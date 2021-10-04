@@ -140,7 +140,7 @@
         });
     }
 
-    RED.nodes.registerType("inject",InjectNode);
+    RED.nodes.registerType("timer",InjectNode);
 
     InjectNode.prototype.close = function() {
         if (this.onceTimeout) {
