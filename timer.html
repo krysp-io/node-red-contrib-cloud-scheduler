@@ -33,9 +33,9 @@
     </div>
 
     <div class="form-row">
-        <label for=""><i class="fa fa-repeat"></i> <span>repeat</span></label>
+        <label for=""><i class="fa fa-repeat"></i> <span>Repeat</span></label>
         <select id="inject-time-type-select">
-            <option value="interval">interval/option>
+            <option value="interval">interval</option>
             <option value="interval-time">interval between times</option>
             <option value="time">at a specific time</option>
         </select>
@@ -419,7 +419,7 @@
                     min: 1
                 });
 
-                var repeattype = "none";
+                var repeattype = "interval";
                 if (node.repeat != "" && node.repeat != 0) {
                     repeattype = "interval";
                     var r = "s";
