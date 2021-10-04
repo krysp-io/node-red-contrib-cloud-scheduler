@@ -16,7 +16,7 @@
 
 <script type="text/html" data-template-name="timer">
     <div class="form-row">
-        <label for="node-input-name"><i class="fa fa-tag"></i> <span>Timer</span></label>
+        <label for="node-input-name"><i class="fa fa-tag"></i> <span>Name</span></label>
         <input type="text" id="node-input-name" value="Timer">
     </div>
 
@@ -227,7 +227,7 @@
             category: 'krysp',
             color: "#a6bbcf",
             defaults: {
-                name: { value: "" },
+                name: { value: "Timer" },
                 props: {
                     value: [{ p: "payload" }, { p: "topic", vt: "str" }], validate: function (v) {
                         if (!v || v.length === 0) { return true }
@@ -253,7 +253,7 @@
                 payload: { value: "", validate: RED.validators.typedInput("payloadType") },
                 payloadType: { value: "date" },
             },
-            icon: "inject.svg",
+            icon: "timer.svg",
             inputs: 0,
             outputs: 1,
             outputLabels: function (index) {
