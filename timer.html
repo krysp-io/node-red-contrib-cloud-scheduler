@@ -20,13 +20,12 @@
         <input type="text" id="node-input-name" value="Timer">
     </div>
 
-    <div class="form-row node-input-property-container-row">
+    <!-- <div class="form-row node-input-property-container-row">
         <ol id="node-input-property-container"></ol>
-    </div>
+    </div> -->
 
     <div class="form-row" id="node-once">
         <label for="node-input-once">&nbsp;</label>
-        <input type="checkbox" id="node-input-once" style="display:inline-block; width:15px; vertical-align:baseline;">
         <span>Inject once after</span>&nbsp;
         <input type="text" id="node-input-onceDelay" placeholder="0.1" style="width:45px; height:28px;">&nbsp;
         <span>seconds, then</span>
@@ -248,7 +247,7 @@
                 },
                 repeat: { value: "", validate: function (v) { return ((v === "") || (RED.validators.number(v) && (v >= 0) && (v <= 2147483))) } },
                 crontab: { value: "" },
-                once: { value: false },
+                once: { value: true },
                 onceDelay: { value: 0.1 },
                 topic: { value: "" },
                 payload: { value: "", validate: RED.validators.typedInput("payloadType") },
