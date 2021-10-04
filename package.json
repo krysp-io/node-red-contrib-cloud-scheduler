@@ -14,7 +14,7 @@
   "license": "ISC",
   "node-red": {
     "nodes": {
-      "start": "start.js"
+      "timer": "timer.js"
     }
   },
   "dependencies": {
