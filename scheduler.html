@@ -278,7 +278,7 @@
                 payloadType: {value:"date"},
             },
             icon: "timer.svg",
-            inputs: 1,
+            inputs: 0,
             outputs: 1,
             outputLabels: function (index) {
                 var lab = '';
@@ -734,17 +734,17 @@
                 if (result.payload) { this.payload = result.payload; };
                 if (result.topic) { this.topic = result.topic; };
             },
-            // button: {
-            //     enabled: function () {
-            //         return !this.changed
-            //     },
-            //     onclick: function () {
-            //         if (this.changed) {
-            //             return RED.notify(RED._("notification.warning", { message: RED._("notification.warnings.undeployedChanges") }), "warning");
-            //         }
-            //         doInject(this);
-            //     }
-            // },
+            button: {
+                enabled: function () {
+                    return !this.changed
+                },
+                onclick: function () {
+                    if (this.changed) {
+                        return RED.notify(RED._("notification.warning", { message: RED._("notification.warnings.undeployedChanges") }), "warning");
+                    }
+                    doInject(this);
+                }
+            },
             oneditresize: resizeDialog
         });
     })();
