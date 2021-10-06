@@ -656,8 +656,8 @@
                 } else if (type == "interval-time") {
                     repeat = "";
                     var count = $("#inject-time-interval-time-units").val();
-                    var startTime = Number($("#inject-time-interval-time-start").val());
-                    var endTime = Number($("#inject-time-interval-time-end").val());
+                    var startTime = Number($("#scheduler-time-interval-time-start").val());
+                    var endTime = Number($("#scheduler-time-interval-time-end").val());
                     var days = $('#inject-time-interval-time-days input[type=checkbox]:checked').map(function (_, el) {
                         return $(el).val()
                     }).get();
