@@ -140,7 +140,7 @@
         });
     }
 
-    RED.nodes.registerType("timer",InjectNode);
+    RED.nodes.registerType("scheduler",InjectNode);
 
     InjectNode.prototype.close = function() {
         if (this.onceTimeout) {
