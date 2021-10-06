@@ -54,7 +54,7 @@
     </div>
 
     <div class="form-row inject-time-row hidden" id="inject-time-row-interval-time">
-        <span>every</span> <select style="width:90px; margin-left:5px;" id="inject-time-interval-time-units" class="inject-time-int-count" value="1">
+        <span  style="margin-right: 5px">every</span> <select style="width:90px; margin-left:5px;" id="inject-time-interval-time-units" class="inject-time-int-count" value="1">
             <option value="1">1</option>
             <option value="2">2</option>
             <option value="3">3</option>
@@ -399,6 +399,7 @@
                     $("#inject-time-row-" + id).show();
                     if ((id == "none") || (id == "interval") || (id == "interval-time")) {
                         $("#node-input-once").prop('checked', true);
+                        $("#node-input-onceDelay").attr('disabled', false);
                         $("#node-once").show();
                     }
                     else {
@@ -422,17 +423,17 @@
                 //         $(this).append($("<option></option>").val(i).text(l));
                 //     }
                 // });
-                $("<option></option>").val(24).text("00:00").appendTo("#inject-time-interval-time-end");
-                $("#inject-time-interval-time-start").on("change", function () {
-                    var start = Number($("#inject-time-interval-time-start").val());
-                    var end = Number($("#inject-time-interval-time-end").val());
-                    $("#inject-time-interval-time-end option").remove();
+                $("<option></option>").val(24).text("00:00").appendTo("#scheduler-time-interval-time-end");
+                $("#scheduler-time-interval-time-start").on("change", function () {
+                    var start = Number($("#scheduler-time-interval-time-start").val());
+                    var end = Number($("#scheduler-time-interval-time-end").val());
+                    $("#scheduler-time-interval-time-end option").remove();
                     for (var i = start + 1; i < 25; i++) {
                         var l = (i < 10 ? "0" : "") + i + ":00";
                         if (i == 24) {
                             l = "00:00";
                         }
-                        var opt = $("<option></option>").val(i).text(l).appendTo("#inject-time-interval-time-end");
+                        var opt = $("<option></option>").val(i).text(l).appendTo("#scheduler-time-interval-time-end");
                         if (i === end) {
                             opt.attr("selected", "selected");
                         }
@@ -517,8 +518,8 @@
                                 end = Number(endparts[1]) + 1;
                             }
                         }
-                        $("#inject-time-interval-time-end").val(end);
-                        $("#inject-time-interval-time-start").val(start);
+                        $("#scheduler-time-interval-time-end").val(end);
+                        $("#scheduler-time-interval-time-start").val(start);
 
                     }
                 } else {
@@ -631,7 +632,7 @@
                 }
 
                 $("#inject-time-type-select").trigger("change");
-                $("#inject-time-interval-time-start").trigger("change");
+                $("#scheduler-time-interval-time-start").trigger("change");
 
             },
             oneditsave: function () {
