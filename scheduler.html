@@ -111,6 +111,10 @@
         </div>
     </div>
 
+    <div id="node-input-property-container">
+
+    </div>
+
 </script>
 <style>
     .mb-20 {
@@ -511,7 +515,7 @@
                 eList.editableList({
                     buttons: [
                         {
-                            id: "node-inject-test-inject-button",
+                            id: "node-inject-test-timer-button",
                             label: "Test Without Deploy",
                             click: function (e) {
                                 var items = eList.editableList('items');
@@ -521,40 +525,40 @@
                             }
                         }
                     ],
-                    addItem: function (container, i, opt) {
-                        var prop = opt;
-                        if (!prop.hasOwnProperty('p')) {
-                            prop = { p: "", v: "", vt: "str" };
-                        }
-                        container.css({
-                            overflow: 'hidden',
-                            whiteSpace: 'nowrap'
-                        });
-                        var row = $('<div/>').appendTo(container);
+                    // addItem: function (container, i, opt) {
+                    //     var prop = opt;
+                    //     if (!prop.hasOwnProperty('p')) {
+                    //         prop = { p: "", v: "", vt: "str" };
+                    //     }
+                    //     container.css({
+                    //         overflow: 'hidden',
+                    //         whiteSpace: 'nowrap'
+                    //     });
+                    //     var row = $('<div/>').appendTo(container);
 
-                        var propertyName = $('<input/>', { class: "node-input-prop-property-name", type: "text" })
-                            .css("width", "30%")
-                            .appendTo(row)
-                            .typedInput({ types: ['msg'] });
+                    //     var propertyName = $('<input/>', { class: "node-input-prop-property-name", type: "text" })
+                    //         .css("width", "30%")
+                    //         .appendTo(row)
+                    //         .typedInput({ types: ['msg'] });
 
-                        $('<div/>', { style: 'display:inline-block; padding:0px 6px;' })
-                            .text('=')
-                            .appendTo(row);
+                    //     $('<div/>', { style: 'display:inline-block; padding:0px 6px;' })
+                    //         .text('=')
+                    //         .appendTo(row);
 
-                        var propertyValue = $('<input/>', { class: "node-input-prop-property-value", type: "text" })
-                            .css("width", "calc(70% - 30px)")
-                            .appendTo(row)
-                            .typedInput({ default: 'str', types: ['flow', 'global', 'str', 'num', 'bool', 'json', 'bin', 'date', 'jsonata', 'env', 'msg'] });
+                    //     var propertyValue = $('<input/>', { class: "node-input-prop-property-value", type: "text" })
+                    //         .css("width", "calc(70% - 30px)")
+                    //         .appendTo(row)
+                    //         .typedInput({ default: 'str', types: ['flow', 'global', 'str', 'num', 'bool', 'json', 'bin', 'date', 'jsonata', 'env', 'msg'] });
 
-                        propertyName.typedInput('value', prop.p);
+                    //     propertyName.typedInput('value', prop.p);
 
-                        propertyValue.typedInput('value', prop.v);
-                        propertyValue.typedInput('type', prop.vt);
-                    },
-                    removable: true,
-                    sortable: true
+                    //     propertyValue.typedInput('value', prop.v);
+                    //     propertyValue.typedInput('type', prop.vt);
+                    // },
+                    // removable: true,
+                    // sortable: true
                 });
-                $('#node-inject-test-inject-button').css("float", "right").css("margin-right", "unset");
+                $('#node-inject-test-timer-button').css("float", "right").css("margin-right", "unset");
 
                 if (RED.nodes.subflow(node.z)) {
                     $('#node-inject-test-inject-button').attr("disabled", true);
