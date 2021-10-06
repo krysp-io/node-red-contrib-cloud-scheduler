@@ -157,6 +157,23 @@
     .inject-time-count {
         width: 40px !important;
     }
+    .test-start-button {
+        height: 45px !important;
+        display: block !important;
+        padding: .5rem 1.5rem !important;
+        font-size: 16px !important;
+        color: #fff !important;
+        background-color: #070480 !important;
+        margin-top: 40px !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+        border-radius: 5px !important;
+    }
+    .custom-button {
+        font-size: 14px !important;
+        height: 45px !important;
+        padding: .5rem 1.5rem !important;
+    }
 </style>
 
 <script type="text/javascript">
@@ -509,7 +526,7 @@
                 $("#inject-time-type-select").val(repeattype);
                 $("#inject-time-row-" + repeattype).show();
 
-                var element = $('<button type="button" class="red-ui-button red-ui-button-small red-ui-editableList-addButton" style="margin-top: 4px; margin-right: 5px;"></button>')
+                var element = $('<button type="button" class="red-ui-button-small red-ui-editableList-addButton custom-button" style="margin-top: 4px; margin-right: 5px;"></button>')
                     .appendTo("#node-test-without-deploy")
                     .on("click", function(evt) {
                         evt.preventDefault();
@@ -522,6 +539,8 @@
                 element.append($("<i></i>").attr("class", "fa fa-play"));
                 element.attr("title", "debug");
                 element.attr("id", "node-inject-test-timer-button");
+                $('#node-inject-test-timer-button').addClass("test-start-button");
+                $("#node-inject-test-timer-button > i").css("padding-left", "10px")
 
                 /* */
 
