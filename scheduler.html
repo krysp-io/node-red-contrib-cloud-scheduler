@@ -67,8 +67,8 @@
             <option value="30">30</option>
             <option value="0">60</option>
         </select> <span style="margin-left: 5px;">minutes</span><br/>
-        <span style="margin-left: 5px;">between</span> <input type="time" id="inject-time-interval-time-start" value="00:00"></input></select>
-        <span style="margin-left: 5px;">and</span> <input type="time" id="inject-time-interval-time-end" value="01:00"></input><br/>
+        <span style="margin-left: 5px;">between</span> <input type="time" id="inject-time-interval-time-start" class="inject-time-times" value="00:00"></input></select>
+        <span style="margin-left: 5px;">and</span> <input type="time" id="inject-time-interval-time-end" class="inject-time-times" value="01:00"></input><br/>
         <div id="inject-time-interval-time-days" class="inject-time-days" style="margin-top:5px">
             <div style="display:inline-block; vertical-align:top; margin-right:5px;">on</div>
             <div style="display:inline-block;">
@@ -143,7 +143,7 @@
     }
 
     .inject-time-times {
-        width: 90px !important;
+        width: 120px !important;
     }
 
     #inject-time-time {
@@ -414,12 +414,12 @@
                     $("#node-input-onceDelay").attr('disabled', !$("#node-input-once").prop('checked'));
                 })
 
-                $(".inject-time-times").each(function () {
-                    for (var i = 0; i < 24; i++) {
-                        var l = (i < 10 ? "0" : "") + i + ":00";
-                        $(this).append($("<option></option>").val(i).text(l));
-                    }
-                });
+                // $(".inject-time-times").each(function () {
+                //     for (var i = 0; i < 24; i++) {
+                //         var l = (i < 10 ? "0" : "") + i + ":00";
+                //         $(this).append($("<option></option>").val(i).text(l));
+                //     }
+                // });
                 $("<option></option>").val(24).text("00:00").appendTo("#inject-time-interval-time-end");
                 $("#inject-time-interval-time-start").on("change", function () {
                     var start = Number($("#inject-time-interval-time-start").val());
