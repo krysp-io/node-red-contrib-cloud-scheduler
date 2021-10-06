@@ -67,8 +67,8 @@
             <option value="30">30</option>
             <option value="0">60</option>
         </select> <span style="margin-left: 5px;">minutes</span><br/>
-        <span style="margin-left: 5px;">between</span> <input type="text" id="inject-time-time" value="00:00"></input></select>
-        <span style="margin-left: 5px;">and</span> <input type="text" id="inject-time-time" value="01:00"></input><br/>
+        <span style="margin-left: 5px;">between</span> <input type="time" id="inject-time-interval-time-start" value="00:00"></input></select>
+        <span style="margin-left: 5px;">and</span> <input type="time" id="inject-time-interval-time-end" value="01:00"></input><br/>
         <div id="inject-time-interval-time-days" class="inject-time-days" style="margin-top:5px">
             <div style="display:inline-block; vertical-align:top; margin-right:5px;">on</div>
             <div style="display:inline-block;">
@@ -90,7 +90,7 @@
     </div>
 
     <div class="form-row inject-time-row hidden" id="inject-time-row-time">
-        <span>at</span> <input type="text" id="inject-time-time" value="12:00"></input><br/>
+        <span>at</span> <input type="time" value="12:00"></input><br/>
         <div id="inject-time-time-days" class="inject-time-days">
             <div style="display:inline-block; vertical-align:top; margin-right:5px;">on</div>
             <div style="display:inline-block;">
