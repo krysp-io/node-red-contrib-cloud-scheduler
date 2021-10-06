@@ -633,7 +633,7 @@
                         if (count === "0") {
                             crontab = count + " " + timerange + " * * " + days;
                         } else {
-                            crontab = "12 45/" + count + " " + "23" + " * * " + days;
+                            crontab = "30,45/" + count + " " + "23,1" + " * * " + days;
                         }
                     }
                 } else if (type == "time") {
