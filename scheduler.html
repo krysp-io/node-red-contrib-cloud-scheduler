@@ -398,6 +398,7 @@
                     $(".inject-time-row").hide();
                     $("#inject-time-row-" + id).show();
                     if ((id == "none") || (id == "interval") || (id == "interval-time")) {
+                        $("#node-input-once").prop('checked', true);
                         $("#node-once").show();
                     }
                     else {
