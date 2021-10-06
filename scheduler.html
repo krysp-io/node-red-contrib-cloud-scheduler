@@ -112,9 +112,7 @@
     </div>
 
     <hr>
-    <div id="node-test-without-deploy">
-
-    </div>
+    <div id="node-test-without-deploy"></div>
 
 </script>
 <style>
@@ -173,6 +171,9 @@
         font-size: 14px !important;
         height: 45px !important;
         padding: .5rem 1.5rem !important;
+    }
+    #node-test-without-deploy {
+        display: flex;
     }
 </style>
 
@@ -540,7 +541,8 @@
                 element.attr("title", "debug");
                 element.attr("id", "node-inject-test-timer-button");
                 $('#node-inject-test-timer-button').addClass("test-start-button");
-                $("#node-inject-test-timer-button > i").css("padding-left", "10px")
+                $("#node-inject-test-timer-button > i").css("padding-right", "10px");
+                $("#node-inject-test-timer-button > i").css("float", "left");
 
                 /* */
 
