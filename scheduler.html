@@ -16,7 +16,7 @@
 
 <script type="text/html" data-template-name="Scheduler">
     <div class="form-row">
-        <label for="node-input-name"><i class="fa fa-tag"></i> <span>Name</span></label>
+        <label for="node-input-name"><i class="fa fa-tag"></i> <span> Name</span></label>
         <input type="text" id="node-input-name" placeholder="Name">
     </div>
 
@@ -24,9 +24,14 @@
         <label for="node-input-account"><i class="fa fa-user"></i> Credentials</label>
         <input type="text" id="node-input-account">
     </div>
+
+    <div class="form-row">
+        <label for="node-input-projectId"><i class="fa fa-object-group"></i> Project</label>
+        <input type="text" id="node-input-projectId">
+    </div>
     
     <div class="form-row">
-        <label for="node-input-method"><i class="fa fa-tasks"></i> <span>Method</span></label>
+        <label for="node-input-method"><i class="fa fa-tasks"></i> <span> Method</span></label>
         <select type="text" id="node-input-method" style="width:70%;" value="post">
             <option value="post">POST</option>
             <option value="put">PUT</option>
@@ -35,7 +40,7 @@
     </div>
     
     <div class="form-row">
-        <label for="node-input-url"><i class="fa fa-tag"></i> <span>URL</span></label>
+        <label for="node-input-url"><i class="fa fa-tag"></i> <span> URL</span></label>
         <input type="text" id="node-input-url" placeholder="https://">
         <p class="d-flex justify-content-center mt-2 w-100 text-muted">HTTP enpoint will be created with the given URL</p>
     </div>
@@ -48,7 +53,7 @@
     </div>
 
     <div class="form-row">
-        <label for=""><i class="fa fa-repeat"></i> <span>Repeat</span></label>
+        <label for=""><i class="fa fa-repeat"></i> <span> Repeat</span></label>
         <select id="inject-time-type-select" class="form-control">
             <option value="interval">interval</option>
             <option value="interval-time">interval between times</option>
@@ -214,6 +219,7 @@
             color: "#a6bbcf",
             defaults: {
                 name: { value: "Scheduler" },
+                projectId: { value: "", required: true },
                 account: { type: "google-cloud-credentials", required: false },
                 props: {},
                 repeat: { value: "", validate: function (v) { return ((v === "") || (RED.validators.number(v) && (v >= 0) && (v <= 2147483))) } },

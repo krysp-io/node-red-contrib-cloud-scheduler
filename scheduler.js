@@ -14,7 +14,7 @@
  * limitations under the License.
  **/
 
- module.exports = function (RED) {
+module.exports = function (RED) {
     "use strict";
     var bodyParser = require("body-parser");
     var multer = require("multer");
@@ -29,20 +29,12 @@
 
     const scheduler = require('@google-cloud/scheduler');
 
-    // Create a client.
-    const client = new scheduler.CloudSchedulerClient({
-        credentials: {
-            client_email: process.env.GOOGLE_CREDENTIAL_CLIENT_EMAIL,
-            private_key: process.env.GOOGLE_CREDENTIAL_PRIVATE_KEY.replace(/\\n/gm, '\n')
-        }
-    });
 
     // Construct the fully qualified location path.
     const parent = client.locationPath("ace-bucksaw-299016", "us-east1");
 
 
     function rawBodyParser(req, res, next) {
-        console.log("called raw body parser");
         if (req.skipRawBodyParser) { next(); } // don't parse this if told to skip
         if (req._body) { return next(); }
         req.body = "";
@@ -89,7 +81,6 @@
     var corsSetup = false;
 
     function createResponseWrapper(node, res) {
-        console.log("createResponseWrapper");
         var wrapper = {
             _res: res
         };
@@ -122,10 +113,8 @@
                 node.warn(RED._("httpin.errors.deprecated-call", { method: "msg.res." + f }));
                 var result = res[f].apply(res, arguments);
                 if (result === res) {
-                    console.log("result === res")
                     return wrapper;
                 } else {
-                    console.log("else")
                     return result;
                 }
             }
@@ -133,7 +122,7 @@
         return wrapper;
     }
 
-    var corsHandler = function (req, res, next) { console.log("called cors handler"); next(); }
+    var corsHandler = function (req, res, next) { next(); }
 
     if (RED.settings.httpNodeCors) {
         corsHandler = cors(RED.settings.httpNodeCors);
@@ -149,6 +138,7 @@
 
         this.repeat = n.repeat;
         this.crontab = n.crontab;
+        this.projectId = n.projectId;
         this.once = n.once;
         this.onceDelay = (n.onceDelay || 0.1) * 1000;
         this.interval_id = null;
@@ -157,9 +147,26 @@
         this.name = null;
         var node = this;
         this.url = n.url;
-        if (this.url[0] !== '/') {
-            this.url = '/'+this.url;
+
+        let credentials = null;
+        if (config.account) {
+            credentials = GetCredentials(config.account);
         }
+
+        // Create a client.
+        const client = new scheduler.CloudSchedulerClient({
+            credentials: credentials
+        });
+
+        function GetCredentials(node) {
+            return JSON.parse(RED.nodes.getCredentials(node).account);
+        }
+
+        if (this.url[0] !== '/') {
+            this.url = '/' + this.url;
+        }
+
+
 
         if (node.repeat > 2147483) {
             node.error(RED._("inject.errors.toolong", this));
@@ -179,11 +186,12 @@
                 if (RED.settings.verbose) {
                     this.log(RED._("inject.crontab", this));
                 }
+
                 this.name = n.id + process.env.KRYSP_NAMESPACE;
                 const job = {
                     name: `projects/ace-bucksaw-299016/locations/us-east1/jobs/${this.name}`,
                     httpTarget: {
-                        uri: `http://localhost:1880/inject/${n.id}`,
+                        uri: `${window.location.origin}${this.url}`,
                         httpMethod: this.method,
                         body: Buffer.from('Hello World'),
                     },
@@ -199,49 +207,40 @@
 
                 // Use the client to send the job creation request.
 
-                // const response = await client.createJob(request);
-                // this.cronjob = response;
-                // this.jobId = response[0].name;
+                try {
+                    const [response] = await client.createJob(request);
+                    this.cronjob = response;
+                } catch (err) {
+                    const [response] = await client.updateJob(request);
+                    this.cronjob = response;
+                }
             }
         }
 
-        let credentials = null;
-        if (config.account) {
-            credentials = GetCredentials(config.account);
-        }
-
-        function GetCredentials(node) {
-            return JSON.parse(RED.nodes.getCredentials(node).account);
-        }
 
         var node = this;
 
         this.errorHandler = function (err, req, res, next) {
-            console.log("called error handler");
             node.warn(err);
             res.sendStatus(500);
         };
 
 
         this.callback = function (req, res) {
-            console.log("called this callback");
             var msgid = RED.util.generateId();
             res._msgid = msgid;
             if (node.method.match(/^(post|delete|put|options|patch)$/)) {
-                console.log("node.method post");
                 node.send(req.body);
                 res.sendStatus(200);
                 // node.send({ _msgid: msgid, req: req, res: createResponseWrapper(node, res), payload: req.body });
             } else if (node.method == "get") {
-                console.log("node.method get")
                 node.send({ _msgid: msgid, req: req, res: createResponseWrapper(node, res), payload: req.query });
             } else {
-                console.log("node.method else")
                 node.send({ _msgid: msgid, req: req, res: createResponseWrapper(node, res) });
             }
         };
 
-        var httpMiddleware = function (req, res, next) { console.log("called http middleware"); next(); }
+        var httpMiddleware = function (req, res, next) { next(); }
 
         if (RED.settings.httpNodeMiddleware) {
             if (typeof RED.settings.httpNodeMiddleware === "function" || Array.isArray(RED.settings.httpNodeMiddleware)) {
@@ -253,7 +252,7 @@
         var jsonParser = bodyParser.json({ limit: maxApiRequestSize });
         var urlencParser = bodyParser.urlencoded({ limit: maxApiRequestSize, extended: true });
 
-        var metricsHandler = function (req, res, next) { console.log("called metrics handler"); next(); }
+        var metricsHandler = function (req, res, next) { next(); }
         if (this.metric()) {
             metricsHandler = function (req, res, next) {
                 var startAt = process.hrtime();
@@ -272,7 +271,7 @@
             };
         }
 
-        var multipartParser = function (req, res, next) { console.log("multipart parser"); next(); }
+        var multipartParser = function (req, res, next) { next(); }
         if (this.upload) {
             var mp = multer({ storage: multer.memoryStorage() }).any();
             multipartParser = function (req, res, next) {
@@ -284,15 +283,15 @@
         }
 
         if (this.method == "post") {
-            RED.httpNode.post(this.url,cookieParser(),httpMiddleware,corsHandler,metricsHandler,jsonParser,urlencParser,multipartParser,rawBodyParser,this.callback,this.errorHandler);
+            RED.httpNode.post(this.url, cookieParser(), httpMiddleware, corsHandler, metricsHandler, jsonParser, urlencParser, multipartParser, rawBodyParser, this.callback, this.errorHandler);
         } else if (this.method == "put") {
-            RED.httpNode.put(this.url,cookieParser(),httpMiddleware,corsHandler,metricsHandler,jsonParser,urlencParser,rawBodyParser,this.callback,this.errorHandler);
+            RED.httpNode.put(this.url, cookieParser(), httpMiddleware, corsHandler, metricsHandler, jsonParser, urlencParser, rawBodyParser, this.callback, this.errorHandler);
         } else if (this.method == "patch") {
-            RED.httpNode.patch(this.url,cookieParser(),httpMiddleware,corsHandler,metricsHandler,jsonParser,urlencParser,rawBodyParser,this.callback,this.errorHandler);
+            RED.httpNode.patch(this.url, cookieParser(), httpMiddleware, corsHandler, metricsHandler, jsonParser, urlencParser, rawBodyParser, this.callback, this.errorHandler);
         }
 
-        
-       // Construct the request body.
+
+        // Construct the request body.
 
 
         if (this.once) {
@@ -313,29 +312,29 @@
                 done();
             }
         });
+
+        this.on("close", function() {
+            if (this.onceTimeout) {
+                clearTimeout(this.onceTimeout);
+            }
+            if (this.interval_id != null) {
+                clearInterval(this.interval_id);
+                if (RED.settings.verbose) { this.log(RED._("inject.stopped")); }
+            } else if (this.cronjob != null) {
+                // Construct the fully qualified location path.
+    
+                const job = client.jobPath("ace-bucksaw-299016", "us-east1", this.name);
+                // Use the client to send the job creation request.
+                await client.deleteJob({ name: job });
+    
+                if (RED.settings.verbose) { this.log(RED._("inject.stopped")); }
+    
+                delete this.cronjob;
+            }
+        })
     }
 
     RED.nodes.registerType("Scheduler", SchedulerNode);
-
-    InjectNode.prototype.close = async function () {
-        if (this.onceTimeout) {
-            clearTimeout(this.onceTimeout);
-        }
-        if (this.interval_id != null) {
-            clearInterval(this.interval_id);
-            if (RED.settings.verbose) { this.log(RED._("inject.stopped")); }
-        } else if (this.cronjob != null) {
-            // Construct the fully qualified location path.
-
-            const job = client.jobPath("ace-bucksaw-299016", "us-east1", this.name);
-            // Use the client to send the job creation request.
-            await client.deleteJob({ name: job });
-
-            if (RED.settings.verbose) { this.log(RED._("inject.stopped")); }
-
-            delete this.cronjob;
-        }
-    };
 
     RED.httpAdmin.post("/inject/:id", RED.auth.needsPermission("inject.write"), async function (req, res) {
         var node = RED.nodes.getNode(req.params.id);
