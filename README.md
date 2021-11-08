@@ -23,7 +23,7 @@ Restart your Node-RED instance and you should have a "Scheduler" node available 
 -------
 
 
-<p>1. After installation, drag the <b>start</b> node from the palette to the workspace.</p>
+<p>1. After installation, drag the <b>scheduler</b> node from the palette to the workspace.</p>
 <p>2. Double click on the node to add msg.payload.</p>
 <p>3. Test the flow by clicking on "Test Without Deploy".</p>
 
