@@ -1,6 +1,6 @@
 # node-red-contrib-scheduler
 -------
-A node that allows to start any flow at a given time interval.
+A node that allows to execute any flow at a given time interval.
 
 
 # Pre-requisites
