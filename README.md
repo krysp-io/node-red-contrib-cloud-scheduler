@@ -1,6 +1,6 @@
-# node-red-contrib-start
+# node-red-contrib-scheduler
 -------
-A node that allows to start any flow with a payload as "Hello World".
+A node that allows to start any flow at a given time interval.
 
 
 # Pre-requisites
