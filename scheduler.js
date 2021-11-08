@@ -312,7 +312,7 @@ module.exports = function (RED) {
             }
         });
 
-        this.on("close", function() {
+        this.on("close", async function() {
             if (this.onceTimeout) {
                 clearTimeout(this.onceTimeout);
             }
