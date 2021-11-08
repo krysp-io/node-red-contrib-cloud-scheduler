@@ -128,7 +128,7 @@ module.exports = function (RED) {
 
 
 
-    function InjectNode(n) {
+    function SchedulerNode(n) {
         RED.nodes.createNode(this, n);
 
 
