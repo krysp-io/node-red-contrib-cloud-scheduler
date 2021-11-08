@@ -1,5 +1,5 @@
 {
-  "name": "node-red-contrib-timer",
+  "name": "node-red-contrib-scheduler",
   "version": "1.0.0",
   "description": "",
   "scripts": {
@@ -17,6 +17,17 @@
     }
   },
   "dependencies": {
-    "bootstrap": "^5.1.1"
+    "@google-cloud/scheduler": "^2.3.0",
+    "body-parser": "^1.19.0",
+    "bootstrap": "^5.1.1",
+    "content-type": "^1.0.4",
+    "cookie-parser": "^1.4.5",
+    "cors": "^2.8.5",
+    "hash-sum": "^2.0.0",
+    "is-utf8": "^0.2.1",
+    "media-typer": "^1.1.0",
+    "multer": "^1.4.3",
+    "on-headers": "^1.0.2",
+    "raw-body": "^2.4.1"
   }
 }

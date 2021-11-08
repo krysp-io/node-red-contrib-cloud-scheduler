@@ -14,27 +14,42 @@
   limitations under the License.
 -->
 
-<script type="text/html" data-template-name="scheduler">
+<script type="text/html" data-template-name="Scheduler">
     <div class="form-row">
         <label for="node-input-name"><i class="fa fa-tag"></i> <span>Name</span></label>
-        <input type="text" id="scheduler-input-name" value="scheduler">
+        <input type="text" id="node-input-name" placeholder="Name">
     </div>
 
-    <!-- <div class="form-row node-input-property-container-row"><
-        <ol id="node-input-property-container"></ol>
-    </div> -->
-
-    <hr>
-    <div class="form-row mb-20" id="node-once">
-        <span>Inject once after</span>&nbsp;
-        <input type="checkbox" id="node-input-once" style="display:none">
+    <div class="form-row">
+        <label for="node-input-account"><i class="fa fa-user"></i> Credentials</label>
+        <input type="text" id="node-input-account">
+    </div>
+    
+    <div class="form-row">
+        <label for="node-input-method"><i class="fa fa-tasks"></i> <span>Method</span></label>
+        <select type="text" id="node-input-method" style="width:70%;" value="post">
+            <option value="post">POST</option>
+            <option value="put">PUT</option>
+            <option value="patch">PATCH</option>
+        </select>
+    </div>
+    
+    <div class="form-row">
+        <label for="node-input-url"><i class="fa fa-tag"></i> <span>URL</span></label>
+        <input type="text" id="node-input-url" placeholder="https://">
+        <p class="d-flex justify-content-center mt-2 w-100 text-muted">HTTP enpoint will be created with the given URL</p>
+    </div>
+    
+    <div class="d-flex justify-content-center" id="node-once">
+        <label for="node-input-once">&nbsp;</label>
+        <span>inject once after</span>&nbsp;
         <input type="text" id="node-input-onceDelay" placeholder="0.1" style="width:45px; height:28px;">&nbsp;
         <span>seconds, then</span>
     </div>
 
     <div class="form-row">
         <label for=""><i class="fa fa-repeat"></i> <span>Repeat</span></label>
-        <select id="inject-time-type-select">
+        <select id="inject-time-type-select" class="form-control">
             <option value="interval">interval</option>
             <option value="interval-time">interval between times</option>
             <option value="time">at a specific time</option>
@@ -44,17 +59,16 @@
     </div>
 
     <div class="form-row inject-time-row hidden" id="inject-time-row-interval">
-        <span>every</span>
+        <span data-i18n="inject.every">every</span>
         <input id="inject-time-interval-count" class="inject-time-count" value="1"></input>
-        <select style="width:100px;margin-left: 5px;" id="inject-time-interval-units">
-            <option value="s">seconds</option>
+        <select style="width:100px" id="inject-time-interval-units">
             <option value="m">minutes</option>
             <option value="h">hours</option>
         </select><br/>
     </div>
 
     <div class="form-row inject-time-row hidden" id="inject-time-row-interval-time">
-        <span  style="margin-right: 5px">every</span> <select style="width:90px; margin-left:5px;" id="inject-time-interval-time-units" class="inject-time-int-count" value="1">
+        <span>every</span> <select style="width:90px; margin-left:20px;" id="inject-time-interval-time-units" class="inject-time-int-count" value="1">
             <option value="1">1</option>
             <option value="2">2</option>
             <option value="3">3</option>
@@ -67,16 +81,16 @@
             <option value="20">20</option>
             <option value="30">30</option>
             <option value="0">60</option>
-        </select><br /> <span style="margin-left: 5px; margin-top:10px">minutes</span><br/>
-        <span style="margin-left: 5px;margin-right: 5px; margin-top:10px">between</span> <input type="time" style="margin-top: 10px;" id="scheduler-time-interval-time-start" class="inject-time-times" value="00:00"></input></select><br />
-        <span style="margin-left: 5px;margin-right: 5px;margin-top:10px">and</span> <input type="time" style="margin-top: 10px;" id="scheduler-time-interval-time-end" class="inject-time-times" value="01:00"></input><br/>
+        </select> <span>minutes</span><br/>
+        <span>between</span> <select id="inject-time-interval-time-start" class="inject-time-times"></select>
+        <span>and</span> <select id="inject-time-interval-time-end" class="inject-time-times"></select><br/>
         <div id="inject-time-interval-time-days" class="inject-time-days" style="margin-top:5px">
             <div style="display:inline-block; vertical-align:top; margin-right:5px;">on</div>
             <div style="display:inline-block;">
                 <div>
                     <label><input type='checkbox' checked value='1'/> <span>Monday</span></label>
                     <label><input type='checkbox' checked value='2'/> <span>Tuesday</span></label>
-                    <label><input type='checkbox' checked value='3'/> <span>Wednesday</span></label>
+                    <label><input type='checkbox' checked value='3'/> <span>Wednedsay</span></label>
                 </div>
                 <div>
                     <label><input type='checkbox' checked value='4'/> <span>Thursday</span></label>
@@ -91,14 +105,14 @@
     </div>
 
     <div class="form-row inject-time-row hidden" id="inject-time-row-time">
-        <span style="margin-right: 5px;">at</span> <input type="time" id="inject-time-time" value="12:00" class="inject-time-times"></input><br/>
+        <span>at</span> <input type="text" id="inject-time-time" value="12:00"></input><br/>
         <div id="inject-time-time-days" class="inject-time-days">
             <div style="display:inline-block; vertical-align:top; margin-right:5px;">on</div>
             <div style="display:inline-block;">
                 <div>
                     <label><input type='checkbox' checked value='1'/> <span>Monday</span></label>
                     <label><input type='checkbox' checked value='2'/> <span>Tuesday</span></label>
-                    <label><input type='checkbox' checked value='3'/> <span>Wednesday</span></label>
+                    <label><input type='checkbox' checked value='3'/> <span>Wednedsay</span></label>
                 </div>
                 <div>
                     <label><input type='checkbox' checked value='4'/> <span>Thursday</span></label>
@@ -112,14 +126,8 @@
         </div>
     </div>
 
-    <hr>
-    <div id="node-test-without-deploy"></div>
-
 </script>
 <style>
-    .mb-20 {
-        margin-bottom: 20px !important;
-    }
     .inject-time-row {
         padding-left: 110px;
     }
@@ -156,31 +164,11 @@
     .inject-time-count {
         width: 40px !important;
     }
-    .test-start-button {
-        height: 45px !important;
-        display: block !important;
-        padding: .5rem 1.5rem !important;
-        font-size: 16px !important;
-        color: #fff !important;
-        background-color: #070480 !important;
-        margin-top: 40px !important;
-        margin-left: auto !important;
-        margin-right: auto !important;
-        border-radius: 5px !important;
-    }
-    .custom-button {
-        font-size: 14px !important;
-        height: 45px !important;
-        padding: .5rem 1.5rem !important;
-    }
-    #node-test-without-deploy {
-        display: flex;
-    }
 </style>
 
 <script type="text/javascript">
     (function () {
-
+    
         function resizeDialog(size) {
             size = size || { height: $(".red-ui-tray-content form").height() }
             var rows = $("#dialog-form>div:not(.node-input-property-container-row):visible");
@@ -193,45 +181,17 @@
             height += 16;
             $("#node-input-property-container").editableList('height', height);
         }
-        function getProps(el, legacy) {
-            var result = {
-                props: []
-            }
-            el.each(function(i) {
-                var prop = $(this);
-                var p = {
-                    p:prop.find(".node-input-prop-property-name").typedInput('value')
-                };
-                if (p.p) {
-                    p.v = prop.find(".node-input-prop-property-value").typedInput('value');
-                    p.vt = prop.find(".node-input-prop-property-value").typedInput('type');
-                    if(legacy) {
-                        if (p.p === "payload") { // save payload to old "legacy" property
-                            result.payloadType = p.vt;
-                            result.payload = p.v;
-                            delete p.v;
-                            delete p.vt;
-                        } else if (p.p === "topic" && p.vt === "str") {
-                            result.topic = p.v;
-                            delete p.v;
-                        }
-                    }
-                    result.props.push(p);
-                }
-            });
-            return result;
-        }
         /** Perform inject, optionally sending a custom msg (refactored for re-use in the form inject button)*/
         function doInject(node, customMsg) {
-            var label = node._def.label.call(node, customMsg ? customMsg.__user_inject_props__ : undefined);
-            if (label.length > 30) {
-                label = label.substring(0, 50) + "...";
-            }
-            label = label.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+            // var label = node._def.label.call(node,customMsg?customMsg.__user_inject_props__:undefined);
+            // if (label.length > 30) {
+            //     label = label.substring(0, 50) + "...";
+            // }
+            // label = label.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
             $.ajax({
                 url: "inject/" + node.id,
                 type: "POST",
-                data: JSON.stringify(customMsg || {}),
+                data: JSON.stringify({}),
                 contentType: "application/json; charset=utf-8",
                 success: function (resp) {
                     RED.notify(node._("inject.success", { label: label }), { type: "success", id: "inject", timeout: 2000 });
@@ -249,79 +209,24 @@
                 }
             });
         }
-        RED.nodes.registerType('scheduler', {
+        RED.nodes.registerType('Scheduler', {
             category: 'krysp',
             color: "#a6bbcf",
             defaults: {
-                name: { value: "scheduler" },
-                props:{value:[{p:"payload"},{p:"topic",vt:"str"}], validate:function(v) {
-                    if (!v || v.length === 0) { return true }
-                    for (var i=0;i<v.length;i++) {
-                        if (/msg|flow|global/.test(v[i].vt)) {
-                            if (!RED.utils.validatePropertyExpression(v[i].v)) {
-                                return false;
-                            }
-                        } else if (v[i].vt === "jsonata") {
-                            try{jsonata(v[i].v);}catch(e){return false;}
-                        } else if ([i].vt === "json") {
-                            try{JSON.parse(v[i].v);}catch(e){return false;}
-                        }
-                    }
-                    return true;
-                }
-            },
+                name: { value: "Scheduler" },
+                account: { type: "google-cloud-credentials", required: false },
+                props: {},
                 repeat: { value: "", validate: function (v) { return ((v === "") || (RED.validators.number(v) && (v >= 0) && (v <= 2147483))) } },
                 crontab: { value: "" },
                 once: { value: true },
                 onceDelay: { value: 0.1 },
-                topic: {value:""},
-                payload: {value:"", validate: RED.validators.typedInput("payloadType")},
-                payloadType: {value:"date"},
+                url: { value: "" },
+                jobId: { value: "" },
+                method: {value:"post"}
             },
-            icon: "timer.svg",
+            icon: "inject.svg",
             inputs: 0,
             outputs: 1,
-            outputLabels: function (index) {
-                var lab = '';
-
-                // if only payload and topic - display payload type
-                // if only one property - show it's type
-                // if more than one property (other than payload and topic) - show "x properties" where x is the number of properties.
-                // this.props will not be an array for legacy inject nodes until they are re-deployed
-                //
-                var props = this.props;
-                if (!Array.isArray(props)) {
-                    props = [
-                        { p: "payload", v: this.payload, vt: this.payloadType },
-                        { p: "topic", v: this.topic, vt: "str" }
-                    ]
-                }
-                if (props) {
-                    for (var i = 0, l = props.length; i < l; i++) {
-                        if (i > 0) lab += "\n";
-                        if (i === 5) {
-                            lab += "... +" + (props.length - 5);
-                            break;
-                        }
-                        lab += props[i].p + ": ";
-
-                        var propType = props[i].p === "payload" ? this.payloadType : props[i].vt;
-                        if (propType === "json") {
-                            try {
-                                var parsedProp = JSON.parse(props[i].p === "payload" ? this.payload : props[i].v);
-                                propType = typeof parsedProp;
-                                if (propType === "object" && Array.isArray(parsedProp)) {
-                                    propType = "Array";
-                                }
-                            } catch (e) {
-                                propType = "invalid";
-                            }
-                        }
-                        lab += this._("inject.label." + propType);
-                    }
-                }
-                return lab;
-            },
             label: function (customProps) {
                 var suffix = "";
                 // if fire once then add small indication
@@ -335,62 +240,14 @@
                 if (this.name) {
                     return this.name + suffix;
                 }
-                var payload = "";
-                var payloadType = "str";
-                var topic = "";
-                if (customProps) {
-                    for (var i = 0; i < customProps.length; i++) {
-                        if (customProps[i].p === "payload") {
-                            payload = customProps[i].v;
-                            payloadType = customProps[i].vt;
-                        } else if (customProps[i].p === "topic") {
-                            topic = customProps[i].v;
-                        }
-                    }
-                } else {
-                    payload = this.payload || "";
-                    payloadType = this.payloadType || "str";
-                    topic = this.topic || "";
-                }
-                if (payloadType === "string" ||
-                    payloadType === "str" ||
-                    payloadType === "num" ||
-                    payloadType === "bool" ||
-                    payloadType === "json") {
-                    if ((topic !== "") && ((topic.length + payload.length) <= 32)) {
-                        return topic + ":" + payload + suffix;
-                    } else if (payload.length > 0 && payload.length < 24) {
-                        return payload + suffix;
-                    } else {
-                        return this._("inject.inject") + suffix;
-                    }
-                } else if (payloadType === 'date' || payloadType === 'bin' || payloadType === 'env') {
-                    if ((topic !== "") && (topic.length <= 16)) {
-                        return topic + ":" + this._('inject.label.' + payloadType) + suffix;
-                    } else {
-                        return this._('inject.label.' + payloadType) + suffix;
-                    }
-                } else if (payloadType === 'flow' || payloadType === 'global') {
-                    var key = RED.utils.parseContextKey(payload);
-                    return payloadType + "." + key.key + suffix;
-                } else {
-                    return this._("inject.inject") + suffix;
-                }
+                return this._("inject.inject") + suffix;
             },
             labelStyle: function () {
                 return this.name ? "node_label_italic" : "";
             },
             oneditprepare: function () {
                 var node = this;
-                if (node.payloadType == null) {
-                    if (node.payload == "") {
-                        node.payloadType = "date";
-                    } else {
-                        node.payloadType = "str";
-                    }
-                } else if (node.payloadType === 'string' || node.payloadType === 'none') {
-                    node.payloadType = "str";
-                }
+
 
                 $("#inject-time-type-select").on("change", function () {
                     $("#node-input-crontab").val('');
@@ -398,9 +255,8 @@
                     $(".inject-time-row").hide();
                     $("#inject-time-row-" + id).show();
                     if ((id == "none") || (id == "interval") || (id == "interval-time")) {
-                        $("#node-input-once").prop('checked', true);
-                        $("#node-input-onceDelay").attr('disabled', false);
                         $("#node-once").show();
+                        $("#node-input-once").prop('checked', true);
                     }
                     else {
                         $("#node-once").hide();
@@ -417,10 +273,27 @@
                     $("#node-input-onceDelay").attr('disabled', !$("#node-input-once").prop('checked'));
                 })
 
-                $("<option></option>").val(24).text("00:00").appendTo("#scheduler-time-interval-time-end");
-                $("#scheduler-time-interval-time-start").on("change", function () {
-                    var start = $("#scheduler-time-interval-time-start").val();
-                    var end = Number$("#scheduler-time-interval-time-end").val();
+                $(".inject-time-times").each(function () {
+                    for (var i = 0; i < 24; i++) {
+                        var l = (i < 10 ? "0" : "") + i + ":00";
+                        $(this).append($("<option></option>").val(i).text(l));
+                    }
+                });
+                $("<option></option>").val(24).text("00:00").appendTo("#inject-time-interval-time-end");
+                $("#inject-time-interval-time-start").on("change", function () {
+                    var start = Number($("#inject-time-interval-time-start").val());
+                    var end = Number($("#inject-time-interval-time-end").val());
+                    $("#inject-time-interval-time-end option").remove();
+                    for (var i = start + 1; i < 25; i++) {
+                        var l = (i < 10 ? "0" : "") + i + ":00";
+                        if (i == 24) {
+                            l = "00:00";
+                        }
+                        var opt = $("<option></option>").val(i).text(l).appendTo("#inject-time-interval-time-end");
+                        if (i === end) {
+                            opt.attr("selected", "selected");
+                        }
+                    }
                 });
 
                 $(".inject-time-count").spinner({
@@ -501,8 +374,8 @@
                                 end = Number(endparts[1]) + 1;
                             }
                         }
-                        $("#scheduler-time-interval-time-end").val(end);
-                        $("#scheduler-time-interval-time-start").val(start);
+                        $("#inject-time-interval-time-end").val(end);
+                        $("#inject-time-interval-time-start").val(start);
 
                     }
                 } else {
@@ -513,63 +386,33 @@
                 $("#inject-time-type-select").val(repeattype);
                 $("#inject-time-row-" + repeattype).show();
 
-                var element = $('<button type="button" class="red-ui-button-small red-ui-editableList-addButton custom-button" style="margin-top: 4px; margin-right: 5px;"></button>')
-                    .appendTo("#node-test-without-deploy")
-                    .on("click", function(evt) {
-                        evt.preventDefault();
-                        var items = eList.editableList('items');
-                        var props = getProps(items);
-                        var m = { __user_inject_props__: props.props };
-                        doInject(node, m);
-                    });
-                element.append($("<span></span>").text("Test Without Deploy"));
-                element.append($("<i></i>").attr("class", "fa fa-play"));
-                element.attr("title", "debug");
-                element.attr("id", "node-inject-test-timer-button");
-                $('#node-inject-test-timer-button').addClass("test-start-button");
-                $("#node-inject-test-timer-button > i").css("padding-right", "10px");
-                $("#node-inject-test-timer-button > i").css("float", "left");
-
                 /* */
 
                 var eList = $('#node-input-property-container').css('min-height', '120px').css('min-width', '450px');
 
-                $('#node-inject-test-timer-button').css("float", "right").css("margin-right", "unset");
+                eList.editableList({
+                    buttons: [
+                        {
+                            id: "node-inject-test-inject-button",
+                            label: node._("inject.injectNow"),
+                            click: function (e) {
+                                doInject(node);
+                            }
+                        }
+                    ],
+                    removable: true,
+                    sortable: true
+                });
+                $('#node-inject-test-inject-button').css("float", "right").css("margin-right", "unset");
 
                 if (RED.nodes.subflow(node.z)) {
                     $('#node-inject-test-inject-button').attr("disabled", true);
                 }
 
-                if (!node.props) {
-                    var payload = {
-                        p: 'payload',
-                        v: node.payload ? node.payload : '',
-                        vt: node.payloadType ? node.payloadType : 'date'
-                    };
-                    var topic = {
-                        p: 'topic',
-                        v: node.topic ? node.topic : '',
-                        vt: 'string'
-                    }
-                    node.props = [payload, topic];
-                }
 
-                for (var i = 0; i < node.props.length; i++) {
-                    var prop = node.props[i];
-                    var newProp = { p: prop.p, v: prop.v, vt: prop.vt };
-                    if (newProp.v === undefined) {
-                        if (prop.p === 'payload') {
-                            newProp.v = node.payload ? node.payload : '';
-                            newProp.vt = node.payloadType ? node.payloadType : 'date';
-                        } else if (prop.p === 'topic' && prop.vt === "str") {
-                            newProp.v = node.topic ? node.topic : '';
-                        }
-                    }
-                    eList.editableList('addItem', newProp);
-                }
 
                 $("#inject-time-type-select").trigger("change");
-                $("#scheduler-time-interval-time-start").trigger("change");
+                $("#inject-time-interval-time-start").trigger("change");
 
             },
             oneditsave: function () {
@@ -581,22 +424,18 @@
                 } else if (type == "interval") {
                     var count = $("#inject-time-interval-count").val();
                     var units = $("#inject-time-interval-units").val();
-                    if (units == "s") {
-                        repeat = count;
-                    } else {
-                        if (units == "m") {
-                            //crontab = "*/"+count+" * * * "+days;
-                            repeat = count * 60;
-                        } else if (units == "h") {
-                            //crontab = "0 */"+count+" * * "+days;
-                            repeat = count * 60 * 60;
-                        }
+                    if (units == "m") {
+                        crontab = "*/"+count+" * * * *";
+                        // repeat = count * 60;
+                    } else if (units == "h") {
+                        crontab = "0 */"+count+" * * *";
+                        // repeat = count * 60 * 60;
                     }
                 } else if (type == "interval-time") {
                     repeat = "";
                     var count = $("#inject-time-interval-time-units").val();
-                    var startTime = $("#scheduler-time-interval-time-start").val();
-                    var endTime = $("#scheduler-time-interval-time-end").val();
+                    var startTime = Number($("#inject-time-interval-time-start").val());
+                    var endTime = Number($("#inject-time-interval-time-end").val());
                     var days = $('#inject-time-interval-time-days input[type=checkbox]:checked').map(function (_, el) {
                         return $(el).val()
                     }).get();
@@ -628,12 +467,12 @@
                             } else {
                                 endpart = "0-" + (endTime - 1);
                             }
-                            timerange = "22" + "," + "22";
+                            timerange = startpart + "," + endpart;
                         }
                         if (count === "0") {
                             crontab = count + " " + timerange + " * * " + days;
                         } else {
-                            crontab = "30-45/" + count + " " + "23-1" + " * * " + days;
+                            crontab = "*/" + count + " " + timerange + " * * " + days;
                         }
                     }
                 } else if (type == "time") {
@@ -661,18 +500,7 @@
                 }
 
                 $("#node-input-repeat").val(repeat);
-                $("#node-input-crontab").val(crontab);
-
-                /* Gather the properties */
-                var items = $("#node-input-property-container").editableList('items');
-                delete this.payloadType;
-                delete this.payload;
-                this.topic = "";
-                var result = getProps(items, true);
-                this.props = result.props;
-                if (result.payloadType) { this.payloadType = result.payloadType; };
-                if (result.payload) { this.payload = result.payload; };
-                if (result.topic) { this.topic = result.topic; };
+                $("#node-input-crontab").val(crontab)
             },
             button: {
                 enabled: function () {
