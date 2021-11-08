@@ -26,26 +26,58 @@ limitations under the License.
 </script>
 
 <script type="text/javascript">
-RED.nodes.registerType("google-cloud-credentials", {
-    category: "config",
-    defaults: {
-        name: {
-            required: true
-        }
-    },
-    credentials: {
-        name: {
-            type: "text",
-            required: true
+    RED.nodes.registerType("google-cloud-credentials", {
+        category: "config",
+        defaults: {
+            name: {
+                required: true
+            }
         },
-        account: {
-            type: "password",
-            required: true
+        credentials: {
+            name: {
+                type: "text",
+                required: true
+            },
+            account: {
+                type: "password",
+                required: true
+            }
+        },
+        exportable: false,
+        label: function () {
+            return this.name;
         }
-    },
-    exportable: false,
-    label: function() {
-        return this.name;
-    }
-});
+    });
+</script>
+
+<script type="text/html" data-help-name="google-cloud-credentials">
+    <p><b>Create a service account:</b></p>
+
+    <p>1.In the Cloud Console, go to the <b>Create service account</b> page.</p>
+
+    <button><a href="https://console.cloud.google.com/apis/dashboard">Go to Create service account</a></button>
+    <p>2. Select a project.</p>
+    <p>3. In the <b>Service account name</b> field, enter a name. The Cloud Console fills in the <b>Service account ID</b> field based on this name.</p>
+
+    <p>In the <b>Service account description</b> field, enter a description. For example, Service account for quickstart.</p>
+
+    <p>4. Click <b>Create and continue</b>.</p>
+    <p>5. Click the <b>Select a role</b> field.</p>
+
+    <p>Under <b>Quick access</b>, click <b>Basic</b>, then click <b>Owner</b>.</p>
+    <dl class="message-properties">
+
+        Note: The Role field affects which resources your service account can access in your project. You can revoke these roles or grant additional roles later. In production environments, do not grant the Owner, Editor, or Viewer roles. Instead, grant a predefined role or custom role that meets your needs.
+    </dl>
+    <p>6. Click <b>Continue</b>.</p>
+    <p>7. Click <b>Done</b> to finish creating the service account.</p>
+    <p>Do not close your browser window. You will use it in the next step.</p>
+
+    <p><b>Create a service account key:</b></p>
+
+    <p>1.In the Cloud Console, click the email address for the service account that you created.</p>
+    <p>2. Click <b>Keys</b>.</p>
+    <p>3. Click <b>Add key</b>, then click <b>Create new key</b>.</p> 
+    <p>4. Click <b>Create</b>. A JSON key file is downloaded to your computer.</p>
+    <p>5. Click <b>Close</b>.</p>
 </script>

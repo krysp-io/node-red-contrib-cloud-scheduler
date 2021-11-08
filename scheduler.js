@@ -30,10 +30,6 @@ module.exports = function (RED) {
     const scheduler = require('@google-cloud/scheduler');
 
 
-    // Construct the fully qualified location path.
-    const parent = client.locationPath("ace-bucksaw-299016", "us-east1");
-
-
     function rawBodyParser(req, res, next) {
         if (req.skipRawBodyParser) { next(); } // don't parse this if told to skip
         if (req._body) { return next(); }
@@ -157,6 +153,9 @@ module.exports = function (RED) {
         const client = new scheduler.CloudSchedulerClient({
             credentials: credentials
         });
+
+        // Construct the fully qualified location path.
+        const parent = client.locationPath(this.projectId, "us-east1");
 
         function GetCredentials(node) {
             return JSON.parse(RED.nodes.getCredentials(node).account);
