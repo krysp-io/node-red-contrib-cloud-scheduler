@@ -135,21 +135,22 @@
 
 <script type="text/html" data-help-name="Scheduler">
     <p>Connects to <a href="https://cloud.google.com/scheduler/docs/" target="_blank">Google Cloud Scheduler</a> and schedules a job.</p>
+    <h3>Inputs</h3>
+    <dl class="message-properties">
+        <dt>Project<span class="property-type">string</span></dt>
+        <dd>Project Id.</dd>
+        <dt>Method <span class="property-type">string</span></dt>
+        <dd>HTTP method that can be configured in the node.If not supplied, DEFAULT will be used.</dd>
+        <dt>URL <span class="property-type">string</span></dt>
+        <dd>HTTP enpoint that can be configured in the node.This endpoint will be used as HTTPtarget in cloud scheduler</dd>
+    </dl>
     <h3>Details</h3>
     <p>
-        This node triggers the flow that has been scheduled to a job.  During configuration, the property called <code>URL</code>
-        will be used as a HTTPtarget in Google Cloud Scheduler.
+        This node triggers the flow that has been scheduled to a job.
     </p>
-    <p>
-        This is an event generating node and as such has no inputs.  When a message is received from the subscription, the flowing message will contain a
-        payload property corresponding to a GCP Pub/Sub message data payload.  In addition, the msg.message will contain a read-only copy of the original message.
-        This is described <a href="https://cloud.google.com/nodejs/docs/reference/pubsub/0.28.x/Message">here</a>.  The message is auto acknowledged   
-    </p>
-    <p>
-        If we know that the incoming message contains a data payload that is JSON encoded, a configuration option called
-        <code>Assume JSON</code> can be selected.  When selected, the content of the message is parsed from a JSON string to an object
-        representation and stored at <code>msg.payload</code>.
-    </p>
+    <p>This is an event generating node and as such has no outputs.</p>
+    <p><b>Note:</b> this node does not send any response to the request. The flow must include an HTTP Response node to complete the request.</p>
+    
 
 </script>
 
