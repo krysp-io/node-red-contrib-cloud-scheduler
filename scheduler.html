@@ -138,7 +138,7 @@
     <h3>Inputs</h3>
     <dl class="message-properties">
         <dt>Project<span class="property-type">string</span></dt>
-        <dd>Project Id.</dd>
+        <dd>Project Id that can be configured in the node.</dd>
         <dt>Method <span class="property-type">string</span></dt>
         <dd>HTTP method that can be configured in the node.If not supplied, DEFAULT will be used.</dd>
         <dt>URL <span class="property-type">string</span></dt>
@@ -149,6 +149,7 @@
         This node triggers the flow that has been scheduled to a job.
     </p>
     <p>This is an event generating node and as such has no outputs.</p>
+    <p>The node will listen on the configured path for requests of a particular type. The path can be fully specified, such as /user.</p>
     <p><b>Note:</b> this node does not send any response to the request. The flow must include an HTTP Response node to complete the request.</p>
     
 
