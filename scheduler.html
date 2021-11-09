@@ -243,7 +243,7 @@
             defaults: {
                 name: { value: "Scheduler" },
                 projectId: { value: "", required: true },
-                account: { type: "scheduler-cloud-credentials", required: true },
+                account: { type: "google-cloud-credentials", required: true },
                 props: {},
                 repeat: { value: "", validate: function (v) { return ((v === "") || (RED.validators.number(v) && (v >= 0) && (v <= 2147483))) } },
                 crontab: { value: "" },
