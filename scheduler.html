@@ -243,13 +243,13 @@
             defaults: {
                 name: { value: "Scheduler" },
                 projectId: { value: "", required: true },
-                account: { type: "google-cloud-credentials", required: false },
+                account: { type: "scheduler-cloud-credentials", required: true },
                 props: {},
                 repeat: { value: "", validate: function (v) { return ((v === "") || (RED.validators.number(v) && (v >= 0) && (v <= 2147483))) } },
                 crontab: { value: "" },
                 once: { value: true },
                 onceDelay: { value: 0.1 },
-                url: { value: "" },
+                url: { value: "", required: true },
                 jobId: { value: "" },
                 method: {value:"post"}
             },
