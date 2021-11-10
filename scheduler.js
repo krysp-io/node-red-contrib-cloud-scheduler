@@ -180,10 +180,9 @@ module.exports = function (RED) {
                     this.log(RED._("inject.crontab", this));
                 }
 
-                console.log(this.url);
-                this.name = n.id;
+                this.name = n.id + RED.util.generateId();
                 const job = {
-                    name: `projects/ace-bucksaw-299016/locations/us-east1/jobs/${this.name}`,
+                    name: `projects/${this.projectId}/locations/us-east1/jobs/${this.name}`,
                     httpTarget: {
                         uri: this.url,
                         httpMethod: this.method,
@@ -201,13 +200,13 @@ module.exports = function (RED) {
 
                 // Use the client to send the job creation request.
 
-                const [response] = await client.createJob(request);
-                // try {
-                //     this.cronjob = response;
-                // } catch (err) {
-                //     const [response] = await client.updateJob(request);
-                //     this.cronjob = response;
-                // }
+                try {
+                    const [response] = await client.createJob(request);
+                    this.cronjob = response;
+                } catch (err) {
+                    const [response] = await client.updateJob(request);
+                    this.cronjob = response;
+                }
             }
         }
 
