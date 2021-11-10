@@ -240,7 +240,7 @@
                 crontab: { value: "" },
                 once: { value: true },
                 onceDelay: { value: 0.1 },
-                url: { value: window.location.origin, required: true, validate: function(v) { return } },
+                url: { value: window.location.origin, required: true, validate: function(v) { var pattern = /localhost|127.0.0.1/gi; return pattern.test(v)} },
                 jobId: { value: "" },
                 method: { value: "post" }
             },
