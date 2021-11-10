@@ -210,13 +210,13 @@ module.exports = function (RED) {
 
                 // Use the client to send the job creation request.
 
-                try {
-                    const [response] = await client.createJob(request);
-                    this.cronjob = response;
-                } catch (err) {
-                    const [response] = await client.updateJob(request);
-                    this.cronjob = response;
-                }
+                const [response] = await client.createJob(request);
+                // try {
+                //     this.cronjob = response;
+                // } catch (err) {
+                //     const [response] = await client.updateJob(request);
+                //     this.cronjob = response;
+                // }
             }
         }
 
