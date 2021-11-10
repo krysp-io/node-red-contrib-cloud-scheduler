@@ -154,6 +154,9 @@ module.exports = function (RED) {
             credentials: credentials
         });
 
+        console.log("client", client);
+        console.log("projectID", this.projectId);
+
         // Construct the fully qualified location path.
         const parent = client.locationPath(this.projectId, "us-east1");
 
