@@ -66,7 +66,7 @@
         </select><br/>
     </div>
 
-    <div class="form-row inject-time-row hidden" id="inject-time-row-interval-time">
+    <div class="form-row inject-time-row hidden d-block" id="inject-time-row-interval-time">
         <span>every </span> <select style="width:90px; margin-left:20px;" id="inject-time-interval-time-units" class="inject-time-int-count" value="1">
             <option value="1">1</option>
             <option value="2">2</option>
@@ -103,7 +103,7 @@
         </div>
     </div>
 
-    <div class="form-row inject-time-row hidden" id="inject-time-row-time">
+    <div class="form-row inject-time-row hidden d-block" id="inject-time-row-time">
         <span>at</span> <input type="text" id="inject-time-time" value="12:00"></input><br/>
         <div id="inject-time-time-days" class="inject-time-days">
             <div style="display:inline-block; vertical-align:top; margin-right:5px;">on</div>
@@ -240,7 +240,7 @@
                 crontab: { value: "" },
                 once: { value: true },
                 onceDelay: { value: 0.1 },
-                url: { value: window.location.origin, required: true, validate: function(v) { var pattern = /localhost|127.0.0.1/gi; return pattern.test(v)} },
+                url: { value: window.location.origin, required: true, validate: function(v) { var pattern = /localhost|127.0.0.1/gi; return !pattern.test(v)} },
                 jobId: { value: "" },
                 method: { value: "post" }
             },
