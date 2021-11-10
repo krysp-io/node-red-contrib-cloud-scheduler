@@ -154,9 +154,6 @@ module.exports = function (RED) {
             credentials: credentials
         });
 
-        console.log("client", client);
-        console.log("projectID", this.projectId);
-
         // Construct the fully qualified location path.
         const parent = client.locationPath(this.projectId, "us-east1");
 
@@ -189,12 +186,12 @@ module.exports = function (RED) {
                     this.log(RED._("inject.crontab", this));
                 }
 
-                
+                console.log(this.url);
                 this.name = n.id;
                 const job = {
                     name: `projects/ace-bucksaw-299016/locations/us-east1/jobs/${this.name}`,
                     httpTarget: {
-                        uri: `${this.url}`,
+                        uri: this.url,
                         httpMethod: this.method,
                         body: Buffer.from('Hello World'),
                     },
