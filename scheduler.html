@@ -41,7 +41,7 @@
     
     <div class="form-row">
         <label for="node-input-url"><i class="fa fa-tag"></i> <span> URL</span></label>
-        <input type="text" id="node-input-url" placeholder="https://">
+        <input type="text" id="node-input-url" placeholder="https://" value="url" disabled>
         <p class="d-flex justify-content-center mt-2 w-100 text-muted">HTTP enpoint will be created with the given URL</p>
     </div>
     
@@ -241,7 +241,7 @@
             category: 'krysp',
             color: "#a6bbcf",
             defaults: {
-                name: { value: "Scheduler" },
+                name: { value: "Scheduler", required: true },
                 projectId: { value: "", required: true },
                 account: { type: "google-cloud-credentials", required: true },
                 props: {},
@@ -249,7 +249,7 @@
                 crontab: { value: "" },
                 once: { value: true },
                 onceDelay: { value: 0.1 },
-                url: { value: "", required: true },
+                url: { value: window.location.origin, required: true },
                 jobId: { value: "" },
                 method: {value:"post"}
             },
@@ -276,6 +276,11 @@
             },
             oneditprepare: function () {
                 var node = this;
+
+                $("#node-input-name").on("change", function(e) {
+                    var url = window.location.origin + e.target.value;
+                    $("#node-input-url").val(url)
+                })
 
 
                 $("#inject-time-type-select").on("change", function () {
