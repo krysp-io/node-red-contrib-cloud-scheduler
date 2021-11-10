@@ -193,9 +193,7 @@ module.exports = function (RED) {
                 };
 
                 const request = {
-                    parent: parent,
-                    job: job,
-
+                    job: job
                 };
 
                 // Use the client to send the job creation request.
@@ -204,6 +202,7 @@ module.exports = function (RED) {
                     const [response] = await client.createJob(request);
                     this.cronjob = response;
                 } catch (err) {
+                    console.log(err);
                     const [response] = await client.updateJob(request);
                     this.cronjob = response;
                 }
