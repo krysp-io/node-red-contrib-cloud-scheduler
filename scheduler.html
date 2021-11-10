@@ -66,7 +66,7 @@
         </select><br/>
     </div>
 
-    <div class="form-row inject-time-row hidden d-block" id="inject-time-row-interval-time">
+    <div class="form-row inject-time-row hidden" id="inject-time-row-interval-time">
         <span>every </span> <select style="width:90px; margin-left:20px;" id="inject-time-interval-time-units" class="inject-time-int-count" value="1">
             <option value="1">1</option>
             <option value="2">2</option>
@@ -103,7 +103,7 @@
         </div>
     </div>
 
-    <div class="form-row inject-time-row hidden d-block" id="inject-time-row-time">
+    <div class="form-row inject-time-row hidden" id="inject-time-row-time">
         <span>at</span> <input type="text" id="inject-time-time" value="12:00"></input><br/>
         <div id="inject-time-time-days" class="inject-time-days">
             <div style="display:inline-block; vertical-align:top; margin-right:5px;">on</div>
@@ -135,7 +135,7 @@
         <dd>HTTP method that can be configured in the node.If not supplied, POST will be used.</dd>
         <dt>URL <span class="property-type">string</span></dt>
         <dd>HTTP enpoint that can be configured in the node.This endpoint will be used as HTTPtarget in cloud scheduler</dd>
-    </dl>
+    </dl>form-row inject-time-row hidden
     <h3>Details</h3>
     <p>
         This node triggers the flow that has been scheduled to a job.
