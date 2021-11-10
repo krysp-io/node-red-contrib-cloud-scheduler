@@ -161,12 +161,6 @@ module.exports = function (RED) {
             return JSON.parse(RED.nodes.getCredentials(node).account);
         }
 
-        if (this.url[0] !== '/') {
-            this.url = '/' + this.url;
-        }
-
-
-
         if (node.repeat > 2147483) {
             node.error(RED._("inject.errors.toolong", this));
             delete node.repeat;
