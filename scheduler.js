@@ -145,8 +145,8 @@ module.exports = function (RED) {
         this.url = n.url;
 
         let credentials = null;
-        if (config.account) {
-            credentials = GetCredentials(config.account);
+        if (n.account) {
+            credentials = GetCredentials(n.account);
         }
 
         // Create a client.
@@ -186,11 +186,12 @@ module.exports = function (RED) {
                     this.log(RED._("inject.crontab", this));
                 }
 
-                this.name = n.id + process.env.KRYSP_NAMESPACE;
+                
+                this.name = n.id;
                 const job = {
                     name: `projects/ace-bucksaw-299016/locations/us-east1/jobs/${this.name}`,
                     httpTarget: {
-                        uri: `${window.location.origin}${this.url}`,
+                        uri: `${this.url}`,
                         httpMethod: this.method,
                         body: Buffer.from('Hello World'),
                     },
