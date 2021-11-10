@@ -278,6 +278,7 @@
 
                 $("#node-input-name").on("change", function() {
                     var url = window.location.origin + '/' + $("#node-input-name").val();
+                    this.url = url;
                     $("#node-input-url").val(url)
                 })
 
