@@ -24,11 +24,6 @@
         <label for="node-input-account"><i class="fa fa-user"></i> Credentials</label>
         <input type="text" id="node-input-account">
     </div>
-
-    <div class="form-row">
-        <label for="node-input-projectId"><i class="fa fa-object-group"></i> Project</label>
-        <input type="text" id="node-input-projectId">
-    </div>
     
     <div class="form-row">
         <label for="node-input-method"><i class="fa fa-tasks"></i> <span> Method</span></label>
@@ -241,7 +236,6 @@
             color: "#a6bbcf",
             defaults: {
                 name: { value: "Scheduler", required: true },
-                projectId: { value: "", required: true },
                 account: { type: "google-cloud-credentials", required: true },
                 props: {},
                 repeat: { value: "", validate: function (v) { return ((v === "") || (RED.validators.number(v) && (v >= 0) && (v <= 2147483))) } },

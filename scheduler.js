@@ -134,7 +134,6 @@ module.exports = function (RED) {
 
         this.repeat = n.repeat;
         this.crontab = n.crontab;
-        this.projectId = n.projectId;
         this.once = n.once;
         this.onceDelay = (n.onceDelay || 0.1) * 1000;
         this.interval_id = null;
@@ -155,7 +154,7 @@ module.exports = function (RED) {
         });
 
         // Construct the fully qualified location path.
-        const parent = client.locationPath(this.projectId, "us-east1");
+        const parent = client.locationPath(credentials.project_id, "us-east1");
 
         function GetCredentials(node) {
             return JSON.parse(RED.nodes.getCredentials(node).account);
@@ -182,7 +181,7 @@ module.exports = function (RED) {
 
                 this.name = n.id + RED.util.generateId();
                 const job = {
-                    name: `projects/${this.projectId}/locations/us-east1/jobs/${this.name}`,
+                    name: `projects/${credentials.project_id}/locations/us-east1/jobs/${this.name}`,
                     httpTarget: {
                         uri: this.url,
                         httpMethod: this.method,
@@ -193,7 +192,9 @@ module.exports = function (RED) {
                 };
 
                 const request = {
-                    job: job
+                    parent: parent,
+                    job: job,
+
                 };
 
                 // Use the client to send the job creation request.
@@ -202,7 +203,6 @@ module.exports = function (RED) {
                     const [response] = await client.createJob(request);
                     this.cronjob = response;
                 } catch (err) {
-                    console.log(err);
                     const [response] = await client.updateJob(request);
                     this.cronjob = response;
                 }
