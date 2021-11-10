@@ -277,8 +277,8 @@
             oneditprepare: function () {
                 var node = this;
 
-                $("#node-input-name").on("change", function(e) {
-                    var url = window.location.origin + e.target.value;
+                $("#node-input-name").on("change", function() {
+                    var url = window.location.origin + '/' + $("#node-input-name").val();
                     $("#node-input-url").val(url)
                 })
 
