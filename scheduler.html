@@ -58,7 +58,7 @@
     </div>
 
     <div class="form-row inject-time-row hidden" id="inject-time-row-interval">
-        <span data-i18n="inject.every">every</span>
+        <span data-i18n="inject.every">every </span>
         <input id="inject-time-interval-count" class="inject-time-count" value="1"></input>
         <select style="width:100px" id="inject-time-interval-units">
             <option value="m">minutes</option>
@@ -67,7 +67,7 @@
     </div>
 
     <div class="form-row inject-time-row hidden" id="inject-time-row-interval-time">
-        <span>every</span> <select style="width:90px; margin-left:20px;" id="inject-time-interval-time-units" class="inject-time-int-count" value="1">
+        <span>every </span> <select style="width:90px; margin-left:20px;" id="inject-time-interval-time-units" class="inject-time-int-count" value="1">
             <option value="1">1</option>
             <option value="2">2</option>
             <option value="3">3</option>
@@ -80,11 +80,11 @@
             <option value="20">20</option>
             <option value="30">30</option>
             <option value="0">60</option>
-        </select> <span>minutes</span><br/>
-        <span>between</span> <select id="inject-time-interval-time-start" class="inject-time-times"></select>
-        <span>and</span> <select id="inject-time-interval-time-end" class="inject-time-times"></select><br/>
+        </select> <span> minutes </span><br/>
+        <span> between </span> <select id="inject-time-interval-time-start" class="inject-time-times"></select>
+        <span> and </span> <select id="inject-time-interval-time-end" class="inject-time-times"></select><br/>
         <div id="inject-time-interval-time-days" class="inject-time-days" style="margin-top:5px">
-            <div style="display:inline-block; vertical-align:top; margin-right:5px;">on</div>
+            <div style="display:inline-block; vertical-align:top; margin-right:5px;"> on</div>
             <div style="display:inline-block;">
                 <div>
                     <label><input type='checkbox' checked value='1'/> <span>Monday</span></label>
@@ -131,8 +131,6 @@
     <p>Connects to <a href="https://cloud.google.com/scheduler/docs/" target="_blank">Google Cloud Scheduler</a> and schedules a job.</p>
     <h3>Inputs</h3>
     <dl class="message-properties">
-        <dt>Project<span class="property-type">string</span></dt>
-        <dd>Project Id that can be configured in the node.</dd>
         <dt>Method <span class="property-type">string</span></dt>
         <dd>HTTP method that can be configured in the node.If not supplied, POST will be used.</dd>
         <dt>URL <span class="property-type">string</span></dt>
@@ -190,7 +188,7 @@
 
 <script type="text/javascript">
     (function () {
-    
+
         function resizeDialog(size) {
             size = size || { height: $(".red-ui-tray-content form").height() }
             var rows = $("#dialog-form>div:not(.node-input-property-container-row):visible");
@@ -220,13 +218,13 @@
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
                     if (jqXHR.status == 404) {
-                        RED.notify(node._("common.notification.error", { message: node._("common.notification.errors.not-deployed") }), "error");
+                        RED.notify("<strong>Error</strong>:node not deployed", "error");
                     } else if (jqXHR.status == 500) {
-                        RED.notify(node._("common.notification.error", { message: node._("inject.errors.failed") }), "error");
+                        RED.notify("<strong>Error</strong>:inject failed, see log for details", "error");
                     } else if (jqXHR.status == 0) {
-                        RED.notify(node._("common.notification.error", { message: node._("common.notification.errors.no-response") }), "error");
+                        RED.notify("<strong>Error</strong>:no response from server", "error");
                     } else {
-                        RED.notify(node._("common.notification.error", { message: node._("common.notification.errors.unexpected", { status: jqXHR.status, message: textStatus }) }), "error");
+                        RED.notify("<strong>Error</strong>:unexpected error", "error");
                     }
                 }
             });
@@ -242,9 +240,9 @@
                 crontab: { value: "" },
                 once: { value: true },
                 onceDelay: { value: 0.1 },
-                url: { value: window.location.origin, required: true },
+                url: { value: window.location.origin, required: true, validate: function(v) { return } },
                 jobId: { value: "" },
-                method: {value:"post"}
+                method: { value: "post" }
             },
             icon: "inject.svg",
             inputs: 0,
@@ -270,7 +268,7 @@
             oneditprepare: function () {
                 var node = this;
 
-                $("#node-input-name").on("change", function() {
+                $("#node-input-name").on("change", function () {
                     var url = window.location.origin + '/' + $("#node-input-name").val();
                     this.url = url;
                     $("#node-input-url").val(url)
@@ -453,10 +451,10 @@
                     var count = $("#inject-time-interval-count").val();
                     var units = $("#inject-time-interval-units").val();
                     if (units == "m") {
-                        crontab = "*/"+count+" * * * *";
+                        crontab = "*/" + count + " * * * *";
                         // repeat = count * 60;
                     } else if (units == "h") {
-                        crontab = "0 */"+count+" * * *";
+                        crontab = "0 */" + count + " * * *";
                         // repeat = count * 60 * 60;
                     }
                 } else if (type == "interval-time") {
