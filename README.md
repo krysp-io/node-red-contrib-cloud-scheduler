@@ -36,9 +36,15 @@ Restart your Node-RED instance and you should have a "Scheduler" node available 
 
 ## Usage
 
-The scheduler node can be utilized in any flow to execute the flow at a given time interval.
+<p>With Scheduler node you can set up your flows to be executed at defined times or regular intervals. The scheduler node work as a cron job for your flows.</p>
 
-Note: This node does not send any response to the request. The flow must include an HTTP Response node to complete the request.
+<p>Each scheduler node requires a publicly accessible URL where the flow will be deployed and will be used by the Google Cloud scheduler to send to a target according to a specified schedule.</p> 
+
+<p>It is important to note that the target must be HTTP/S endpoints.</p>
+
+<p>To test the scheduler node in a local environment, developer can either</p>
+<p>1. Utilize tools like ngrok to accept HTTP traffic</p>
+<p>2. Export their flows & import them to Krysp platform (built using Node-RED).</p>
 
 ## Discussions and suggestions
 
