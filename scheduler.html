@@ -39,8 +39,8 @@
         <input type="text" id="node-input-url" value="url">
     </div>
     <div class="form-row">
-        <input type="checkbox" id="node-input-accessible" style="display:inline-block; width:15px; vertical-align:baseline;">
-        <label for="node-input-accessible" style="display: inline;width: 100%;"> This URL is accessible from the internet. <a href="#" id="node-red-help">Help</a></label>
+        <input type="checkbox" id="node-input-accessible" style="display:inline-block; width:15px; vertical-align:baseline; margin-left: 100px;">
+        <label for="node-input-accessible" style="display: inline;width: 100%;" class="text-danger"> This URL is accessible from the internet. <a href="#" id="node-red-help">Help</a></label>
     </div>
     
     <div class="d-flex justify-content-center" id="node-once">
@@ -133,6 +133,14 @@
 
 <script type="text/html" data-help-name="Scheduler">
     <p>Connects to <a href="https://cloud.google.com/scheduler/docs/" target="_blank">Google Cloud Scheduler</a> and schedules a job.</p>
+    <h3>Pre-requisites</h3>
+    Google Cloud Scheduler requires the URL to be accessible for triggering the scheduled task.
+ 
+    For this task to be invoked by cloud scheduler, this URL must be:
+    1. URL cannot be reached from internet.
+    2. Localhost or 127.0.0.1 will not work.
+    3. Use a ping service to test if the nodered server is reachable from outside the network.
+
     <h3>Inputs</h3>
     <dl class="message-properties">
         <dt>Method <span class="property-type">string</span></dt>
@@ -142,7 +150,7 @@
     <p>
         This node triggers the flow that has been scheduled to a job.
     </p>
-    <p>This is an event generating node and as such has no outputs.</p>
+    
     <p>The node will listen on the configured path for requests of a particular type. The path can be fully specified, such as /user.</p>
     <p><b>Note:</b> this node does not send any response to the request. The flow must include an HTTP Response node to complete the request.</p>
     
@@ -250,7 +258,7 @@
                 url: { value: window.location.origin, required: true, validate: function(v) { var pattern = /localhost|127.0.0.1/gi; return !pattern.test(v)} },
                 jobId: { value: "" },
                 method: { value: "post" },
-                accessible: {value: false, required: true}
+                accessible: {value: false, required: true, validate: function(v) { v !== true}}
             },
             icon: "inject.svg",
             inputs: 0,
