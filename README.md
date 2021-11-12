@@ -4,7 +4,8 @@ A node that allows to execute any flow at a given time interval.
 
 ## Pre-requisites
 
-The Node-RED Scheduler node requires Node-RED to be installed.
+1 The Node-RED Scheduler node requires Node-RED to be installed.
+2. The Node-RED should be accessible from internet.
 
 ## Quickstart
 
@@ -36,6 +37,8 @@ Restart your Node-RED instance and you should have a "Scheduler" node available 
 ## Usage
 
 The scheduler node can be utilized in any flow to execute the flow at a given time interval.
+
+Note: This node does not send any response to the request. The flow must include an HTTP Response node to complete the request.
 
 ## Discussions and suggestions
 
