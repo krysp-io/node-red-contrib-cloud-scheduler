@@ -277,11 +277,11 @@
                 var node = this;
 
                 $("#node-red-help").on("click", function() {
-                    RED.node.getNodeHelp("Scheduler")
+                    RED.sidebar.help.show(val);
                 })
 
                 $("#node-input-name").on("change", function() {
-                    this.url = window.location.origin + $("#node-input-name");
+                    this.url = window.location.origin + $("#node-input-name").val();
                     $("#node-input-url").val(this.url)
                 })
 
