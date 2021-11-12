@@ -1,10 +1,8 @@
-# node-red-contrib-scheduler
--------
+## node-red-contrib-scheduler
 A node that allows to execute any flow at a given time interval.
 
 
-# Pre-requisites
--------
+## Pre-requisites
 
 The Node-RED Scheduler node requires Node-RED to be installed.
 
@@ -28,20 +26,21 @@ Or else install the package directly from Manage Palette
 
 Restart your Node-RED instance and you should have a "Scheduler" node available in the palette.
 
-# Get Started
--------
+## Get Started
 
 
 <p>1. After installation, drag the <b>scheduler</b> node from the palette to the workspace.</p>
 <p>2. Double click on the node to add timer.</p>
 
 
-# Usage
--------
+## Usage
 
 The scheduler node can be utilized in any flow to execute the flow at a given time interval.
 
-# Discussions and suggestions
--------
+## Discussions and suggestions
 
 Use the Krysp Forum: https://www.krysp.io/forum to ask questions or to discuss new features.
+
+[projects]: https://console.cloud.google.com/project
+[enable_api]: https://console.cloud.google.com/flows/enableapi?apiid=cloudscheduler.googleapis.com
+[auth]: https://cloud.google.com/docs/authentication/getting-started
