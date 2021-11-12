@@ -146,7 +146,9 @@
     <dl class="message-properties">
         <dt>Method <span class="property-type">string</span></dt>
         <dd>HTTP method that can be configured in the node.If not supplied, POST will be used.</dd>
-    </dl>form-row inject-time-row hidden
+        <dt>URL <span class="property-type">string</span></dt>
+        <dd>URL that can be configured in the node for creating HTTP in node.</dd>
+    </dl>
     <h3>Details</h3>
     <p>
         This node triggers the flow that has been scheduled to a job.
@@ -266,7 +268,7 @@
                 url: { value: window.location.origin, required: true, validate: function (v) { var pattern = /localhost|127.0.0.1/gi; return !pattern.test(v) } },
                 jobId: { value: "" },
                 method: { value: "post" },
-                accessible: { value: false, required: true, validate: function (v) { $("#node-input-accessible").prop("checked") !== true } }
+                accessible: { value: false, required: true, validate: function (v) { console.log(v) } }
             },
             icon: "inject.svg",
             inputs: 0,
