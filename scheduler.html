@@ -276,12 +276,13 @@
             oneditprepare: function () {
                 var node = this;
 
-                $("#node-red-help").on("click", function() {
-                    RED.sidebar.help.show(val);
+                $("#node-red-help").on("click", function(e) {
+                    e.preventDefault();
+                    RED.sidebar.help.show("Scheduler");
                 })
 
                 $("#node-input-name").on("change", function() {
-                    this.url = window.location.origin + $("#node-input-name").val();
+                    this.url = `${window.location.origin}/${$("#node-input-name").val()}`;
                     $("#node-input-url").val(this.url)
                 })
 
