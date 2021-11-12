@@ -4,8 +4,8 @@ A node that allows to execute any flow at a given time interval.
 
 ## Pre-requisites
 
-1 The Node-RED Scheduler node requires Node-RED to be installed.
-2. The Node-RED should be accessible from internet.
+<p>1 The Node-RED Scheduler node requires Node-RED to be installed.</p>
+<p>2. The Node-RED should be accessible from internet.</p>
 
 ## Quickstart
 
