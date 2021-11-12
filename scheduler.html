@@ -40,12 +40,6 @@
     </div>
 
     <div class="form-row">
-        <label class="checkcontainer">Two
-            <input type="checkbox">
-            <span class="checkmark"></span>
-          </label>
-    </div>
-    <div class="form-row">
         <input type="checkbox" id="node-input-accessible" class="node-red-accessible" style="display:inline-block; width:15px; vertical-align:baseline; margin-left: 100px;">
         <label for="node-input-accessible" style="display: inline;width: 100%;"> This URL is accessible from the internet. <a href="#" id="node-red-help">Help</a></label>
     </div>
@@ -141,12 +135,14 @@
 <script type="text/html" data-help-name="Scheduler">
     <p>Connects to <a href="https://cloud.google.com/scheduler/docs/" target="_blank">Google Cloud Scheduler</a> and schedules a job.</p>
     <h3>Pre-requisites</h3>
-    Google Cloud Scheduler requires the URL to be accessible for triggering the scheduled task.
+    <p>Google Cloud Scheduler requires the URL to be accessible for triggering the scheduled task.</p>
  
-    For this task to be invoked by cloud scheduler, this URL must be:
-    1. URL cannot be reached from internet.
-    2. Localhost or 127.0.0.1 will not work.
-    3. Use a ping service to test if the nodered server is reachable from outside the network.
+    <p>For this task to be invoked by cloud scheduler, this URL must be:</p>
+    <dl class="message-properties">
+        <dt>1. URL cannot be reached from internet.</dt>
+        <dt>2. Localhost or 127.0.0.1 will not work.</dt>
+        <dt>3. Use a ping service to test if the nodered server is reachable from outside the network.</dt>
+    </dl>
 
     <h3>Inputs</h3>
     <dl class="message-properties">
@@ -165,27 +161,6 @@
 </script>
 
 <style>
-    .checkContainer {
-        display: block;
-        position: relative;
-        padding-left: 35px;
-        margin-bottom: 12px;
-        cursor: pointer;
-        font-size: 17px;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
-    }
-
-    .checkmark {
-        position: absolute;
-        top: 0;
-        left: 0;
-        height: 25px;
-        width: 25px;
-        background-color: aquamarine;
-    }
 
     .form-row {
         display: block;
