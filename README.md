@@ -8,8 +8,17 @@ A node that allows to execute any flow at a given time interval.
 
 The Node-RED Scheduler node requires Node-RED to be installed.
 
-# Install
--------
+## Quickstart
+
+### Before you begin
+
+1.  [Select or create a Cloud Platform project][projects].
+1.  [Enable the Google Cloud Scheduler API][enable_api].
+1.  [Set up authentication with a service account][auth] so you can access the
+    API from your local workstation.
+
+### Installing the client library
+
 
 To install the stable version use the Menu - Manage palette option and search for node-red-contrib-scheduler, or run the following command in your Node-RED user directory - typically ~/.node-red: 
 
