@@ -361,7 +361,7 @@
                 if (node.crontab) {
                     var cronparts = node.crontab.split(" ");
                     var days = cronparts[4];
-                    var minutesPart = node.cronparts[0].split("/");
+                    var minutesPart = cronparts[0].split("/");
                     if (!isNaN(minutesPart[1]) && cronparts[1] === '*') {
                         repeattype = "interval";
                         var r = "s";
