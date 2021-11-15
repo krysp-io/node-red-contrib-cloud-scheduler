@@ -301,11 +301,8 @@
                 })
 
                 $("#node-input-name").on("change", function () {
-                    const url = `${window.location.origin}/${$("#node-input-name").val()}`;
-                    if (this.url === url) {
-                        this.url = `${window.location.origin}/${$("#node-input-name").val()}`;
-                        $("#node-input-url").val(this.url)
-                    }
+                    this.url = `${window.location.origin}/${$("#node-input-name").val()}`;
+                    $("#node-input-url").val(this.url)
                 })
 
 
