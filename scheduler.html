@@ -267,9 +267,9 @@
                 crontab: { value: "" },
                 once: { value: true },
                 onceDelay: { value: 0.1 },
-                url: { value: `${window.location.origin}/Scheduler`, required: true, validate: function (v) { var pattern = /localhost|127.0.0.1/gi; return !pattern.test(v) } },
+                url: { value: `${window.location.origin}/Scheduler`},
                 method: { value: "post" },
-                not_publicly_accessible: { value: false, required: true } 
+                not_publicly_accessible: { value: false } 
             },
             icon: "inject.svg",
             inputs: 0,
