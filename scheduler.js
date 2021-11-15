@@ -168,7 +168,7 @@
             return;
         }
 
-        const SchedulerHttpIn = (msg, send done) => {
+        const SchedulerHttpIn = () => {
            
             if (RED.settings.httpNodeRoot !== false) {
     
@@ -266,6 +266,8 @@
                 this.warn(RED._("httpin.errors.not-created"));
             }
         }
+
+        SchedulerHttpIn();
 
 
         // Create a client.
