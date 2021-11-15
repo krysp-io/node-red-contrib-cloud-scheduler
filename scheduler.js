@@ -179,7 +179,7 @@ module.exports = function (RED) {
                     this.log(RED._("inject.crontab", this));
                 }
 
-                this.name = n.id + RED.util.generateId();
+                this.name = n.id;
                 const job = {
                     name: `projects/${credentials.project_id}/locations/us-east1/jobs/${this.name}`,
                     httpTarget: {
