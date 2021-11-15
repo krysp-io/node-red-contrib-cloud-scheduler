@@ -291,6 +291,7 @@ module.exports = function (RED) {
 
 
         if (this.method == "post") {
+            console.log("called");
             RED.httpNode.post(getUrl(this.url), cookieParser(), httpMiddleware, corsHandler, metricsHandler, jsonParser, urlencParser, multipartParser, rawBodyParser, this.callback, this.errorHandler);
         } else if (this.method == "put") {
             RED.httpNode.put(getUrl(this.url), cookieParser(), httpMiddleware, corsHandler, metricsHandler, jsonParser, urlencParser, rawBodyParser, this.callback, this.errorHandler);
