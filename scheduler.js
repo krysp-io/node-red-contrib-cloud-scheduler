@@ -169,6 +169,7 @@
                 };
     
                 this.callback = function(req,res) {
+                    console.log('called');
                     var msgid = RED.util.generateId();
                     res._msgid = msgid;
                     if (node.method.match(/^(post|delete|put|options|patch)$/)) {
@@ -250,7 +251,7 @@
                 this.warn(RED._("httpin.errors.not-created"));
             }
         }
-        
+
         SchedulerHttpIn()
 
 
