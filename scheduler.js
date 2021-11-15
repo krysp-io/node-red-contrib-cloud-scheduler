@@ -272,13 +272,30 @@ module.exports = function (RED) {
             };
         }
 
-        console.log("this,url", this.url);
+        function getUrl(url) {
+            var url = null;
+            var removeDoubleSlashFromUrl = url.split('//');
+            if (removeDoubleSlashFromUrl.length === 1) {
+                url = `/${removeDoubleSlashFromUrl[0]}`
+                return url
+            } else {
+                var getPathOfUrl = removeDoubleSlashFromUrl[1].split('/');
+                getPathOfUrl.splice(0,1).join('/')
+                return `/${getPathOfUrl}`
+            }
+        }
+
+        console.log('=====================');
+        console.log(getUrl());
+        console.log('=====================');
+
+
         if (this.method == "post") {
-            RED.httpNode.post(this.url, cookieParser(), httpMiddleware, corsHandler, metricsHandler, jsonParser, urlencParser, multipartParser, rawBodyParser, this.callback, this.errorHandler);
+            RED.httpNode.post(getUrl(this.url), cookieParser(), httpMiddleware, corsHandler, metricsHandler, jsonParser, urlencParser, multipartParser, rawBodyParser, this.callback, this.errorHandler);
         } else if (this.method == "put") {
-            RED.httpNode.put(this.url, cookieParser(), httpMiddleware, corsHandler, metricsHandler, jsonParser, urlencParser, rawBodyParser, this.callback, this.errorHandler);
+            RED.httpNode.put(getUrl(this.url), cookieParser(), httpMiddleware, corsHandler, metricsHandler, jsonParser, urlencParser, rawBodyParser, this.callback, this.errorHandler);
         } else if (this.method == "patch") {
-            RED.httpNode.patch(this.url, cookieParser(), httpMiddleware, corsHandler, metricsHandler, jsonParser, urlencParser, rawBodyParser, this.callback, this.errorHandler);
+            RED.httpNode.patch(getUrl(this.url), cookieParser(), httpMiddleware, corsHandler, metricsHandler, jsonParser, urlencParser, rawBodyParser, this.callback, this.errorHandler);
         }
 
 

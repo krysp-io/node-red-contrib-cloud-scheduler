@@ -268,7 +268,6 @@
                 once: { value: true },
                 onceDelay: { value: 0.1 },
                 url: { value: window.location.origin, required: true, validate: function (v) { var pattern = /localhost|127.0.0.1/gi; return !pattern.test(v) } },
-                jobId: { value: "" },
                 method: { value: "post" },
                 not_publicly_accessible: { value: false, required: true, validate: function (v) { return $("#node-input-not_publicly_accessible").prop("checked") } }
             },
