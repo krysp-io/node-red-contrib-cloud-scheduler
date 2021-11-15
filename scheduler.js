@@ -158,99 +158,7 @@
         // }
 
         const SchedulerHttpIn = () => {
-            if (RED.settings.httpNodeRoot !== false) {
-
-    
-                var node = this;
-    
-                this.errorHandler = (err,req,res,next) => {
-                    node.warn(err);
-                    res.sendStatus(500);
-                };
-    
-                this.callback = (req,res) => {
-                    console.log('called', this);
-                    var msgid = RED.util.generateId();
-                    res._msgid = msgid;
-                    if (this.method.match(/^(post|delete|put|options|patch)$/)) {
-                        this.send({_msgid:msgid,req:req,res:createResponseWrapper(this,res),payload:req.body});
-                    } else if (this.method == "get") {
-                        this.send({_msgid:msgid,req:req,res:createResponseWrapper(this,res),payload:req.query});
-                    } else {
-                        this.send({_msgid:msgid,req:req,res:createResponseWrapper(this,res)});
-                    }
-                };
-    
-                var httpMiddleware = (req,res,next) => { next(); }
-    
-                if (RED.settings.httpNodeMiddleware) {
-                    if (typeof RED.settings.httpNodeMiddleware === "function" || Array.isArray(RED.settings.httpNodeMiddleware)) {
-                        httpMiddleware = RED.settings.httpNodeMiddleware;
-                    }
-                }
-    
-                var maxApiRequestSize = RED.settings.apiMaxLength || '5mb';
-                var jsonParser = bodyParser.json({limit:maxApiRequestSize});
-                var urlencParser = bodyParser.urlencoded({limit:maxApiRequestSize,extended:true});
-    
-                var metricsHandler = (req,res,next) => { next(); }
-                if (this.metric()) {
-                    metricsHandler = (req, res, next) => {
-                        var startAt = process.hrtime();
-                        onHeaders(res, () => {
-                            if (res._msgid) {
-                                var diff = process.hrtime(startAt);
-                                var ms = diff[0] * 1e3 + diff[1] * 1e-6;
-                                var metricResponseTime = ms.toFixed(3);
-                                var metricContentLength = res.getHeader("content-length");
-                                //assuming that _id has been set for res._metrics in HttpOut node!
-                                node.metric("response.time.millis", {_msgid:res._msgid} , metricResponseTime);
-                                node.metric("response.content-length.bytes", {_msgid:res._msgid} , metricContentLength);
-                            }
-                        });
-                        next();
-                    };
-                }
-    
-                var multipartParser = (req,res,next) => { next(); }
-
-                const getUrl = (path) => {
-                    var url = null;
-                    var removeDoubleSlashFromUrl = path.split('//');
-                    if (removeDoubleSlashFromUrl.length === 1) {
-                        url = removeDoubleSlashFromUrl[0][0] === '/' ? removeDoubleSlashFromUrl[0] : `/${removeDoubleSlashFromUrl[0]}`
-                        return url
-                    } else {
-                        var getPathOfUrl = removeDoubleSlashFromUrl[1].split('/');
-                        getPathOfUrl.splice(0,1).join('/')
-                        return `/${getPathOfUrl}`
-                    }
-                }
-    
-                if (this.method == "get") {
-                    RED.httpNode.get(getUrl(this.url),cookieParser(),httpMiddleware,corsHandler,metricsHandler,this.callback,this.errorHandler);
-                } else if (this.method == "post") {
-                    RED.httpNode.post(getUrl(this.url),cookieParser(),httpMiddleware,corsHandler,metricsHandler,jsonParser,urlencParser,multipartParser,rawBodyParser,this.callback,this.errorHandler);
-                } else if (this.method == "put") {
-                    RED.httpNode.put(getUrl(this.url),cookieParser(),httpMiddleware,corsHandler,metricsHandler,jsonParser,urlencParser,rawBodyParser,this.callback,this.errorHandler);
-                } else if (this.method == "patch") {
-                    RED.httpNode.patch(getUrl(this.url),cookieParser(),httpMiddleware,corsHandler,metricsHandler,jsonParser,urlencParser,rawBodyParser,this.callback,this.errorHandler);
-                } else if (this.method == "delete") {
-                    RED.httpNode.delete(getUrl(this.url),cookieParser(),httpMiddleware,corsHandler,metricsHandler,jsonParser,urlencParser,rawBodyParser,this.callback,this.errorHandler);
-                }
-                this.on("close",() => {
-                    var node = this;
-                    RED.httpNode._router.stack.forEach((route,i,routes) => {
-                        if (route.route && route.route.path === node.url && route.route.methods[node.method]) {
-                            routes.splice(i,1);
-                        }
-                    });
-                });
-    
-                
-            } else {
-                this.warn(RED._("httpin.errors.not-created"));
-            }
+           
         }
 
         this.on("input", function (msg, send, done) {
@@ -259,8 +167,104 @@
             if (errors.length) {
                 done(errors.join('; '));
             } else {
-                send(msg);
-                done();
+                SchedulerHttpIn(msg, (err, result) => {
+                    if (RED.settings.httpNodeRoot !== false) {
+
+    
+                        var node = this;
+            
+                        this.errorHandler = (err,req,res,next) => {
+                            node.warn(err);
+                            res.sendStatus(500);
+                        };
+            
+                        this.callback = (req,res) => {
+                            console.log('called', node);
+                            var msgid = RED.util.generateId();
+                            res._msgid = msgid;
+                            if (node.method.match(/^(post|delete|put|options|patch)$/)) {
+                                send({_msgid:msgid,req:req,res:createResponseWrapper(node,res),payload:req.body});
+                                done();
+                            } else if (this.method == "get") {
+                                send({_msgid:msgid,req:req,res:createResponseWrapper(node,res),payload:req.query});
+                                done();
+                            } else {
+                                send({_msgid:msgid,req:req,res:createResponseWrapper(node,res)});
+                                done();
+                            }
+                        };
+            
+                        var httpMiddleware = (req,res,next) => { next(); }
+            
+                        if (RED.settings.httpNodeMiddleware) {
+                            if (typeof RED.settings.httpNodeMiddleware === "function" || Array.isArray(RED.settings.httpNodeMiddleware)) {
+                                httpMiddleware = RED.settings.httpNodeMiddleware;
+                            }
+                        }
+            
+                        var maxApiRequestSize = RED.settings.apiMaxLength || '5mb';
+                        var jsonParser = bodyParser.json({limit:maxApiRequestSize});
+                        var urlencParser = bodyParser.urlencoded({limit:maxApiRequestSize,extended:true});
+            
+                        var metricsHandler = (req,res,next) => { next(); }
+                        if (this.metric()) {
+                            metricsHandler = (req, res, next) => {
+                                var startAt = process.hrtime();
+                                onHeaders(res, () => {
+                                    if (res._msgid) {
+                                        var diff = process.hrtime(startAt);
+                                        var ms = diff[0] * 1e3 + diff[1] * 1e-6;
+                                        var metricResponseTime = ms.toFixed(3);
+                                        var metricContentLength = res.getHeader("content-length");
+                                        //assuming that _id has been set for res._metrics in HttpOut node!
+                                        node.metric("response.time.millis", {_msgid:res._msgid} , metricResponseTime);
+                                        node.metric("response.content-length.bytes", {_msgid:res._msgid} , metricContentLength);
+                                    }
+                                });
+                                next();
+                            };
+                        }
+            
+                        var multipartParser = (req,res,next) => { next(); }
+        
+                        const getUrl = (path) => {
+                            var url = null;
+                            var removeDoubleSlashFromUrl = path.split('//');
+                            if (removeDoubleSlashFromUrl.length === 1) {
+                                url = removeDoubleSlashFromUrl[0][0] === '/' ? removeDoubleSlashFromUrl[0] : `/${removeDoubleSlashFromUrl[0]}`
+                                return url
+                            } else {
+                                var getPathOfUrl = removeDoubleSlashFromUrl[1].split('/');
+                                getPathOfUrl.splice(0,1).join('/')
+                                return `/${getPathOfUrl}`
+                            }
+                        }
+            
+                        if (this.method == "get") {
+                            RED.httpNode.get(getUrl(this.url),cookieParser(),httpMiddleware,corsHandler,metricsHandler,this.callback,this.errorHandler);
+                        } else if (this.method == "post") {
+                            RED.httpNode.post(getUrl(this.url),cookieParser(),httpMiddleware,corsHandler,metricsHandler,jsonParser,urlencParser,multipartParser,rawBodyParser,this.callback,this.errorHandler);
+                        } else if (this.method == "put") {
+                            RED.httpNode.put(getUrl(this.url),cookieParser(),httpMiddleware,corsHandler,metricsHandler,jsonParser,urlencParser,rawBodyParser,this.callback,this.errorHandler);
+                        } else if (this.method == "patch") {
+                            RED.httpNode.patch(getUrl(this.url),cookieParser(),httpMiddleware,corsHandler,metricsHandler,jsonParser,urlencParser,rawBodyParser,this.callback,this.errorHandler);
+                        } else if (this.method == "delete") {
+                            RED.httpNode.delete(getUrl(this.url),cookieParser(),httpMiddleware,corsHandler,metricsHandler,jsonParser,urlencParser,rawBodyParser,this.callback,this.errorHandler);
+                        }
+                        this.on("close",() => {
+                            var node = this;
+                            RED.httpNode._router.stack.forEach((route,i,routes) => {
+                                if (route.route && route.route.path === node.url && route.route.methods[node.method]) {
+                                    routes.splice(i,1);
+                                }
+                            });
+                        });
+            
+                        
+                    } else {
+                        this.warn(RED._("httpin.errors.not-created"));
+                    }
+                })
             }
         });
 
