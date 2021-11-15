@@ -218,7 +218,7 @@
                     var url = null;
                     var removeDoubleSlashFromUrl = path.split('//');
                     if (removeDoubleSlashFromUrl.length === 1) {
-                        url = removeDoubleSlashFromUrl[0][0] !== '/' ? removeDoubleSlashFromUrl[0] : `/${removeDoubleSlashFromUrl[0]}`
+                        url = removeDoubleSlashFromUrl[0][0] === '/' ? removeDoubleSlashFromUrl[0] : `/${removeDoubleSlashFromUrl[0]}`
                         return url
                     } else {
                         var getPathOfUrl = removeDoubleSlashFromUrl[1].split('/');
