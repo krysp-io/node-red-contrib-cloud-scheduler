@@ -379,9 +379,9 @@ module.exports = function (RED) {
         if (node != null) {
             try {
                 if (req.body && req.body.__user_inject_props__) {
-                    node.receive(req.body);
+                    node.send(req.body);
                 } else {
-                    node.receive();
+                    node.send();
                 }
                 res.sendStatus(200);
             } catch (err) {
