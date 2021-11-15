@@ -344,19 +344,17 @@ module.exports = function (RED) {
                 console.log("removed", removed);
                 console.log("===================");
 
-                removeJob(async () => {
-                    // Construct the fully qualified location path.
-    
-                    const job = client.jobPath(credentials.project_id, "us-east1", this.jobId);
-                    try {
-                        await client.deleteJob({ name: job });
-                    } catch(err) {
+                // Construct the fully qualified location path.
 
-                    }
-    
-                    delete this.cronjob;
-                    done();
-                })
+                const job = client.jobPath(credentials.project_id, "us-east1", this.jobId);
+                try {
+                    await client.deleteJob({ name: job });
+                } catch(err) {
+                    console.log("Delete Job", err)
+                }
+
+                delete this.cronjob;
+                done();
             } 
         })
     }
