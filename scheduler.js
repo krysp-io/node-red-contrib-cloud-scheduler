@@ -155,16 +155,16 @@
         }
 
         if (!n.url) {
-            this.warn(RED._("Missing Path"));
+            this.warn(RED._("Missing Path."));
             return;
         } else if(pattern.test(this.url)) {
-            this.warn(RED._("Localhost is not supported"));
+            this.warn(RED._("Localhost is not supported."));
             return;
         } else if (!this.not_publicly_accessible) {
-            this.warn(RED._("Is this URL publicly accessible?"));
+            this.warn(RED._("Mandatory: Please click on the checkbox if this URL is publicly accessible."));
             return;
         } else if (!credentials) {
-            this.warn(RED._("Google Cloud Credentials are required"));
+            this.warn(RED._("Google Cloud Credentials are required."));
             return;
         }
 

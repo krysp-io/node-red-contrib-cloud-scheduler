@@ -302,6 +302,7 @@
 
                 $("#node-input-name").change(function () {
                     this.url = `${window.location.origin}/${$("#node-input-name").val()}`;
+                    console.log("test", this.url);
                     $("#node-input-url").val(this.url)
                 })
 
