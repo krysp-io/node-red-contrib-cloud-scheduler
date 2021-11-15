@@ -187,15 +187,18 @@
                     res.sendStatus(500);
                 };
     
+            
                 this.callback = (req,res) => {
+                    console.log("callled");
                     var msgid = RED.util.generateId();
                     res._msgid = msgid;
                     if (node.method.match(/^(post|delete|put|options|patch)$/)) {
-                        send({_msgid:msgid,req:req,res:createResponseWrapper(node,res),payload:req.body});
+                        node.send({_msgid:msgid,req:req,res:createResponseWrapper(node,res),payload:req.body});
+                        if (done) { done() }
                     } else if (this.method == "get") {
-                        send({_msgid:msgid,req:req,res:createResponseWrapper(node,res),payload:req.query});
+                        node.send({_msgid:msgid,req:req,res:createResponseWrapper(node,res),payload:req.query});
                     } else {
-                        send({_msgid:msgid,req:req,res:createResponseWrapper(node,res)});
+                        node.send({_msgid:msgid,req:req,res:createResponseWrapper(node,res)});
                     }
                 };
     
