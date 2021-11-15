@@ -343,13 +343,7 @@ module.exports = function (RED) {
                 console.log("===================");
                 console.log("removed", removed);
                 console.log("===================");
-    
-                var node = this;
-                RED.httpNode._router.stack.forEach(function(route,i,routes) {
-                    if (route.route && route.route.path === getUrl(this.url) && route.route.methods[node.method]) {
-                        routes.splice(i,1);
-                    }
-                });
+
                 if (this.onceTimeout) {
                     clearTimeout(this.onceTimeout);
                 }
@@ -367,9 +361,7 @@ module.exports = function (RED) {
     
                     delete this.cronjob;
                 }
-            } else {
-                SchedulerHttpIn()
-            }
+            } 
             done();
         })
     }
