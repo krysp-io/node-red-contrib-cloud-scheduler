@@ -158,7 +158,7 @@ module.exports = function (RED) {
         this.interval_id = null;
         this.cronjob = null;
         this.method = n.method;
-        this.name = null;
+        this.jobId = null;
         var node = this;
         this.url = n.url;
         this.not_publicly_accessible = n.not_publicly_accessible;
@@ -297,9 +297,9 @@ module.exports = function (RED) {
                 }
 
 
-                this.name = n.id;
+                this.jobId = n.id;
                 const job = {
-                    name: `projects/${credentials.project_id}/locations/us-east1/jobs/${this.name}`,
+                    name: `projects/${credentials.project_id}/locations/us-east1/jobs/${this.jobId}`,
                     httpTarget: {
                         uri: this.url,
                         httpMethod: this.method,
@@ -338,31 +338,27 @@ module.exports = function (RED) {
             node.repeaterSetup();
         }
 
-        this.on("close", async function(removed, done) {
+        this.on("close", function(removed, done) {
             if (removed) {
                 console.log("===================");
                 console.log("removed", removed);
                 console.log("===================");
 
-                if (this.onceTimeout) {
+                removeJob(async () => {
                     clearTimeout(this.onceTimeout);
-                }
-                if (this.interval_id != null) {
-                    clearInterval(this.interval_id);
-                    if (RED.settings.verbose) { this.log(RED._("inject.stopped")); }
-                } else if (this.cronjob != null) {
                     // Construct the fully qualified location path.
     
-                    const job = client.jobPath(credentials.project_id, "us-east1", this.name);
-                    // Use the client to send the job creation request.
-                    await client.deleteJob({ name: job });
-    
-                    if (RED.settings.verbose) { this.log(RED._("inject.stopped")); }
+                    const job = client.jobPath(credentials.project_id, "us-east1", this.jobId);
+                    try {
+                        await client.deleteJob({ name: job });
+                    } catch(err) {
+
+                    }
     
                     delete this.cronjob;
-                }
+                    done();
+                })
             } 
-            done();
         })
     }
 
