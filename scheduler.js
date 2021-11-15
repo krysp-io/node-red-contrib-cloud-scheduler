@@ -337,31 +337,6 @@ module.exports = function (RED) {
         } else {
             node.repeaterSetup();
         }
-
-        this.on("close", async function() {
-            console.log("===================");
-            console.log("calles");
-            console.log("===================");
-
-            var node = this;
-            if (this.onceTimeout) {
-                clearTimeout(this.onceTimeout);
-            }
-            if (this.interval_id != null) {
-                clearInterval(this.interval_id);
-                if (RED.settings.verbose) { this.log(RED._("inject.stopped")); }
-            } else if (this.cronjob != null) {
-                // Construct the fully qualified location path.
-
-                const job = client.jobPath(credentials.project_id, "us-east1", this.name);
-                // Use the client to send the job creation request.
-                await client.deleteJob({ name: job });
-
-                if (RED.settings.verbose) { this.log(RED._("inject.stopped")); }
-
-                delete this.cronjob;
-            }
-        })
     }
 
     RED.nodes.registerType("Scheduler", SchedulerNode);
