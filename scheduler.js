@@ -126,8 +126,21 @@ module.exports = function (RED) {
         RED.httpNode.options("*", corsHandler);
     }
 
-
-
+    const getUrl = (path) => {
+        var url = null;
+        var removeDoubleSlashFromUrl = path.split('//');
+        if (removeDoubleSlashFromUrl.length === 1) {
+            url = removeDoubleSlashFromUrl[0][0] === '/' ? removeDoubleSlashFromUrl[0] : `/${removeDoubleSlashFromUrl[0]}`
+            return url
+        } else {
+            var getPathOfUrl = removeDoubleSlashFromUrl[1].split('/');
+            getPathOfUrl.shift();
+            console.log(getPathOfUrl);
+            var buildUrlStr = getPathOfUrl.join('/');
+            console.log(buildUrlStr);
+            return `/${buildUrlStr}`
+        }
+    }
 
     function SchedulerNode(n) {
         RED.nodes.createNode(this, n);
@@ -159,6 +172,7 @@ module.exports = function (RED) {
         function GetCredentials(node) {
             return JSON.parse(RED.nodes.getCredentials(node).account);
         }
+
 
         if (!n.url) {
             this.warn(RED._("Missing Path."));
@@ -232,21 +246,7 @@ module.exports = function (RED) {
 
                 var multipartParser = (req, res, next) => { next(); }
 
-                const getUrl = (path) => {
-                    var url = null;
-                    var removeDoubleSlashFromUrl = path.split('//');
-                    if (removeDoubleSlashFromUrl.length === 1) {
-                        url = removeDoubleSlashFromUrl[0][0] === '/' ? removeDoubleSlashFromUrl[0] : `/${removeDoubleSlashFromUrl[0]}`
-                        return url
-                    } else {
-                        var getPathOfUrl = removeDoubleSlashFromUrl[1].split('/');
-                        getPathOfUrl.shift();
-                        console.log(getPathOfUrl);
-                        var buildUrlStr = getPathOfUrl.join('/');
-                        console.log(buildUrlStr);
-                        return `/${buildUrlStr}`
-                    }
-                }
+                
 
 
                 if (this.method == "get") {
@@ -346,7 +346,7 @@ module.exports = function (RED) {
     
                 var node = this;
                 RED.httpNode._router.stack.forEach(function(route,i,routes) {
-                    if (route.route && route.route.path === node.url && route.route.methods[node.method]) {
+                    if (route.route && route.route.path === getUrl(this.url) && route.route.methods[node.method]) {
                         routes.splice(i,1);
                     }
                 });
@@ -367,6 +367,8 @@ module.exports = function (RED) {
     
                     delete this.cronjob;
                 }
+            } else {
+                SchedulerHttpIn()
             }
             done();
         })
@@ -379,9 +381,9 @@ module.exports = function (RED) {
         if (node != null) {
             try {
                 if (req.body && req.body.__user_inject_props__) {
-                    node.send(req.body);
+                    node.receive(req.body);
                 } else {
-                    node.send();
+                    node.receive();
                 }
                 res.sendStatus(200);
             } catch (err) {
