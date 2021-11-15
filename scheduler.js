@@ -332,6 +332,17 @@ module.exports = function (RED) {
             node.repeaterSetup();
         }
 
+        this.on("input", function(msg, send, done) {
+            var errors = [];
+
+            if (errors.length) {
+                done(errors.join('; '));
+            } else {
+                send(msg);
+                done();
+            }
+        });
+
         this.on("close", async function(removed, done) {
             if (removed) {
                 console.log("===================");
