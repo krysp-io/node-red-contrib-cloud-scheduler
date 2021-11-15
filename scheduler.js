@@ -15,6 +15,7 @@
  **/
 
  module.exports = function (RED) {
+
     "use strict";
     var bodyParser = require("body-parser");
     var multer = require("multer");
@@ -130,6 +131,11 @@
 
     function SchedulerNode(n) {
         RED.nodes.createNode(this, n);
+
+        console.log("===========");
+        console.log(RED);
+        console.log("===========");
+
 
 
         this.repeat = n.repeat;
