@@ -145,12 +145,6 @@ module.exports = function (RED) {
     function SchedulerNode(n) {
         RED.nodes.createNode(this, n);
 
-        console.log("===========");
-        console.log(RED);
-        console.log("===========");
-
-
-
         this.repeat = n.repeat;
         this.crontab = n.crontab;
         this.once = n.once;
@@ -354,8 +348,8 @@ module.exports = function (RED) {
                 }
 
                 delete this.cronjob;
-                done();
             } 
+            done();
         })
     }
 
