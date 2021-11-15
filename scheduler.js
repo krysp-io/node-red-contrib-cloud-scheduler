@@ -157,7 +157,7 @@
         //     return;
         // }
 
-        // const SchedulerHttpIn = () => {
+        const SchedulerHttpIn = () => {
            
             if (RED.settings.httpNodeRoot !== false) {
     
@@ -251,9 +251,9 @@
             } else {
                 this.warn(RED._("httpin.errors.not-created"));
             }
-        // }
+        }
 
-        // SchedulerHttpIn()
+        SchedulerHttpIn()
 
 
 
