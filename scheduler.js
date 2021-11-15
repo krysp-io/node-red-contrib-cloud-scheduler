@@ -142,6 +142,126 @@ module.exports = function (RED) {
         this.name = null;
         var node = this;
         this.url = n.url;
+        this.not_publicly_accessible = n.not_publicly_accessible;
+        var pattern = /localhost|127.0.0.1/gi
+
+        if (!n.url) {
+            this.warn(RED._("Missing Path"));
+            return;
+        } else if(!pattern.test(this.url)) {
+            this.warn(RED._("Localhost is not supported"));
+            return;
+        } else if (this.not_publicly_accessible) {
+            this.warn(RED._("Is this URL publicly accessible"));
+            return;
+        }
+
+        SchedulerHttpIn()
+
+        function SchedulerHttpIn() {
+            if (RED.settings.httpNodeRoot !== false) {
+
+                this.upload = n.upload;
+                this.swaggerDoc = n.swaggerDoc;
+    
+                var node = this;
+    
+                this.errorHandler = function(err,req,res,next) {
+                    node.warn(err);
+                    res.sendStatus(500);
+                };
+    
+                this.callback = function(req,res) {
+                    var msgid = RED.util.generateId();
+                    res._msgid = msgid;
+                    if (node.method.match(/^(post|delete|put|options|patch)$/)) {
+                        node.send({_msgid:msgid,req:req,res:createResponseWrapper(node,res),payload:req.body});
+                    } else if (node.method == "get") {
+                        node.send({_msgid:msgid,req:req,res:createResponseWrapper(node,res),payload:req.query});
+                    } else {
+                        node.send({_msgid:msgid,req:req,res:createResponseWrapper(node,res)});
+                    }
+                };
+    
+                var httpMiddleware = function(req,res,next) { next(); }
+    
+                if (RED.settings.httpNodeMiddleware) {
+                    if (typeof RED.settings.httpNodeMiddleware === "function" || Array.isArray(RED.settings.httpNodeMiddleware)) {
+                        httpMiddleware = RED.settings.httpNodeMiddleware;
+                    }
+                }
+    
+                var maxApiRequestSize = RED.settings.apiMaxLength || '5mb';
+                var jsonParser = bodyParser.json({limit:maxApiRequestSize});
+                var urlencParser = bodyParser.urlencoded({limit:maxApiRequestSize,extended:true});
+    
+                var metricsHandler = function(req,res,next) { next(); }
+                if (this.metric()) {
+                    metricsHandler = function(req, res, next) {
+                        var startAt = process.hrtime();
+                        onHeaders(res, function() {
+                            if (res._msgid) {
+                                var diff = process.hrtime(startAt);
+                                var ms = diff[0] * 1e3 + diff[1] * 1e-6;
+                                var metricResponseTime = ms.toFixed(3);
+                                var metricContentLength = res.getHeader("content-length");
+                                //assuming that _id has been set for res._metrics in HttpOut node!
+                                node.metric("response.time.millis", {_msgid:res._msgid} , metricResponseTime);
+                                node.metric("response.content-length.bytes", {_msgid:res._msgid} , metricContentLength);
+                            }
+                        });
+                        next();
+                    };
+                }
+    
+                var multipartParser = function(req,res,next) { next(); }
+                if (this.upload) {
+                    var mp = multer({ storage: multer.memoryStorage() }).any();
+                    multipartParser = function(req,res,next) {
+                        mp(req,res,function(err) {
+                            req._body = true;
+                            next(err);
+                        })
+                    };
+                }
+
+                function getUrl(path) {
+                    var url = null;
+                    var removeDoubleSlashFromUrl = path.split('//');
+                    if (removeDoubleSlashFromUrl.length === 1) {
+                        url = `/${removeDoubleSlashFromUrl[0]}`
+                        return url
+                    } else {
+                        var getPathOfUrl = removeDoubleSlashFromUrl[1].split('/');
+                        getPathOfUrl.splice(0,1).join('/')
+                        return `/${getPathOfUrl}`
+                    }
+                }
+    
+                if (this.method == "get") {
+                    RED.httpNode.get(getUrl(this.url),cookieParser(),httpMiddleware,corsHandler,metricsHandler,this.callback,this.errorHandler);
+                } else if (this.method == "post") {
+                    RED.httpNode.post(getUrl(this.url),cookieParser(),httpMiddleware,corsHandler,metricsHandler,jsonParser,urlencParser,multipartParser,rawBodyParser,this.callback,this.errorHandler);
+                } else if (this.method == "put") {
+                    RED.httpNode.put(getUrl(this.url),cookieParser(),httpMiddleware,corsHandler,metricsHandler,jsonParser,urlencParser,rawBodyParser,this.callback,this.errorHandler);
+                } else if (this.method == "patch") {
+                    RED.httpNode.patch(getUrl(this.url),cookieParser(),httpMiddleware,corsHandler,metricsHandler,jsonParser,urlencParser,rawBodyParser,this.callback,this.errorHandler);
+                } else if (this.method == "delete") {
+                    RED.httpNode.delete(getUrl(this.url),cookieParser(),httpMiddleware,corsHandler,metricsHandler,jsonParser,urlencParser,rawBodyParser,this.callback,this.errorHandler);
+                }
+    
+                this.on("close",function() {
+                    var node = this;
+                    RED.httpNode._router.stack.forEach(function(route,i,routes) {
+                        if (route.route && route.route.path === node.url && route.route.methods[node.method]) {
+                            routes.splice(i,1);
+                        }
+                    });
+                });
+            } else {
+                this.warn(RED._("httpin.errors.not-created"));
+            }
+        }
 
         // let credentials = null;
         // if (n.account) {
@@ -210,94 +330,70 @@ module.exports = function (RED) {
         // }
 
 
-        var node = this;
+        // var node = this;
 
-        this.errorHandler = function (err, req, res, next) {
-            node.warn(err);
-            res.sendStatus(500);
-        };
-
-
-        this.callback = function (req, res) {
-            var msgid = RED.util.generateId();
-            res._msgid = msgid;
-            if (node.method.match(/^(post|delete|put|options|patch)$/)) {
-                node.send({ _msgid: msgid, req: req, res: createResponseWrapper(node, res), payload: req.body });
-            } else if (node.method == "get") {
-                node.send({ _msgid: msgid, req: req, res: createResponseWrapper(node, res), payload: req.query });
-            } else {
-                node.send({ _msgid: msgid, req: req, res: createResponseWrapper(node, res) });
-            }
-        };
-
-        var httpMiddleware = function (req, res, next) { next(); }
-
-        if (RED.settings.httpNodeMiddleware) {
-            if (typeof RED.settings.httpNodeMiddleware === "function" || Array.isArray(RED.settings.httpNodeMiddleware)) {
-                httpMiddleware = RED.settings.httpNodeMiddleware;
-            }
-        }
-
-        var maxApiRequestSize = RED.settings.apiMaxLength || '5mb';
-        var jsonParser = bodyParser.json({ limit: maxApiRequestSize });
-        var urlencParser = bodyParser.urlencoded({ limit: maxApiRequestSize, extended: true });
-
-        var metricsHandler = function (req, res, next) { next(); }
-        if (this.metric()) {
-            metricsHandler = function (req, res, next) {
-                var startAt = process.hrtime();
-                onHeaders(res, function () {
-                    if (res._msgid) {
-                        var diff = process.hrtime(startAt);
-                        var ms = diff[0] * 1e3 + diff[1] * 1e-6;
-                        var metricResponseTime = ms.toFixed(3);
-                        var metricContentLength = res.getHeader("content-length");
-                        //assuming that _id has been set for res._metrics in HttpOut node!
-                        node.metric("response.time.millis", { _msgid: res._msgid }, metricResponseTime);
-                        node.metric("response.content-length.bytes", { _msgid: res._msgid }, metricContentLength);
-                    }
-                });
-                next();
-            };
-        }
-
-        var multipartParser = function (req, res, next) { next(); }
-        if (this.upload) {
-            var mp = multer({ storage: multer.memoryStorage() }).any();
-            multipartParser = function (req, res, next) {
-                mp(req, res, function (err) {
-                    req._body = true;
-                    next(err);
-                })
-            };
-        }
-
-        function getUrl(path) {
-            var url = null;
-            var removeDoubleSlashFromUrl = path.split('//');
-            if (removeDoubleSlashFromUrl.length === 1) {
-                url = `/${removeDoubleSlashFromUrl[0]}`
-                return url
-            } else {
-                var getPathOfUrl = removeDoubleSlashFromUrl[1].split('/');
-                getPathOfUrl.splice(0,1).join('/')
-                return `/${getPathOfUrl}`
-            }
-        }
-
-        console.log('=====================');
-        console.log(getUrl(this.url));
-        console.log('=====================');
+        // this.errorHandler = function (err, req, res, next) {
+        //     node.warn(err);
+        //     res.sendStatus(500);
+        // };
 
 
-        if (this.method == "post") {
-            console.log("called");
-            RED.httpNode.post(getUrl(this.url), cookieParser(), httpMiddleware, corsHandler, metricsHandler, jsonParser, urlencParser, multipartParser, rawBodyParser, this.callback, this.errorHandler);
-        } else if (this.method == "put") {
-            RED.httpNode.put(getUrl(this.url), cookieParser(), httpMiddleware, corsHandler, metricsHandler, jsonParser, urlencParser, rawBodyParser, this.callback, this.errorHandler);
-        } else if (this.method == "patch") {
-            RED.httpNode.patch(getUrl(this.url), cookieParser(), httpMiddleware, corsHandler, metricsHandler, jsonParser, urlencParser, rawBodyParser, this.callback, this.errorHandler);
-        }
+        // this.callback = function (req, res) {
+        //     var msgid = RED.util.generateId();
+        //     res._msgid = msgid;
+        //     if (node.method.match(/^(post|delete|put|options|patch)$/)) {
+        //         node.send({ _msgid: msgid, req: req, res: createResponseWrapper(node, res), payload: req.body });
+        //     } else if (node.method == "get") {
+        //         node.send({ _msgid: msgid, req: req, res: createResponseWrapper(node, res), payload: req.query });
+        //     } else {
+        //         node.send({ _msgid: msgid, req: req, res: createResponseWrapper(node, res) });
+        //     }
+        // };
+
+        // var httpMiddleware = function (req, res, next) { next(); }
+
+        // if (RED.settings.httpNodeMiddleware) {
+        //     if (typeof RED.settings.httpNodeMiddleware === "function" || Array.isArray(RED.settings.httpNodeMiddleware)) {
+        //         httpMiddleware = RED.settings.httpNodeMiddleware;
+        //     }
+        // }
+
+        // var maxApiRequestSize = RED.settings.apiMaxLength || '5mb';
+        // var jsonParser = bodyParser.json({ limit: maxApiRequestSize });
+        // var urlencParser = bodyParser.urlencoded({ limit: maxApiRequestSize, extended: true });
+
+        // var metricsHandler = function (req, res, next) { next(); }
+        // if (this.metric()) {
+        //     metricsHandler = function (req, res, next) {
+        //         var startAt = process.hrtime();
+        //         onHeaders(res, function () {
+        //             if (res._msgid) {
+        //                 var diff = process.hrtime(startAt);
+        //                 var ms = diff[0] * 1e3 + diff[1] * 1e-6;
+        //                 var metricResponseTime = ms.toFixed(3);
+        //                 var metricContentLength = res.getHeader("content-length");
+        //                 //assuming that _id has been set for res._metrics in HttpOut node!
+        //                 node.metric("response.time.millis", { _msgid: res._msgid }, metricResponseTime);
+        //                 node.metric("response.content-length.bytes", { _msgid: res._msgid }, metricContentLength);
+        //             }
+        //         });
+        //         next();
+        //     };
+        // }
+
+        // var multipartParser = function (req, res, next) { next(); }
+        // if (this.upload) {
+        //     var mp = multer({ storage: multer.memoryStorage() }).any();
+        //     multipartParser = function (req, res, next) {
+        //         mp(req, res, function (err) {
+        //             req._body = true;
+        //             next(err);
+        //         })
+        //     };
+        // }
+
+        
+
 
 
         // Construct the request body.
