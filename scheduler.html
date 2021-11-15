@@ -268,7 +268,7 @@
                 url: { value: window.location.origin, required: true, validate: function (v) { var pattern = /localhost|127.0.0.1/gi; return !pattern.test(v) } },
                 jobId: { value: "" },
                 method: { value: "post" },
-                accessible: { value: false, required: true, validate: function (v) { return !$("#node-input-accessible").prop("checked") } }
+                accessible: { value: false, required: true, validate: function (v) { return $("#node-input-accessible").prop("checked") } }
             },
             icon: "inject.svg",
             inputs: 0,
