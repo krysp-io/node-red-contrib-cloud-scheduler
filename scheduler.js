@@ -272,9 +272,9 @@ module.exports = function (RED) {
             };
         }
 
-        function getUrl(url) {
+        function getUrl(path) {
             var url = null;
-            var removeDoubleSlashFromUrl = url.split('//');
+            var removeDoubleSlashFromUrl = path.split('//');
             if (removeDoubleSlashFromUrl.length === 1) {
                 url = `/${removeDoubleSlashFromUrl[0]}`
                 return url
