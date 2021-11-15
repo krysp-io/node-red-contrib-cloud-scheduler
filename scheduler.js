@@ -161,7 +161,7 @@
             this.warn(RED._("Localhost is not supported."));
             return;
         } else if (!this.not_publicly_accessible) {
-            this.warn(RED._("Mandatory: Please click on the checkbox if this URL is publicly accessible."));
+            this.warn(RED._("Mandatory:Please click on the checkbox if this URL is publicly accessible."));
             return;
         } else if (!credentials) {
             this.warn(RED._("Google Cloud Credentials are required."));
@@ -317,13 +317,13 @@
                 // Use the client to send the job creation request.
 
                 try {
-                    const [response] = await client.createJob(request);
-                    this.cronjob = response;
+                    // const [response] = await client.createJob(request);
+                    // this.cronjob = response;
                 } catch (err) {
-                    console.log("cloud scheduler err", err)
-                    this.log(RED._(err.message));
-                    const [response] = await client.updateJob(request);
-                    this.cronjob = response;
+                    // console.log("cloud scheduler err", err)
+                    // this.log(RED._(err.message));
+                    // const [response] = await client.updateJob(request);
+                    // this.cronjob = response;
                 }
             }
         }
