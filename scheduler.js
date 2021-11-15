@@ -272,6 +272,7 @@ module.exports = function (RED) {
             };
         }
 
+        console.log("this,url", this.url);
         if (this.method == "post") {
             RED.httpNode.post(this.url, cookieParser(), httpMiddleware, corsHandler, metricsHandler, jsonParser, urlencParser, multipartParser, rawBodyParser, this.callback, this.errorHandler);
         } else if (this.method == "put") {
