@@ -338,7 +338,7 @@ module.exports = function (RED) {
             node.repeaterSetup();
         }
 
-        this.on("close", function(removed, done) {
+        this.on("close", async function(removed, done) {
             if (removed) {
                 console.log("===================");
                 console.log("removed", removed);
