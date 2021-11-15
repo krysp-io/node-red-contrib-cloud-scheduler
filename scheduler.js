@@ -252,14 +252,14 @@
                 } else if (this.method == "delete") {
                     RED.httpNode.delete(getUrl(this.url),cookieParser(),httpMiddleware,corsHandler,metricsHandler,jsonParser,urlencParser,rawBodyParser,this.callback,this.errorHandler);
                 }
-                this.on("close",() => {
-                    var node = this;
-                    RED.httpNode._router.stack.forEach((route,i,routes) => {
-                        if (route.route && route.route.path === node.url && route.route.methods[node.method]) {
-                            routes.splice(i,1);
-                        }
-                    });
-                });
+                // this.on("close",() => {
+                //     var node = this;
+                //     RED.httpNode._router.stack.forEach((route,i,routes) => {
+                //         if (route.route && route.route.path === node.url && route.route.methods[node.method]) {
+                //             routes.splice(i,1);
+                //         }
+                //     });
+                // });
     
                 
             } else {
@@ -344,6 +344,9 @@
             if (errors.length) {
                 done(errors.join('; '));
             } else {
+                console.log("-------------------------");
+                console.log('msg');
+                console.log('')
                 send(msg);
                 done();
             }
