@@ -347,20 +347,6 @@ module.exports = function (RED) {
             node.repeaterSetup();
         }
 
-
-        this.on("input", function (msg, send, done) {
-            var errors = [];
-            if (errors.length) {
-                done(errors.join('; '));
-            } else {
-                console.log("-------------------------");
-                console.log('msg', msg);
-                console.log('----------------------');
-                send(msg);
-                done();
-            }
-        });
-
         // this.on("close", async function() {
         //     console.log("===================");
         //     console.log("calles");
