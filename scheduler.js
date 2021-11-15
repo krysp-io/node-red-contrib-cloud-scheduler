@@ -233,8 +233,11 @@
                         return url
                     } else {
                         var getPathOfUrl = removeDoubleSlashFromUrl[1].split('/');
-                        getPathOfUrl.splice(0,1).join('/')
-                        return `/${getPathOfUrl}`
+                        getPathOfUrl.shift();
+                        console.log(getPathOfUrl);
+                        var buildUrlStr = getPathOfUrl.join('/');
+                        console.log(buildUrlStr);
+                        return `/${buildUrlStr}`
                     }
                 }
     
