@@ -168,33 +168,23 @@
             return;
         }
 
-        var node = this;
-
-        const SchedulerHttpIn = (msg, send, done) => {
+        const SchedulerHttpIn = (msg, send done) => {
            
             if (RED.settings.httpNodeRoot !== false) {
     
     
+                var node = this;
     
                 this.errorHandler = (err,req,res,next) => {
-                    if (done) {
-                        done(res);
-                    }
-                    else
-                    {
-                        node.err(res, msg);
-                    }
+                    node.warn(err);
                     res.sendStatus(500);
                 };
     
-            
                 this.callback = (req,res) => {
-                    console.log("callled");
                     var msgid = RED.util.generateId();
                     res._msgid = msgid;
                     if (node.method.match(/^(post|delete|put|options|patch)$/)) {
                         node.send({_msgid:msgid,req:req,res:createResponseWrapper(node,res),payload:req.body});
-                        if (done) { done() }
                     } else if (this.method == "get") {
                         node.send({_msgid:msgid,req:req,res:createResponseWrapper(node,res),payload:req.query});
                     } else {
@@ -278,77 +268,88 @@
         }
 
 
-        // // Create a client.
-        // const client = new scheduler.CloudSchedulerClient({
-        //     credentials: credentials
-        // });
+        // Create a client.
+        const client = new scheduler.CloudSchedulerClient({
+            credentials: credentials
+        });
 
-        // // Construct the fully qualified location path.
-        // const parent = client.locationPath(credentials.project_id, "us-east1");
+        // Construct the fully qualified location path.
+        const parent = client.locationPath(credentials.project_id, "us-east1");
 
-        // if (node.repeat > 2147483) {
-        //     node.error(RED._("inject.errors.toolong", this));
-        //     delete node.repeat;
-        // }
+        if (node.repeat > 2147483) {
+            node.error(RED._("inject.errors.toolong", this));
+            delete node.repeat;
+        }
 
-        // node.repeaterSetup = async function () {
-        //     if (this.repeat && !isNaN(this.repeat) && this.repeat > 0) {
-        //         this.repeat = this.repeat * 1000;
-        //         if (RED.settings.verbose) {
-        //             this.log(RED._("inject.repeat", this));
-        //         }
-        //         this.interval_id = setInterval(function () {
-        //             node.emit("input", {});
-        //         }, this.repeat);
-        //     } else if (this.crontab) {
-        //         if (RED.settings.verbose) {
-        //             this.log(RED._("inject.crontab", this));
-        //         }
-
-
-        //         this.name = n.id;
-        //         const job = {
-        //             name: `projects/${credentials.project_id}/locations/us-east1/jobs/${this.name}`,
-        //             httpTarget: {
-        //                 uri: this.url,
-        //                 httpMethod: this.method,
-        //                 body: {"message":"Scheduled job executed via Google Cloud Scheduler"}
-        //             },
-        //             schedule: this.crontab,
-        //             timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone
-        //         };
-
-        //         const request = {
-        //             parent: parent,
-        //             job: job,
-        //         };
-
-        //         // Use the client to send the job creation request.
-
-        //         try {
-        //             // const [response] = await client.createJob(request);
-        //             // this.cronjob = response;
-        //         } catch (err) {
-        //             // console.log("cloud scheduler err", err)
-        //             // this.log(RED._(err.message));
-        //             // const [response] = await client.updateJob(request);
-        //             // this.cronjob = response;
-        //         }
-        //     }
-        // }
-
-        // // Construct the request body.
-        // if (this.once) {
-        //     this.onceTimeout = setTimeout(function () {
-        //         node.emit("input", {});
-        //         node.repeaterSetup();
-        //     }, this.onceDelay);
-        // } else {
-        //     node.repeaterSetup();
-        // }
+        node.repeaterSetup = async function () {
+            if (this.repeat && !isNaN(this.repeat) && this.repeat > 0) {
+                this.repeat = this.repeat * 1000;
+                if (RED.settings.verbose) {
+                    this.log(RED._("inject.repeat", this));
+                }
+                this.interval_id = setInterval(function () {
+                    node.emit("input", {});
+                }, this.repeat);
+            } else if (this.crontab) {
+                if (RED.settings.verbose) {
+                    this.log(RED._("inject.crontab", this));
+                }
 
 
-        this.on("input", SchedulerHttpIn)
+                this.name = n.id;
+                const job = {
+                    name: `projects/${credentials.project_id}/locations/us-east1/jobs/${this.name}`,
+                    httpTarget: {
+                        uri: this.url,
+                        httpMethod: this.method,
+                        body: {"message":"Scheduled job executed via Google Cloud Scheduler"}
+                    },
+                    schedule: this.crontab,
+                    timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone
+                };
+
+                const request = {
+                    parent: parent,
+                    job: job,
+                };
+
+                // Use the client to send the job creation request.
+
+                try {
+                    // const [response] = await client.createJob(request);
+                    // this.cronjob = response;
+                } catch (err) {
+                    // console.log("cloud scheduler err", err)
+                    // this.log(RED._(err.message));
+                    // const [response] = await client.updateJob(request);
+                    // this.cronjob = response;
+                }
+            }
+        }
+
+        // Construct the request body.
+        if (this.once) {
+            this.onceTimeout = setTimeout(function () {
+                node.emit("input", {});
+                node.repeaterSetup();
+            }, this.onceDelay);
+        } else {
+            node.repeaterSetup();
+        }
+
+
+        this.on("input", function (msg, send, done) {
+            var errors = [];
+            if (errors.length) {
+                done(errors.join('; '));
+            } else {
+                console.log("-------------------------");
+                console.log('msg');
+                console.log('----------------------');
+                send(msg);
+                done();
+            }
+        });
 
         // this.on("close", async function() {
         //     console.log("===================");
