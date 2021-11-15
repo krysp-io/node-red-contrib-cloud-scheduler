@@ -218,7 +218,7 @@
                     var url = null;
                     var removeDoubleSlashFromUrl = path.split('//');
                     if (removeDoubleSlashFromUrl.length === 1) {
-                        url = `/${removeDoubleSlashFromUrl[0]}`
+                        url = removeDoubleSlashFromUrl[0][0] !== '/' ? removeDoubleSlashFromUrl[0] : `/${removeDoubleSlashFromUrl[0]}`
                         return url
                     } else {
                         var getPathOfUrl = removeDoubleSlashFromUrl[1].split('/');
@@ -239,14 +239,7 @@
                     RED.httpNode.delete(getUrl(this.url),cookieParser(),httpMiddleware,corsHandler,metricsHandler,jsonParser,urlencParser,rawBodyParser,this.callback,this.errorHandler);
                 }
     
-                this.on("close",function() {
-                    var node = this;
-                    RED.httpNode._router.stack.forEach(function(route,i,routes) {
-                        if (route.route && route.route.path === node.url && route.route.methods[node.method]) {
-                            routes.splice(i,1);
-                        }
-                    });
-                });
+                
             } else {
                 this.warn(RED._("httpin.errors.not-created"));
             }
