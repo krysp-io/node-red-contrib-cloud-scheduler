@@ -159,7 +159,7 @@
 
         SchedulerHttpIn()
 
-        function SchedulerHttpIn() {
+        const SchedulerHttpIn = () => {
             if (RED.settings.httpNodeRoot !== false) {
 
     
