@@ -267,9 +267,11 @@
                 crontab: { value: "" },
                 once: { value: true },
                 onceDelay: { value: 0.1 },
-                url: { value: "", required: true, validate: function (v) { var pattern = /localhost|127.0.0.1/gi; return !pattern.test(v) } },
+                url: { value: "" },
+                // required: true, validate: function (v) { var pattern = /localhost|127.0.0.1/gi; return !pattern.test(v) } },
                 method: { value: "post" },
-                not_publicly_accessible: { value: false, required: true, validate: function (v) { return $("#node-input-not_publicly_accessible").prop("checked") } }
+                not_publicly_accessible: { value: false }
+                    // required: true, validate: function (v) { return $("#node-input-not_publicly_accessible").prop("checked") } }
             },
             icon: "inject.svg",
             inputs: 0,
