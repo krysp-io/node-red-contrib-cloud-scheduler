@@ -354,7 +354,7 @@ module.exports = function (RED) {
                 done(errors.join('; '));
             } else {
                 console.log("-------------------------");
-                console.log('msg');
+                console.log('msg', msg);
                 console.log('----------------------');
                 send(msg);
                 done();
