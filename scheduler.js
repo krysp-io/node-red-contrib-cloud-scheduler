@@ -320,6 +320,7 @@
                     const [response] = await client.createJob(request);
                     this.cronjob = response;
                 } catch (err) {
+                    this.warn(RED._(err));
                     const [response] = await client.updateJob(request);
                     this.cronjob = response;
                 }
