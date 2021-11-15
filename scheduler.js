@@ -157,8 +157,6 @@
         //     return;
         // }
 
-        SchedulerHttpIn()
-
         const SchedulerHttpIn = () => {
             if (RED.settings.httpNodeRoot !== false) {
 
@@ -252,6 +250,9 @@
                 this.warn(RED._("httpin.errors.not-created"));
             }
         }
+        
+        SchedulerHttpIn()
+
 
         // let credentials = null;
         // if (n.account) {
