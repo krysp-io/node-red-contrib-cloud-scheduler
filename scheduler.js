@@ -423,24 +423,24 @@
 
     RED.nodes.registerType("Scheduler", SchedulerNode);
 
-    RED.httpAdmin.post("/inject/:id", RED.auth.needsPermission("inject.write"), async function (req, res) {
-        var node = RED.nodes.getNode(req.params.id);
-        if (node != null) {
-            try {
-                if (req.body && req.body.__user_inject_props__) {
-                    node.receive(req.body);
-                } else {
-                    node.receive();
-                }
-                res.sendStatus(200);
-            } catch (err) {
-                res.sendStatus(500);
-                node.error(RED._("inject.failed", { error: err.toString() }));
-            }
-        } else {
-            res.sendStatus(404);
-        }
-    });
+    // RED.httpAdmin.post("/inject/:id", RED.auth.needsPermission("inject.write"), async function (req, res) {
+    //     var node = RED.nodes.getNode(req.params.id);
+    //     if (node != null) {
+    //         try {
+    //             if (req.body && req.body.__user_inject_props__) {
+    //                 node.receive(req.body);
+    //             } else {
+    //                 node.receive();
+    //             }
+    //             res.sendStatus(200);
+    //         } catch (err) {
+    //             res.sendStatus(500);
+    //             node.error(RED._("inject.failed", { error: err.toString() }));
+    //         }
+    //     } else {
+    //         res.sendStatus(404);
+    //     }
+    // });
 }
 
 
