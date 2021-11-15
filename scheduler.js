@@ -286,7 +286,7 @@ module.exports = function (RED) {
         }
 
         console.log('=====================');
-        console.log(getUrl());
+        console.log(getUrl(this.url));
         console.log('=====================');
 
 
