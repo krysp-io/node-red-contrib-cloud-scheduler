@@ -179,13 +179,14 @@ module.exports = function (RED) {
                     this.log(RED._("inject.crontab", this));
                 }
 
+
                 this.name = n.id;
                 const job = {
                     name: `projects/${credentials.project_id}/locations/us-east1/jobs/${this.name}`,
                     httpTarget: {
                         uri: this.url,
                         httpMethod: this.method,
-                        body: Buffer.from('Hello World'),
+                        body: "Scheduled job executed via Google Cloud Scheduler"
                     },
                     schedule: this.crontab,
                     timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone
@@ -194,7 +195,6 @@ module.exports = function (RED) {
                 const request = {
                     parent: parent,
                     job: job,
-
                 };
 
                 // Use the client to send the job creation request.
@@ -222,9 +222,7 @@ module.exports = function (RED) {
             var msgid = RED.util.generateId();
             res._msgid = msgid;
             if (node.method.match(/^(post|delete|put|options|patch)$/)) {
-                node.send(req.body);
-                res.sendStatus(200);
-                // node.send({ _msgid: msgid, req: req, res: createResponseWrapper(node, res), payload: req.body });
+                node.send({ _msgid: msgid, req: req, res: createResponseWrapper(node, res), payload: req.body });
             } else if (node.method == "get") {
                 node.send({ _msgid: msgid, req: req, res: createResponseWrapper(node, res), payload: req.query });
             } else {
