@@ -253,7 +253,18 @@
             }
         }
 
-        SchedulerHttpIn()
+        this.on("input", function (msg, send, done) {
+            var errors = [];
+
+            if (errors.length) {
+                done(errors.join('; '));
+            } else {
+                // send(msg);
+                SchedulerHttpIn()
+                done();
+            }
+        });
+
 
 
         // let credentials = null;
