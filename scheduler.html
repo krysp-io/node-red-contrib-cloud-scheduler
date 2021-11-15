@@ -370,7 +370,7 @@
                     if (node.repeat % 1440 === 0) { r = "h"; c = c / 60; }
                     $("#inject-time-interval-count").val(c);
                     $("#inject-time-interval-units").val(r);
-                    $("#inject-time-interval-days").prop("disabled", "disabled");
+                    $("#inject-time-row-interval-time").hide();
                     } else if (!isNaN(cronparts[0]) && !isNaN(cronparts[1])) {
                         repeattype = "time";
                         // Fixed time
