@@ -143,71 +143,71 @@ module.exports = function (RED) {
         var node = this;
         this.url = n.url;
 
-        let credentials = null;
-        if (n.account) {
-            credentials = GetCredentials(n.account);
-        }
+        // let credentials = null;
+        // if (n.account) {
+        //     credentials = GetCredentials(n.account);
+        // }
 
-        // Create a client.
-        const client = new scheduler.CloudSchedulerClient({
-            credentials: credentials
-        });
+        // // Create a client.
+        // const client = new scheduler.CloudSchedulerClient({
+        //     credentials: credentials
+        // });
 
-        // Construct the fully qualified location path.
-        const parent = client.locationPath(credentials.project_id, "us-east1");
+        // // Construct the fully qualified location path.
+        // const parent = client.locationPath(credentials.project_id, "us-east1");
 
-        function GetCredentials(node) {
-            return JSON.parse(RED.nodes.getCredentials(node).account);
-        }
+        // function GetCredentials(node) {
+        //     return JSON.parse(RED.nodes.getCredentials(node).account);
+        // }
 
-        if (node.repeat > 2147483) {
-            node.error(RED._("inject.errors.toolong", this));
-            delete node.repeat;
-        }
+        // if (node.repeat > 2147483) {
+        //     node.error(RED._("inject.errors.toolong", this));
+        //     delete node.repeat;
+        // }
 
-        node.repeaterSetup = async function () {
-            if (this.repeat && !isNaN(this.repeat) && this.repeat > 0) {
-                this.repeat = this.repeat * 1000;
-                if (RED.settings.verbose) {
-                    this.log(RED._("inject.repeat", this));
-                }
-                this.interval_id = setInterval(function () {
-                    node.emit("input", {});
-                }, this.repeat);
-            } else if (this.crontab) {
-                if (RED.settings.verbose) {
-                    this.log(RED._("inject.crontab", this));
-                }
+        // node.repeaterSetup = async function () {
+        //     if (this.repeat && !isNaN(this.repeat) && this.repeat > 0) {
+        //         this.repeat = this.repeat * 1000;
+        //         if (RED.settings.verbose) {
+        //             this.log(RED._("inject.repeat", this));
+        //         }
+        //         this.interval_id = setInterval(function () {
+        //             node.emit("input", {});
+        //         }, this.repeat);
+        //     } else if (this.crontab) {
+        //         if (RED.settings.verbose) {
+        //             this.log(RED._("inject.crontab", this));
+        //         }
 
 
-                this.name = n.id;
-                const job = {
-                    name: `projects/${credentials.project_id}/locations/us-east1/jobs/${this.name}`,
-                    httpTarget: {
-                        uri: this.url,
-                        httpMethod: this.method,
-                        body: {"message":"Scheduled job executed via Google Cloud Scheduler"}
-                    },
-                    schedule: this.crontab,
-                    timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone
-                };
+        //         this.name = n.id;
+        //         const job = {
+        //             name: `projects/${credentials.project_id}/locations/us-east1/jobs/${this.name}`,
+        //             httpTarget: {
+        //                 uri: this.url,
+        //                 httpMethod: this.method,
+        //                 body: {"message":"Scheduled job executed via Google Cloud Scheduler"}
+        //             },
+        //             schedule: this.crontab,
+        //             timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone
+        //         };
 
-                const request = {
-                    parent: parent,
-                    job: job,
-                };
+        //         const request = {
+        //             parent: parent,
+        //             job: job,
+        //         };
 
-                // Use the client to send the job creation request.
+        //         // Use the client to send the job creation request.
 
-                try {
-                    const [response] = await client.createJob(request);
-                    this.cronjob = response;
-                } catch (err) {
-                    const [response] = await client.updateJob(request);
-                    this.cronjob = response;
-                }
-            }
-        }
+        //         try {
+        //             const [response] = await client.createJob(request);
+        //             this.cronjob = response;
+        //         } catch (err) {
+        //             const [response] = await client.updateJob(request);
+        //             this.cronjob = response;
+        //         }
+        //     }
+        // }
 
 
         var node = this;
@@ -302,44 +302,44 @@ module.exports = function (RED) {
         // Construct the request body.
 
 
-        if (this.once) {
-            this.onceTimeout = setTimeout(function () {
-                node.emit("input", {});
-                node.repeaterSetup();
-            }, this.onceDelay);
-        } else {
-            node.repeaterSetup();
-        }
-        this.on("input", function (msg, send, done) {
-            var errors = [];
+        // if (this.once) {
+        //     this.onceTimeout = setTimeout(function () {
+        //         node.emit("input", {});
+        //         node.repeaterSetup();
+        //     }, this.onceDelay);
+        // } else {
+        //     node.repeaterSetup();
+        // }
+        // this.on("input", function (msg, send, done) {
+        //     var errors = [];
 
-            if (errors.length) {
-                done(errors.join('; '));
-            } else {
-                send(msg);
-                done();
-            }
-        });
+        //     if (errors.length) {
+        //         done(errors.join('; '));
+        //     } else {
+        //         send(msg);
+        //         done();
+        //     }
+        // });
 
-        this.on("close", async function() {
-            if (this.onceTimeout) {
-                clearTimeout(this.onceTimeout);
-            }
-            if (this.interval_id != null) {
-                clearInterval(this.interval_id);
-                if (RED.settings.verbose) { this.log(RED._("inject.stopped")); }
-            } else if (this.cronjob != null) {
-                // Construct the fully qualified location path.
+        // this.on("close", async function() {
+        //     if (this.onceTimeout) {
+        //         clearTimeout(this.onceTimeout);
+        //     }
+        //     if (this.interval_id != null) {
+        //         clearInterval(this.interval_id);
+        //         if (RED.settings.verbose) { this.log(RED._("inject.stopped")); }
+        //     } else if (this.cronjob != null) {
+        //         // Construct the fully qualified location path.
     
-                const job = client.jobPath(credentials.project_id, "us-east1", this.name);
-                // Use the client to send the job creation request.
-                await client.deleteJob({ name: job });
+        //         const job = client.jobPath(credentials.project_id, "us-east1", this.name);
+        //         // Use the client to send the job creation request.
+        //         await client.deleteJob({ name: job });
     
-                if (RED.settings.verbose) { this.log(RED._("inject.stopped")); }
+        //         if (RED.settings.verbose) { this.log(RED._("inject.stopped")); }
     
-                delete this.cronjob;
-            }
-        })
+        //         delete this.cronjob;
+        //     }
+        // })
     }
 
     RED.nodes.registerType("Scheduler", SchedulerNode);
