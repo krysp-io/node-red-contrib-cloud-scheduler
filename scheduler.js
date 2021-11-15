@@ -259,8 +259,7 @@
             if (errors.length) {
                 done(errors.join('; '));
             } else {
-                // send(msg);
-                SchedulerHttpIn()
+                send(msg);
                 done();
             }
         });
