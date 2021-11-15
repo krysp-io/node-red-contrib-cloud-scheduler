@@ -137,17 +137,20 @@
     <h3>Pre-requisites</h3>
     <p>Google Cloud Scheduler requires the URL to be accessible for triggering the scheduled task.</p>
  
-    <p>For this task to be invoked by cloud scheduler, this URL must be:</p>
-        <p>1. URL cannot be reached from internet.</p>
+    <p>For this task to be invoked by cloud scheduler,the URL must be:</p>
+        <p>1. URL must be accessible from the internet.</p>
         <p>2. Localhost or 127.0.0.1 will not work.</p>
-        <p>3. Use a ping service to test if the nodered server is reachable from outside the network.</p>
 
     <h3>Inputs</h3>
     <dl class="message-properties">
+        <dt>Credentials <span class="property-type">string</span></dt>
+        <dd>Google Cloud Credentials that will be configured in the node.</dd>
         <dt>Method <span class="property-type">string</span></dt>
-        <dd>HTTP method that can be configured in the node.If not supplied, POST will be used.</dd>
+        <dd>HTTP method that will be configured in the node.If not supplied, POST will be used.</dd>
         <dt>URL <span class="property-type">string</span></dt>
-        <dd>URL that can be configured in the node for creating HTTP in node.</dd>
+        <dd>Publicly accessible URL that will be configured in the node for creating HTTP in node.</dd>
+        <dt>Repeat <span class="property-type">string</span></dt>
+        <dd>Time interval on which task should be executed.</dd>
     </dl>
     <h3>Details</h3>
     <p>
@@ -362,6 +365,7 @@
                     var cronparts = node.crontab.split(" ");
                     var days = cronparts[4];
                     var minutesPart = cronparts[0].split("/");
+                    var hoursPart = cronparts[1].split("/");
                     if (!isNaN(minutesPart[1]) && cronparts[1] === '*') {
                         repeattype = "interval";
                         var r = "s";
