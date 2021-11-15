@@ -300,7 +300,7 @@
                     RED.sidebar.help.show("Scheduler");
                 })
 
-                $("#node-input-name").change(function () {
+                $("#node-input-name").keyup(function () {
                     this.url = `${window.location.origin}/${$("#node-input-name").val()}`;
                     console.log("test", this.url);
                     $("#node-input-url").val(this.url)
