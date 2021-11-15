@@ -30,7 +30,7 @@
     const scheduler = require('@google-cloud/scheduler');
 
 
-    function rawBodyParser(req, res, next) {
+    const rawBodyParser = (req, res, next) => {
         if (req.skipRawBodyParser) { next(); } // don't parse this if told to skip
         if (req._body) { return next(); }
         req.body = "";
@@ -64,7 +64,7 @@
         getBody(req, {
             length: req.headers['content-length'],
             encoding: isText ? "utf8" : null
-        }, function (err, buf) {
+        }, (err, buf) => {
             if (err) { return next(err); }
             if (!isText && checkUTF && isUtf8(buf)) {
                 buf = buf.toString()
@@ -76,7 +76,7 @@
 
     var corsSetup = false;
 
-    function createResponseWrapper(node, res) {
+    const createResponseWrapper = (node, res) => {
         var wrapper = {
             _res: res
         };
@@ -104,8 +104,8 @@
             "type",
             "vary"
         ];
-        toWrap.forEach(function (f) {
-            wrapper[f] = function () {
+        toWrap.forEach((f) => {
+            wrapper[f] = () => {
                 node.warn(RED._("httpin.errors.deprecated-call", { method: "msg.res." + f }));
                 var result = res[f].apply(res, arguments);
                 if (result === res) {
@@ -118,7 +118,7 @@
         return wrapper;
     }
 
-    var corsHandler = function (req, res, next) { next(); }
+    var corsHandler = (req, res, next) => { next(); }
 
     if (RED.settings.httpNodeCors) {
         corsHandler = cors(RED.settings.httpNodeCors);
@@ -163,25 +163,25 @@
     
                 var node = this;
     
-                this.errorHandler = function(err,req,res,next) {
+                this.errorHandler = (err,req,res,next) => {
                     node.warn(err);
                     res.sendStatus(500);
                 };
     
-                this.callback = function(req,res) {
-                    console.log('called', node);
+                this.callback = (req,res) => {
+                    console.log('called', this);
                     var msgid = RED.util.generateId();
                     res._msgid = msgid;
-                    if (node.method.match(/^(post|delete|put|options|patch)$/)) {
-                        node.send({_msgid:msgid,req:req,res:createResponseWrapper(node,res),payload:req.body});
-                    } else if (node.method == "get") {
-                        node.send({_msgid:msgid,req:req,res:createResponseWrapper(node,res),payload:req.query});
+                    if (this.method.match(/^(post|delete|put|options|patch)$/)) {
+                        this.send({_msgid:msgid,req:req,res:createResponseWrapper(this,res),payload:req.body});
+                    } else if (this.method == "get") {
+                        this.send({_msgid:msgid,req:req,res:createResponseWrapper(this,res),payload:req.query});
                     } else {
-                        node.send({_msgid:msgid,req:req,res:createResponseWrapper(node,res)});
+                        this.send({_msgid:msgid,req:req,res:createResponseWrapper(this,res)});
                     }
                 };
     
-                var httpMiddleware = function(req,res,next) { next(); }
+                var httpMiddleware = (req,res,next) => { next(); }
     
                 if (RED.settings.httpNodeMiddleware) {
                     if (typeof RED.settings.httpNodeMiddleware === "function" || Array.isArray(RED.settings.httpNodeMiddleware)) {
@@ -193,11 +193,11 @@
                 var jsonParser = bodyParser.json({limit:maxApiRequestSize});
                 var urlencParser = bodyParser.urlencoded({limit:maxApiRequestSize,extended:true});
     
-                var metricsHandler = function(req,res,next) { next(); }
+                var metricsHandler = (req,res,next) => { next(); }
                 if (this.metric()) {
-                    metricsHandler = function(req, res, next) {
+                    metricsHandler = (req, res, next) => {
                         var startAt = process.hrtime();
-                        onHeaders(res, function() {
+                        onHeaders(res, () => {
                             if (res._msgid) {
                                 var diff = process.hrtime(startAt);
                                 var ms = diff[0] * 1e3 + diff[1] * 1e-6;
@@ -212,9 +212,9 @@
                     };
                 }
     
-                var multipartParser = function(req,res,next) { next(); }
+                var multipartParser = (req,res,next) => { next(); }
 
-                function getUrl(path) {
+                const getUrl = (path) => {
                     var url = null;
                     var removeDoubleSlashFromUrl = path.split('//');
                     if (removeDoubleSlashFromUrl.length === 1) {
@@ -240,7 +240,7 @@
                 }
                 this.on("close",() => {
                     var node = this;
-                    RED.httpNode._router.stack.forEach(function(route,i,routes) {
+                    RED.httpNode._router.stack.forEach((route,i,routes) => {
                         if (route.route && route.route.path === node.url && route.route.methods[node.method]) {
                             routes.splice(i,1);
                         }
