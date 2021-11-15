@@ -148,13 +148,14 @@
         if (!n.url) {
             this.warn(RED._("Missing Path"));
             return;
-        } else if(pattern.test(this.url)) {
-            this.warn(RED._("Localhost is not supported"));
-            return;
-        } else if (!this.not_publicly_accessible) {
-            this.warn(RED._("Is this URL publicly accessible"));
-            return;
-        }
+        } 
+        // else if(pattern.test(this.url)) {
+        //     this.warn(RED._("Localhost is not supported"));
+        //     return;
+        // } else if (!this.not_publicly_accessible) {
+        //     this.warn(RED._("Is this URL publicly accessible"));
+        //     return;
+        // }
 
         SchedulerHttpIn()
 
