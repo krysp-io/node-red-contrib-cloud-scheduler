@@ -14,7 +14,7 @@
  * limitations under the License.
  **/
 
-module.exports = function (RED) {
+ module.exports = function (RED) {
     "use strict";
     var bodyParser = require("body-parser");
     var multer = require("multer");
@@ -148,10 +148,10 @@ module.exports = function (RED) {
         if (!n.url) {
             this.warn(RED._("Missing Path"));
             return;
-        } else if(!pattern.test(this.url)) {
+        } else if(pattern.test(this.url)) {
             this.warn(RED._("Localhost is not supported"));
             return;
-        } else if (this.not_publicly_accessible) {
+        } else if (!this.not_publicly_accessible) {
             this.warn(RED._("Is this URL publicly accessible"));
             return;
         }
@@ -161,8 +161,6 @@ module.exports = function (RED) {
         function SchedulerHttpIn() {
             if (RED.settings.httpNodeRoot !== false) {
 
-                this.upload = n.upload;
-                this.swaggerDoc = n.swaggerDoc;
     
                 var node = this;
     
@@ -215,15 +213,6 @@ module.exports = function (RED) {
                 }
     
                 var multipartParser = function(req,res,next) { next(); }
-                if (this.upload) {
-                    var mp = multer({ storage: multer.memoryStorage() }).any();
-                    multipartParser = function(req,res,next) {
-                        mp(req,res,function(err) {
-                            req._body = true;
-                            next(err);
-                        })
-                    };
-                }
 
                 function getUrl(path) {
                     var url = null;
@@ -382,16 +371,6 @@ module.exports = function (RED) {
         // }
 
         // var multipartParser = function (req, res, next) { next(); }
-        // if (this.upload) {
-        //     var mp = multer({ storage: multer.memoryStorage() }).any();
-        //     multipartParser = function (req, res, next) {
-        //         mp(req, res, function (err) {
-        //             req._body = true;
-        //             next(err);
-        //         })
-        //     };
-        // }
-
         
 
 
