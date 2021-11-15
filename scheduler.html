@@ -267,7 +267,7 @@
                 crontab: { value: "" },
                 once: { value: true },
                 onceDelay: { value: 0.1 },
-                url: { value: "", required: true, validate: function (v) { var pattern = /localhost|127.0.0.1/gi; return !pattern.test(v) } },
+                url: { value: `${window.location.origin}/Scheduler`, required: true, validate: function (v) { var pattern = /localhost|127.0.0.1/gi; return !pattern.test(v) } },
                 method: { value: "post" },
                 not_publicly_accessible: { value: false, required: true, validate: function (v) { return $("#node-input-not_publicly_accessible").prop("checked") } }
             },
@@ -300,9 +300,12 @@
                     RED.sidebar.help.show("Scheduler");
                 })
 
-                $("#node-input-url").on("change", function () {
-                    this.url = `${window.location.origin}/${$("#node-input-name").val()}`;
-                    $("#node-input-url").val(this.url)
+                $("#node-input-name").on("change", function () {
+                    const url = `${window.location.origin}/${$("#node-input-name").val()}`;
+                    if (this.url === url) {
+                        this.url = `${window.location.origin}/${$("#node-input-name").val()}`;
+                        $("#node-input-url").val(this.url)
+                    }
                 })
 
 
