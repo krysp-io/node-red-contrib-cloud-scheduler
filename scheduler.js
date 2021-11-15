@@ -320,7 +320,8 @@
                     const [response] = await client.createJob(request);
                     this.cronjob = response;
                 } catch (err) {
-                    this.warn(RED._(err));
+                    console.log("cloud scheduler err", err)
+                    this.log(RED._(err.message));
                     const [response] = await client.updateJob(request);
                     this.cronjob = response;
                 }
