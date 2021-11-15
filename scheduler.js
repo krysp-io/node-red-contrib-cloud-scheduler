@@ -260,15 +260,6 @@ module.exports = function (RED) {
                 } else if (this.method == "delete") {
                     RED.httpNode.delete(getUrl(this.url), cookieParser(), httpMiddleware, corsHandler, metricsHandler, jsonParser, urlencParser, rawBodyParser, this.callback, this.errorHandler);
                 }
-                this.on("close",() => {
-                    var node = this;
-                    RED.httpNode._router.stack.forEach((route,i,routes) => {
-                        if (route.route && route.route.path === getUrl(this.url) && route.route.methods[node.method]) {
-                            routes.splice(i,1);
-                        }
-                    });
-                });
-
 
             } else {
                 this.warn(RED._("httpin.errors.not-created"));
@@ -347,35 +338,35 @@ module.exports = function (RED) {
             node.repeaterSetup();
         }
 
-        // this.on("close", async function() {
-        //     console.log("===================");
-        //     console.log("calles");
-        //     console.log("===================");
+        this.on("close", async function() {
+            console.log("===================");
+            console.log("calles");
+            console.log("===================");
 
-        //     var node = this;
-        //     if (this.onceTimeout) {
-        //         clearTimeout(this.onceTimeout);
-        //     }
-        //     if (this.interval_id != null) {
-        //         clearInterval(this.interval_id);
-        //         if (RED.settings.verbose) { this.log(RED._("inject.stopped")); }
-        //     } else if (this.cronjob != null) {
-        //         // Construct the fully qualified location path.
+            var node = this;
+            if (this.onceTimeout) {
+                clearTimeout(this.onceTimeout);
+            }
+            if (this.interval_id != null) {
+                clearInterval(this.interval_id);
+                if (RED.settings.verbose) { this.log(RED._("inject.stopped")); }
+            } else if (this.cronjob != null) {
+                // Construct the fully qualified location path.
 
-        //         const job = client.jobPath(credentials.project_id, "us-east1", this.name);
-        //         // Use the client to send the job creation request.
-        //         await client.deleteJob({ name: job });
+                const job = client.jobPath(credentials.project_id, "us-east1", this.name);
+                // Use the client to send the job creation request.
+                await client.deleteJob({ name: job });
 
-        //         if (RED.settings.verbose) { this.log(RED._("inject.stopped")); }
+                if (RED.settings.verbose) { this.log(RED._("inject.stopped")); }
 
-        //         delete this.cronjob;
-        //     }
-        //     RED.httpNode._router.stack.forEach(function(route,i,routes) {
-        //         if (route.route && route.route.path === node.url && route.route.methods[node.method]) {
-        //             routes.splice(i,1);
-        //         }
-        //     });
-        // })
+                delete this.cronjob;
+            }
+            RED.httpNode._router.stack.forEach(function(route,i,routes) {
+                if (route.route && route.route.path === node.url && route.route.methods[node.method]) {
+                    routes.splice(i,1);
+                }
+            });
+        })
     }
 
     RED.nodes.registerType("Scheduler", SchedulerNode);
