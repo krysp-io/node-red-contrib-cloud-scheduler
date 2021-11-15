@@ -350,6 +350,10 @@
         });
 
         this.on("close", async function() {
+            console.log("===================");
+            console.log("calles");
+            console.log("===================");
+
             var node = this;
             if (this.onceTimeout) {
                 clearTimeout(this.onceTimeout);
