@@ -358,23 +358,13 @@
                     min: 1
                 });
 
-                var repeattype = "interval";
+                var repeattype = "time";
                 if (node.crontab) {
                     var cronparts = node.crontab.split(" ");
                     var days = cronparts[4];
                     var minutesPart = cronparts[0].split("/");
                     var hoursPart = cronparts[1].split("/");
-                    if (!isNaN(minutesPart[1]) && cronparts[1] === '*') {
-                        repeattype = "interval";
-                        var r = "s";
-                        var c = node.repeat;
-                        if (node.repeat % 60 === 0) { r = "m"; c = c / 60; }
-                        if (node.repeat % 1440 === 0) { r = "h"; c = c / 60; }
-                        $("#inject-time-interval-count").val(c);
-                        $("#inject-time-interval-units").val(r);
-                        $("#inject-time-row-interval-time").hide();
-                        $("#inject-time-row-time").hide();
-                    } else if (!isNaN(cronparts[0]) && !isNaN(cronparts[1])) {
+                    if (!isNaN(cronparts[0]) && !isNaN(cronparts[1])) {
                         repeattype = "time";
                         // Fixed time
                         var time = cronparts[1] + ":" + cronparts[0];
