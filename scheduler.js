@@ -177,6 +177,7 @@ module.exports = function (RED) {
                         }
                     });
                 }
+                done()
             });
 
             if (n.account) {
