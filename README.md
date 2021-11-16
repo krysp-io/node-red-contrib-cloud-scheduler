@@ -17,8 +17,8 @@ A node that allows to execute any flow at a given time interval.
     API from your local workstation.
     
     
-    <img src='https://static.node.iopulsedev.net/nodes/Scheduler_Config.png' alt='manage palette' width="300" height="450">
-    <img src='https://static.node.iopulsedev.net/nodes/Scheduler_Config_help.png' alt='manage palette' width="200" height="450">
+    <img src='https://static.node.iopulsedev.net/nodes/Scheduler_Config.png' alt='Config Node' width="300" height="450">
+    <img src='https://static.node.iopulsedev.net/nodes/Scheduler_Config_help.png' alt='config_help' width="200" height="450">
 
 ### Installing the client library
 
@@ -37,6 +37,7 @@ Restart your Node-RED instance and you should have a "Scheduler" node available 
 <p>1. After installation, drag the <b>scheduler</b> node from the palette to the workspace.</p>
 <p>2. Double click on the node to add timer.</p>
 
+<img src='https://static.node.iopulsedev.net/nodes/Scheduler_Timer.png' alt='config_help' width="200" height="450">
 
 ## Usage
 
