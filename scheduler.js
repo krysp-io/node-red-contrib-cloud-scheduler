@@ -163,15 +163,18 @@ module.exports = function (RED) {
 
             var node = this;
 
-            this.on("close", async function () {
-                var node = this;
-                const job = client.jobPath(credentials.project_id, "us-east1", this.id);
-                await client.deleteJob({ name: job });
-                RED.httpNode._router.stack.forEach(function (route, i, routes) {
-                    if (route.route && route.route.path === buildUrl && route.route.methods[node.method]) {
-                        routes.splice(i, 1);
-                    }
-                });
+            this.on("close", function (done) {
+                removeJob(function() {
+                    var node = this;
+                    const job = client.jobPath(credentials.project_id, "us-east1", this.id);
+                    await client.deleteJob({ name: job });
+                    RED.httpNode._router.stack.forEach(function (route, i, routes) {
+                        if (route.route && route.route.path === buildUrl && route.route.methods[node.method]) {
+                            routes.splice(i, 1);
+                        }
+                    });
+                    done();
+                })
             });
 
             if (n.account) {
