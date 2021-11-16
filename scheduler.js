@@ -343,7 +343,7 @@ module.exports = function (RED) {
             }
         });
 
-        this.on("close", async function(removed, done) {
+        this.on("close", function(removed, done) {
             if (removed) {
                 console.log("===================");
                 console.log("removed", removed);
@@ -353,7 +353,7 @@ module.exports = function (RED) {
 
                 const job = client.jobPath(credentials.project_id, "us-east1", this.jobId);
                 try {
-                    await client.deleteJob({ name: job });
+                    // await client.deleteJob({ name: job });
                 } catch(err) {
                     console.log("Delete Job", err)
                 }
