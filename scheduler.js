@@ -150,6 +150,7 @@ module.exports = function (RED) {
             }
             this.url = n.url;
             var pattern = /^http:|https:/;
+            var checkForLocalhost = /localhost|127.0.0.1/gi;
             if (this.url[0] !== '/' && !pattern.test(this.url)) {
                 this.url = '/' + this.url;
             }
@@ -161,6 +162,7 @@ module.exports = function (RED) {
             let credentials = null;
             let buildUrl = getUrl(this.url);
             this.jobCreated = false;
+            this.not_publicly_accessible = n.not_publicly_accessible;
 
             var node = this;
 
@@ -191,7 +193,17 @@ module.exports = function (RED) {
             if (!credentials) {
                 this.warn(RED._("Missing Google Cloud Credentials"));
                 return;
+            } else if (checkForLocalhost.test(this.url)) {
+                this.warn(RED._("Localhost is not supported."));
+                return;
+            } else if (!this.not_publicly_accessible) {
+                this.warn(RED._("Mandatory:Please click on the checkbox if this URL is publicly accessible."));
+                return;
+            } else if (!n.method) {
+                this.warn(RED._("Method is required."));
+                return;
             }
+
 
             // Create a client.
             const client = new scheduler.CloudSchedulerClient({
