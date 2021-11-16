@@ -46,6 +46,13 @@ Restart your Node-RED instance and you should have a "Scheduler" node available 
 <p>1. Utilize tools like ngrok to accept HTTP traffic</p>
 <p>2. Export their flows & import them to Krysp platform (built using Node-RED).</p>
 
+<img src='https://static.node.iopulsedev.net/Screenshot from 2021-11-16 09-11-55.png' alt='manage palette'>
+<img src='https://static.node.iopulsedev.net/Screenshot from 2021-11-16 09-12-16.png' alt='manage palette'>
+<img src='https://static.node.iopulsedev.net/Screenshot from 2021-11-16 09-12-33.png' alt='manage palette'>
+<img src='https://static.node.iopulsedev.net/Screenshot from 2021-11-16 09-13-03.png' alt='manage palette'>
+<img src='https://static.node.iopulsedev.net/Screenshot from 2021-11-16 09-13-15.png' alt='manage palette'>
+
+
 ## Discussions and suggestions
 
 Use the Krysp Forum: https://www.krysp.io/forum to ask questions or to discuss new features.
