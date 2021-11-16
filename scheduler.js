@@ -160,18 +160,23 @@ module.exports = function (RED) {
             this.jobId = null;
             let credentials = null;
             let buildUrl = getUrl(this.url);
+            this.jobCreated = false;
 
             var node = this;
 
-            this.on("close", async function () {
+            this.on("close", async function (removed, done) {
                 var node = this;
-                const job = client.jobPath(credentials.project_id, "us-east1", this.id);
-                await client.deleteJob({ name: job });
-                RED.httpNode._router.stack.forEach(async function (route, i, routes) {
-                    if (route.route && route.route.path === buildUrl && route.route.methods[node.method]) {
-                        routes.splice(i, 1);
-                    }
-                });
+                if (removed) {
+                    const job = client.jobPath(credentials.project_id, "us-east1", this.id);
+                    await client.deleteJob({ name: job });
+                } else {
+                    this.jobCreated = false;
+                    RED.httpNode._router.stack.forEach(async function (route, i, routes) {
+                        if (route.route && route.route.path === buildUrl && route.route.methods[node.method]) {
+                            routes.splice(i, 1);
+                        }
+                    });
+                }
             });
 
             if (n.account) {
@@ -212,79 +217,94 @@ module.exports = function (RED) {
                 job: job,
             };
 
-            this.errorHandler = function (err, req, res, next) {
-                node.warn(err);
-                res.sendStatus(500);
-            };
-
-            this.callback = async function (req, res) {
-                var msgid = RED.util.generateId();
-                res._msgid = msgid;
+            try {
                 await client.createJob(request);
-                if (node.method.match(/^(post|delete|put|options|patch)$/)) {
-                    node.send({ _msgid: msgid, req: req, res: createResponseWrapper(node, res), payload: req.body });
-                } else if (node.method == "get") {
-                    node.send({ _msgid: msgid, req: req, res: createResponseWrapper(node, res), payload: req.query });
-                } else {
-                    node.send({ _msgid: msgid, req: req, res: createResponseWrapper(node, res) });
+                node.emit("input", {});
+            } catch (err) {
+                this.jobCreated = true;
+                node.emit("input", {});
+            }
+
+            this.on("input", async function (msg, send, done) {
+                if (this.jobCreated) {
+                    await client.updateJob(request)
                 }
-            };
+                HTTPIn()
+            })
 
-            var httpMiddleware = function (req, res, next) { next(); }
+            function HTTPIn() {
+                this.errorHandler = function (err, req, res, next) {
+                    node.warn(err);
+                    res.sendStatus(500);
+                };
 
-            if (RED.settings.httpNodeMiddleware) {
-                if (typeof RED.settings.httpNodeMiddleware === "function" || Array.isArray(RED.settings.httpNodeMiddleware)) {
-                    httpMiddleware = RED.settings.httpNodeMiddleware;
+                this.callback = async function (req, res) {
+                    var msgid = RED.util.generateId();
+                    res._msgid = msgid;
+                    if (node.method.match(/^(post|delete|put|options|patch)$/)) {
+                        node.send({ _msgid: msgid, req: req, res: createResponseWrapper(node, res), payload: req.body });
+                    } else if (node.method == "get") {
+                        node.send({ _msgid: msgid, req: req, res: createResponseWrapper(node, res), payload: req.query });
+                    } else {
+                        node.send({ _msgid: msgid, req: req, res: createResponseWrapper(node, res) });
+                    }
+                };
+
+                var httpMiddleware = function (req, res, next) { next(); }
+
+                if (RED.settings.httpNodeMiddleware) {
+                    if (typeof RED.settings.httpNodeMiddleware === "function" || Array.isArray(RED.settings.httpNodeMiddleware)) {
+                        httpMiddleware = RED.settings.httpNodeMiddleware;
+                    }
+                }
+
+                var maxApiRequestSize = RED.settings.apiMaxLength || '5mb';
+                var jsonParser = bodyParser.json({ limit: maxApiRequestSize });
+                var urlencParser = bodyParser.urlencoded({ limit: maxApiRequestSize, extended: true });
+
+                var metricsHandler = function (req, res, next) { next(); }
+                if (this.metric()) {
+                    metricsHandler = function (req, res, next) {
+                        var startAt = process.hrtime();
+                        onHeaders(res, function () {
+                            if (res._msgid) {
+                                var diff = process.hrtime(startAt);
+                                var ms = diff[0] * 1e3 + diff[1] * 1e-6;
+                                var metricResponseTime = ms.toFixed(3);
+                                var metricContentLength = res.getHeader("content-length");
+                                //assuming that _id has been set for res._metrics in HttpOut node!
+                                node.metric("response.time.millis", { _msgid: res._msgid }, metricResponseTime);
+                                node.metric("response.content-length.bytes", { _msgid: res._msgid }, metricContentLength);
+                            }
+                        });
+                        next();
+                    };
+                }
+
+                var multipartParser = function (req, res, next) { next(); }
+                if (this.upload) {
+                    var mp = multer({ storage: multer.memoryStorage() }).any();
+                    multipartParser = function (req, res, next) {
+                        mp(req, res, function (err) {
+                            req._body = true;
+                            next(err);
+                        })
+                    };
+                }
+
+
+                if (this.method == "get") {
+                    RED.httpNode.get(buildUrl, cookieParser(), httpMiddleware, corsHandler, metricsHandler, this.callback, this.errorHandler);
+                } else if (this.method == "post") {
+                    RED.httpNode.post(buildUrl, cookieParser(), httpMiddleware, corsHandler, metricsHandler, jsonParser, urlencParser, multipartParser, rawBodyParser, this.callback, this.errorHandler);
+                } else if (this.method == "put") {
+                    RED.httpNode.put(buildUrl, cookieParser(), httpMiddleware, corsHandler, metricsHandler, jsonParser, urlencParser, rawBodyParser, this.callback, this.errorHandler);
+                } else if (this.method == "patch") {
+                    RED.httpNode.patch(buildUrl, cookieParser(), httpMiddleware, corsHandler, metricsHandler, jsonParser, urlencParser, rawBodyParser, this.callback, this.errorHandler);
+                } else if (this.method == "delete") {
+                    RED.httpNode.delete(buildUrl, cookieParser(), httpMiddleware, corsHandler, metricsHandler, jsonParser, urlencParser, rawBodyParser, this.callback, this.errorHandler);
                 }
             }
-
-            var maxApiRequestSize = RED.settings.apiMaxLength || '5mb';
-            var jsonParser = bodyParser.json({ limit: maxApiRequestSize });
-            var urlencParser = bodyParser.urlencoded({ limit: maxApiRequestSize, extended: true });
-
-            var metricsHandler = function (req, res, next) { next(); }
-            if (this.metric()) {
-                metricsHandler = function (req, res, next) {
-                    var startAt = process.hrtime();
-                    onHeaders(res, function () {
-                        if (res._msgid) {
-                            var diff = process.hrtime(startAt);
-                            var ms = diff[0] * 1e3 + diff[1] * 1e-6;
-                            var metricResponseTime = ms.toFixed(3);
-                            var metricContentLength = res.getHeader("content-length");
-                            //assuming that _id has been set for res._metrics in HttpOut node!
-                            node.metric("response.time.millis", { _msgid: res._msgid }, metricResponseTime);
-                            node.metric("response.content-length.bytes", { _msgid: res._msgid }, metricContentLength);
-                        }
-                    });
-                    next();
-                };
-            }
-
-            var multipartParser = function (req, res, next) { next(); }
-            if (this.upload) {
-                var mp = multer({ storage: multer.memoryStorage() }).any();
-                multipartParser = function (req, res, next) {
-                    mp(req, res, function (err) {
-                        req._body = true;
-                        next(err);
-                    })
-                };
-            }
-
-
-            if (this.method == "get") {
-                RED.httpNode.get(buildUrl, cookieParser(), httpMiddleware, corsHandler, metricsHandler, this.callback, this.errorHandler);
-            } else if (this.method == "post") {
-                RED.httpNode.post(buildUrl, cookieParser(), httpMiddleware, corsHandler, metricsHandler, jsonParser, urlencParser, multipartParser, rawBodyParser, this.callback, this.errorHandler);
-            } else if (this.method == "put") {
-                RED.httpNode.put(buildUrl, cookieParser(), httpMiddleware, corsHandler, metricsHandler, jsonParser, urlencParser, rawBodyParser, this.callback, this.errorHandler);
-            } else if (this.method == "patch") {
-                RED.httpNode.patch(buildUrl, cookieParser(), httpMiddleware, corsHandler, metricsHandler, jsonParser, urlencParser, rawBodyParser, this.callback, this.errorHandler);
-            } else if (this.method == "delete") {
-                RED.httpNode.delete(buildUrl, cookieParser(), httpMiddleware, corsHandler, metricsHandler, jsonParser, urlencParser, rawBodyParser, this.callback, this.errorHandler);
-            }
-
 
         } else {
             this.warn(RED._("httpin.errors.not-created"));
