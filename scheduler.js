@@ -219,7 +219,7 @@ module.exports = function (RED) {
                     uri: this.url,
                     httpMethod: this.method,
                     headers: {
-                        'Content-Type': 'application/json'
+                        'content-type': 'application/json'
                     },
                     body: { "msg.payload": "Scheduled job executed via Google Cloud Scheduler" }
                 },
