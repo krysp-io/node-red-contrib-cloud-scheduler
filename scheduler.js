@@ -164,7 +164,7 @@ module.exports = function (RED) {
             var node = this;
 
             this.on("close", function (done) {
-                removeJob(function() {
+                removeJob(async function() {
                     var node = this;
                     const job = client.jobPath(credentials.project_id, "us-east1", this.id);
                     await client.deleteJob({ name: job });
