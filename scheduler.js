@@ -148,7 +148,7 @@ module.exports = function (RED) {
         this.once = n.once;
         this.onceDelay = (n.onceDelay || 0.1) * 1000;
         this.interval_id = null;
-        this.cronjob = null;
+        this.cronjob = [];
         this.method = n.method;
         this.jobId = null;
         var node = this;
@@ -305,16 +305,12 @@ module.exports = function (RED) {
                     job: job,
                 };
 
-                // Use the client to send the job creation request.
+        
 
-                try {
-                    const [response] = await client.createJob(request);
-                    this.cronjob = response;
-                } catch (err) {
-                    console.log("cloud scheduler err", err)
-                    this.log(RED._(err.message));
-                    const [response] = await client.updateJob(request);
-                    this.cronjob = response;
+                if (this.cronjob.length) {
+                    client.updateJob(request).then(response => this.cronjob = response).catch(err => node.warn(err))
+                } else {
+                    client.createJob(request).then(response => this.cronjob = response).catch(err => node.warn(err))
                 }
             }
         }
@@ -328,17 +324,6 @@ module.exports = function (RED) {
         } else {
             node.repeaterSetup();
         }
-
-        node.on("input", function(msg, send, done) {
-            var errors = [];
-
-            if (errors.length) {
-                done(errors.join('; '));
-            } else {
-                send(msg);
-                done();
-            }
-        });
 
         this.on("close", async function(removed, done) {
             if (removed) {
@@ -365,25 +350,6 @@ module.exports = function (RED) {
     }
 
     RED.nodes.registerType("Scheduler", SchedulerNode);
-
-    RED.httpAdmin.post("/inject/:id", RED.auth.needsPermission("inject.write"), function (req, res) {
-        var node = RED.nodes.getNode(req.params.id);
-        if (node != null) {
-            try {
-                if (req.body && req.body.__user_inject_props__) {
-                    node.receive(req.body);
-                } else {
-                    node.receive();
-                }
-                res.sendStatus(200);
-            } catch (err) {
-                res.sendStatus(500);
-                node.error(RED._("inject.failed", { error: err.toString() }));
-            }
-        } else {
-            res.sendStatus(404);
-        }
-    });
 }
 
 
