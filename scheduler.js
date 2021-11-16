@@ -217,22 +217,25 @@ module.exports = function (RED) {
                 job: job,
             };
 
-            try {
-                await client.createJob(request);
-                node.emit("input", {});
-            } catch (err) {
-                this.jobCreated = true;
-                node.emit("input", {});
-            }
+            
+                client.createJob(request).then(created => node.emit("input", {})).catch(err => {
+                    this.jobCreated = true;
+                    node.emit("input", {});
+                })
 
-            this.on("input", async function (msg, send, done) {
+            this.on("input", HTTPIn);
+            
+            
+            async function HTTPIn(msg, send, done) {
                 if (this.jobCreated) {
-                    await client.updateJob(request)
+                    try {
+                        await client.updateJob(request);
+                        this.jobCreated = false;
+                    } catch(err) {
+                        this.jobCreated = false;
+                        node.emit("input", {})
+                    }
                 }
-                HTTPIn()
-            })
-
-            function HTTPIn() {
                 this.errorHandler = function (err, req, res, next) {
                     node.warn(err);
                     res.sendStatus(500);
