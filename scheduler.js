@@ -332,16 +332,16 @@ module.exports = function (RED) {
             node.repeaterSetup();
         }
 
-        this.on("input", function(msg, send, done) {
-            var errors = [];
+        // this.on("input", function(msg, send, done) {
+        //     var errors = [];
 
-            if (errors.length) {
-                done(errors.join('; '));
-            } else {
-                send(msg);
-                done();
-            }
-        });
+        //     if (errors.length) {
+        //         done(errors.join('; '));
+        //     } else {
+        //         send(msg);
+        //         done();
+        //     }
+        // });
 
         // this.on("close", function(removed, done) {
         //     if (removed) {
