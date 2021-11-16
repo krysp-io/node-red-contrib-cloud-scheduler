@@ -221,7 +221,7 @@ module.exports = function (RED) {
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ "message": "Scheduled job executed via Google Cloud Scheduler" })
+                    body: { "message": "Scheduled job executed via Google Cloud Scheduler" }
                 },
                 schedule: this.crontab,
                 timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone
