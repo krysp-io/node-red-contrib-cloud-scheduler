@@ -44,12 +44,12 @@
         <label for="node-input-not_publicly_accessible" style="display: inline;width: 100%;"> This URL is accessible from the internet. <a href="#" id="node-red-help">Help</a></label>
     </div>
     
-    <div class="d-flex justify-content-center" id="node-once">
+    <!-- <div class="d-flex justify-content-center" id="node-once">
         <label for="node-input-once">&nbsp;</label>
         <span>inject once after</span>&nbsp;
         <input type="text" id="node-input-onceDelay" placeholder="0.1" style="width:45px; height:28px;">&nbsp;
         <span>seconds, then</span>
-    </div>
+    </div> -->
 
     <div class="form-row">
         <label for=""><i class="fa fa-repeat"></i> <span> Repeat</span></label>
@@ -316,12 +316,12 @@
                     $(".inject-time-row").hide();
                     $("#inject-time-row-" + id).show();
                     if ((id == "none") || (id == "interval") || (id == "interval-time")) {
-                        $("#node-once").show();
-                        $("#node-input-once").prop('checked', true);
+                        // $("#node-once").show();
+                        // $("#node-input-once").prop('checked', true);
                     }
                     else {
-                        $("#node-once").hide();
-                        $("#node-input-once").prop('checked', false);
+                        // $("#node-once").hide();
+                        // $("#node-input-once").prop('checked', false);
                     }
 
                     // Scroll down
