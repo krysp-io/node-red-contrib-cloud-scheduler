@@ -366,7 +366,7 @@
                     var minutesPart = cronparts[0].split("/");
                     var hoursPart = cronparts[1].split("/");
                     var checkForintervalTime = cronparts[1].split(",");
-                    if ((!isNaN(minutes[1]) || !isNaN(hoursPart[1])) && checkForintervalTime.length <= 0) {
+                    if (((!isNaN(minutesPart[1]) && minutesPart.length>1) || !(isNaN(hoursPart[1] && hoursPart.length>1))) && checkForintervalTime.length <= 1) {
                         repeattype = "interval";
                         const count = minutesPart[1] !== '*' ? minutesPart[1] : hoursPart[1];
                         $("#inject-time-interval-count").val(count)
