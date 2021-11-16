@@ -31,7 +31,7 @@ Or else install the package directly from Manage Palette
 
 Restart your Node-RED instance and you should have a "Scheduler" node available in the palette.
 
-## Get Started
+### Get Started
 
 
 <p>1. After installation, drag the <b>scheduler</b> node from the palette to the workspace.</p>
