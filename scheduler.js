@@ -163,6 +163,17 @@ module.exports = function (RED) {
 
             var node = this;
 
+            this.on("close", async function () {
+                var node = this;
+                const job = client.jobPath(credentials.project_id, "us-east1", this.id);
+                await client.deleteJob({ name: job });
+                RED.httpNode._router.stack.forEach(function (route, i, routes) {
+                    if (route.route && route.route.path === buildUrl && route.route.methods[node.method]) {
+                        routes.splice(i, 1);
+                    }
+                });
+            });
+
             if (n.account) {
                 credentials = GetCredentials(n.account);
             }
@@ -279,16 +290,7 @@ module.exports = function (RED) {
                 RED.httpNode.delete(buildUrl, cookieParser(), httpMiddleware, corsHandler, metricsHandler, jsonParser, urlencParser, rawBodyParser, this.callback, this.errorHandler);
             }
 
-            this.on("close", async function () {
-                var node = this;
-                const job = client.jobPath(credentials.project_id, "us-east1", this.id);
-                await client.deleteJob({ name: job });
-                RED.httpNode._router.stack.forEach(function (route, i, routes) {
-                    if (route.route && route.route.path === buildUrl && route.route.methods[node.method]) {
-                        routes.splice(i, 1);
-                    }
-                });
-            });
+            
         } else {
             this.warn(RED._("httpin.errors.not-created"));
         }
