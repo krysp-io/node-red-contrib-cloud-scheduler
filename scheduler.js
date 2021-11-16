@@ -149,7 +149,8 @@ module.exports = function (RED) {
                 return;
             }
             this.url = n.url;
-            if (this.url[0] !== '/') {
+            var pattern = /^http:|https:/;
+            if (this.url[0] !== '/' && !pattern.test(this.url)) {
                 this.url = '/' + this.url;
             }
             this.method = n.method;
@@ -206,12 +207,12 @@ module.exports = function (RED) {
             if (this.cronjob.name) {
                 client.updateJob(request).then(response => {
                     [this.cronjob] = [response]; 
-                    node.log([response])
+                    node.warn([response])
                 }).catch(err => node.warn(err))
             } else {
                 client.createJob(request).then(response => {
                     [this.cronjob] = [response]; 
-                    node.log([response])
+                    node.warn([response])
                 }).catch(err => node.warn(err))
             }
 
