@@ -368,9 +368,11 @@
                     var checkForintervalTime = cronparts[1].split(",");
                     var checkForintervalTimeDifference = cronparts[1].split("-")
                     if (
-                        ((!isNaN(minutesPart[1]) && minutesPart.length>1) 
-                        || 
-                        !(isNaN(hoursPart[1] && hoursPart.length>1))) 
+                        (
+                            (!isNaN(minutesPart[1]) && minutesPart.length>1) 
+                            || 
+                            (!isNaN(hoursPart[1]) && hoursPart.length>1)
+                        ) 
                         && 
                         checkForintervalTime.length <= 1 
                         && 
