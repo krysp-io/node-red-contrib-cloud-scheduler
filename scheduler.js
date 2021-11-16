@@ -251,6 +251,7 @@ module.exports = function (RED) {
                     } else {
                         node.send({ _msgid: msgid, req: req, res: createResponseWrapper(node, res) });
                     }
+                    done()
                 };
 
                 var httpMiddleware = function (req, res, next) { next(); }
