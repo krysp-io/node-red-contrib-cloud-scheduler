@@ -143,44 +143,43 @@ module.exports = function (RED) {
     function SchedulerNode(n) {
         RED.nodes.createNode(this, n);
 
-        this.repeat = n.repeat;
-        this.crontab = n.crontab;
-        this.once = n.once;
-        this.onceDelay = (n.onceDelay || 0.1) * 1000;
-        this.interval_id = null;
-        this.cronjob = [];
-        this.method = n.method;
-        this.jobId = null;
-        var node = this;
+        // this.repeat = n.repeat;
+        // this.crontab = n.crontab;
+        // this.once = n.once;
+        // this.onceDelay = (n.onceDelay || 0.1) * 1000;
+        // this.interval_id = null;
+        // this.cronjob = [];
+        // this.method = n.method;
+        // this.jobId = null;
+        // var node = this;
         this.url = n.url;
-        this.not_publicly_accessible = n.not_publicly_accessible;
-        var pattern = /localhost|127.0.0.1/gi;
-        let credentials = null;
+        // this.not_publicly_accessible = n.not_publicly_accessible;
+        // var pattern = /localhost|127.0.0.1/gi;
+        // let credentials = null;
 
-        if (n.account) {
-            credentials = GetCredentials(n.account);
-        }
+        // if (n.account) {
+        //     credentials = GetCredentials(n.account);
+        // }
 
-        function GetCredentials(node) {
-            return JSON.parse(RED.nodes.getCredentials(node).account);
-        }
+        // function GetCredentials(node) {
+        //     return JSON.parse(RED.nodes.getCredentials(node).account);
+        // }
 
 
-        if (!n.url) {
-            this.warn(RED._("Missing Path."));
-            return;
-        } else if (pattern.test(this.url)) {
-            this.warn(RED._("Localhost is not supported."));
-            return;
-        } else if (!this.not_publicly_accessible) {
-            this.warn(RED._("Mandatory:Please click on the checkbox if this URL is publicly accessible."));
-            return;
-        } else if (!credentials) {
-            this.warn(RED._("Google Cloud Credentials are required."));
-            return;
-        }
+        // if (!n.url) {
+        //     this.warn(RED._("Missing Path."));
+        //     return;
+        // } else if (pattern.test(this.url)) {
+        //     this.warn(RED._("Localhost is not supported."));
+        //     return;
+        // } else if (!this.not_publicly_accessible) {
+        //     this.warn(RED._("Mandatory:Please click on the checkbox if this URL is publicly accessible."));
+        //     return;
+        // } else if (!credentials) {
+        //     this.warn(RED._("Google Cloud Credentials are required."));
+        //     return;
+        // }
 
-        const SchedulerHttpIn = () => {
 
             if (RED.settings.httpNodeRoot !== false) {
 
@@ -241,104 +240,104 @@ module.exports = function (RED) {
 
 
                 if (this.method == "get") {
-                    RED.httpNode.get(getUrl(this.url), cookieParser(), httpMiddleware, corsHandler, metricsHandler, this.callback, this.errorHandler);
+                    RED.httpNode.get(this.url, cookieParser(), httpMiddleware, corsHandler, metricsHandler, this.callback, this.errorHandler);
                 } else if (this.method == "post") {
-                    RED.httpNode.post(getUrl(this.url), cookieParser(), httpMiddleware, corsHandler, metricsHandler, jsonParser, urlencParser, multipartParser, rawBodyParser, this.callback, this.errorHandler);
+                    RED.httpNode.post(this.url, cookieParser(), httpMiddleware, corsHandler, metricsHandler, jsonParser, urlencParser, multipartParser, rawBodyParser, this.callback, this.errorHandler);
                 } else if (this.method == "put") {
-                    RED.httpNode.put(getUrl(this.url), cookieParser(), httpMiddleware, corsHandler, metricsHandler, jsonParser, urlencParser, rawBodyParser, this.callback, this.errorHandler);
+                    RED.httpNode.put(this.url, cookieParser(), httpMiddleware, corsHandler, metricsHandler, jsonParser, urlencParser, rawBodyParser, this.callback, this.errorHandler);
                 } else if (this.method == "patch") {
-                    RED.httpNode.patch(getUrl(this.url), cookieParser(), httpMiddleware, corsHandler, metricsHandler, jsonParser, urlencParser, rawBodyParser, this.callback, this.errorHandler);
+                    RED.httpNode.patch(this.url, cookieParser(), httpMiddleware, corsHandler, metricsHandler, jsonParser, urlencParser, rawBodyParser, this.callback, this.errorHandler);
                 } else if (this.method == "delete") {
-                    RED.httpNode.delete(getUrl(this.url), cookieParser(), httpMiddleware, corsHandler, metricsHandler, jsonParser, urlencParser, rawBodyParser, this.callback, this.errorHandler);
+                    RED.httpNode.delete(this.url, cookieParser(), httpMiddleware, corsHandler, metricsHandler, jsonParser, urlencParser, rawBodyParser, this.callback, this.errorHandler);
                 }
 
             } else {
                 this.warn(RED._("httpin.errors.not-created"));
             }
-        }
+    //     }
 
-        SchedulerHttpIn();
-
-
-        // Create a client.
-        const client = new scheduler.CloudSchedulerClient({
-            credentials: credentials
-        });
-
-        // Construct the fully qualified location path.
-        const parent = client.locationPath(credentials.project_id, "us-east1");
-
-        if (node.repeat > 2147483) {
-            node.error(RED._("inject.errors.toolong", this));
-            delete node.repeat;
-        }
-
-        node.repeaterSetup = async function () {
-            if (this.crontab) {
-                if (RED.settings.verbose) {
-                    this.log(RED._("inject.crontab", this));
-                }
+    //     SchedulerHttpIn();
 
 
-                this.jobId = n.id;
-                const job = {
-                    name: `projects/${credentials.project_id}/locations/us-east1/jobs/${this.jobId}`,
-                    httpTarget: {
-                        uri: this.url,
-                        httpMethod: this.method,
-                        body: { "message": "Scheduled job executed via Google Cloud Scheduler" }
-                    },
-                    schedule: this.crontab,
-                    timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone
-                };
+    //     // Create a client.
+    //     const client = new scheduler.CloudSchedulerClient({
+    //         credentials: credentials
+    //     });
 
-                const request = {
-                    parent: parent,
-                    job: job,
-                };
+    //     // Construct the fully qualified location path.
+    //     const parent = client.locationPath(credentials.project_id, "us-east1");
+
+    //     if (node.repeat > 2147483) {
+    //         node.error(RED._("inject.errors.toolong", this));
+    //         delete node.repeat;
+    //     }
+
+    //     node.repeaterSetup = async function () {
+    //         if (this.crontab) {
+    //             if (RED.settings.verbose) {
+    //                 this.log(RED._("inject.crontab", this));
+    //             }
+
+
+    //             this.jobId = n.id;
+    //             const job = {
+    //                 name: `projects/${credentials.project_id}/locations/us-east1/jobs/${this.jobId}`,
+    //                 httpTarget: {
+    //                     uri: this.url,
+    //                     httpMethod: this.method,
+    //                     body: { "message": "Scheduled job executed via Google Cloud Scheduler" }
+    //                 },
+    //                 schedule: this.crontab,
+    //                 timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone
+    //             };
+
+    //             const request = {
+    //                 parent: parent,
+    //                 job: job,
+    //             };
 
         
 
-                if (this.cronjob.length) {
-                    client.updateJob(request).then(response => this.cronjob = response).catch(err => node.warn(err))
-                } else {
-                    client.createJob(request).then(response => this.cronjob = response).catch(err => node.warn(err))
-                }
-            }
-        }
+    //             if (this.cronjob.length) {
+    //                 client.updateJob(request).then(response => this.cronjob = response).catch(err => node.warn(err))
+    //             } else {
+    //                 client.createJob(request).then(response => this.cronjob = response).catch(err => node.warn(err))
+    //             }
+    //         }
+    //     }
 
-        // Construct the request body.
-        if (this.once) {
-            this.onceTimeout = setTimeout(function () {
-                node.repeaterSetup();
-            }, this.onceDelay);
-        } else {
-            node.repeaterSetup();
-        }
+    //     // Construct the request body.
+    //     if (this.once) {
+    //         this.onceTimeout = setTimeout(function () {
+    //             node.repeaterSetup();
+    //         }, this.onceDelay);
+    //     } else {
+    //         node.repeaterSetup();
+    //     }
 
-        this.on("close", async function(removed, done) {
-            if (removed) {
-                // Construct the fully qualified location path.
+    //     this.on("close", async function(removed, done) {
+    //         if (removed) {
+    //             // Construct the fully qualified location path.
 
-                const job = client.jobPath(credentials.project_id, "us-east1", this.jobId);
-                try {
-                    await client.deleteJob({ name: job });
-                } catch(err) {
-                    console.log("Delete Job", err)
-                }
+    //             const job = client.jobPath(credentials.project_id, "us-east1", this.jobId);
+    //             try {
+    //                 await client.deleteJob({ name: job });
+    //             } catch(err) {
+    //                 console.log("Delete Job", err)
+    //             }
 
-                delete this.cronjob;
-            } else {
-                var node = this;
-                RED.httpNode._router.stack.forEach(function(route,i,routes) {
-                    if (route.route && route.route.path === node.url && route.route.methods[node.method]) {
-                        routes.splice(i,1);
-                    }
-                });
-            }
-            done();
-        })
-    }
+    //             this.cronjob = [];
+    //         } else {
+    //             var node = this;
+    //             RED.httpNode._router.stack.forEach(function(route,i,routes) {
+    //                 if (route.route && route.route.path === node.url && route.route.methods[node.method]) {
+    //                     routes.splice(i,1);
+    //                 }
+    //             });
+    //         }
+    //         done();
+    //     })
+    // }
 
     RED.nodes.registerType("Scheduler", SchedulerNode);
 }
