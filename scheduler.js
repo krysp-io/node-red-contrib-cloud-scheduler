@@ -135,9 +135,7 @@ module.exports = function (RED) {
         } else {
             var getPathOfUrl = removeDoubleSlashFromUrl[1].split('/');
             getPathOfUrl.shift();
-            console.log(getPathOfUrl);
             var buildUrlStr = getPathOfUrl.join('/');
-            console.log(buildUrlStr);
             return `/${buildUrlStr}`
         }
     }
@@ -195,7 +193,6 @@ module.exports = function (RED) {
                 };
 
                 this.callback = (req, res) => {
-                    console.log("called");
                     var msgid = RED.util.generateId();
                     res._msgid = msgid;
                     if (node.method.match(/^(post|delete|put|options|patch)$/)) {
@@ -311,13 +308,13 @@ module.exports = function (RED) {
                 // Use the client to send the job creation request.
 
                 try {
-                    // const [response] = await client.createJob(request);
-                    // this.cronjob = response;
+                    const [response] = await client.createJob(request);
+                    this.cronjob = response;
                 } catch (err) {
-                    // console.log("cloud scheduler err", err)
-                    // this.log(RED._(err.message));
-                    // const [response] = await client.updateJob(request);
-                    // this.cronjob = response;
+                    console.log("cloud scheduler err", err)
+                    this.log(RED._(err.message));
+                    const [response] = await client.updateJob(request);
+                    this.cronjob = response;
                 }
             }
         }
