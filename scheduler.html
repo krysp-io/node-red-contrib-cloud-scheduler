@@ -269,7 +269,10 @@
                 onceDelay: { value: 0.1 },
                 url: { value: `${window.location.origin}/Scheduler`, required: true, validate: function (v) { var pattern = /localhost|127.0.0.1/gi; return !pattern.test(v) }},
                 method: { value: "post" },
-                not_publicly_accessible: { value: false }
+                not_publicly_accessible: { value: false },
+                method: {value:"get",required:true},
+                upload: {value:false},
+                swaggerDoc: {type:"swagger-doc", required:false}
             },
             icon: "inject.svg",
             inputs: 0,
