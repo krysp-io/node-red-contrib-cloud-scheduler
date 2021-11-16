@@ -15,6 +15,10 @@ A node that allows to execute any flow at a given time interval.
 1.  [Enable the Google Cloud Scheduler API][enable_api].
 1.  [Set up authentication with a service account][auth] so you can access the
     API from your local workstation.
+    
+    
+    <img src='https://static.node.iopulsedev.net/nodes/Scheduler_Config.png' alt='Config Node' width="300" height="450">
+    <img src='https://static.node.iopulsedev.net/nodes/Scheduler_Config_help.png' alt='config_help' width="200" height="450">
 
 ### Installing the client library
 
@@ -27,12 +31,16 @@ Or else install the package directly from Manage Palette
 
 Restart your Node-RED instance and you should have a "Scheduler" node available in the palette.
 
-## Get Started
+### Get Started
 
 
 <p>1. After installation, drag the <b>scheduler</b> node from the palette to the workspace.</p>
 <p>2. Double click on the node to add timer.</p>
 
+<p>
+<img src='https://static.node.iopulsedev.net/nodes/Scheduler_Timer.png' alt='config_help' width="300" height="450" />
+<img src='https://static.node.iopulsedev.net/nodes/Scheduler_Timer_help.png' alt='config_help' width="200" height="450" />
+   </p>
 
 ## Usage
 
@@ -45,12 +53,6 @@ Restart your Node-RED instance and you should have a "Scheduler" node available 
 <p>To test the scheduler node in a local environment, developer can either</p>
 <p>1. Utilize tools like ngrok to accept HTTP traffic</p>
 <p>2. Export their flows & import them to Krysp platform (built using Node-RED).</p>
-
-<img src='https://static.node.iopulsedev.net/Screenshot from 2021-11-16 09-11-55.png' alt='manage palette'>
-<img src='https://static.node.iopulsedev.net/Screenshot from 2021-11-16 09-12-16.png' alt='manage palette'>
-<img src='https://static.node.iopulsedev.net/Screenshot from 2021-11-16 09-12-33.png' alt='manage palette'>
-<img src='https://static.node.iopulsedev.net/Screenshot from 2021-11-16 09-13-03.png' alt='manage palette'>
-<img src='https://static.node.iopulsedev.net/Screenshot from 2021-11-16 09-13-15.png' alt='manage palette'>
 
 
 ## Discussions and suggestions
