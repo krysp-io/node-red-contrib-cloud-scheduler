@@ -17,8 +17,8 @@ A node that allows to execute any flow at a given time interval.
     API from your local workstation.
     
     
-    <img src='https://static.node.iopulsedev.net/nodes/Scheduler_Config.png' alt='manage palette' width="600" height="450">
-    <img src='https://static.node.iopulsedev.net/nodes/Scheduler_Config_help.png' alt='manage palette' width="400" height="450">
+    <img src='https://static.node.iopulsedev.net/nodes/Scheduler_Config.png' alt='manage palette' width="300" height="450">
+    <img src='https://static.node.iopulsedev.net/nodes/Scheduler_Config_help.png' alt='manage palette' width="200" height="450">
 
 ### Installing the client library
 
