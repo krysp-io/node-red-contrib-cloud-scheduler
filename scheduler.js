@@ -347,7 +347,7 @@ module.exports = function (RED) {
     
     RED.nodes.registerType("Scheduler", SchedulerNode);
 
-    SchedulerNode.prototype.close = function() {
+    SchedulerNode.prototype.close = async function() {
         console.log("===================");
         console.log("removed", removed);
         console.log("===================");
