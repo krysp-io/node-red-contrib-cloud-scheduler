@@ -158,7 +158,7 @@ module.exports = function (RED) {
             this.crontab = n.crontab;
             this.jobId = null;
             let credentials = null;
-            this.cronjob = [];
+            this.cronjob = {};
             let buildUrl = getUrl(this.url);
 
             var node = this;
@@ -203,10 +203,16 @@ module.exports = function (RED) {
 
 
 
-            if (this.cronjob.length) {
-                client.updateJob(request).then(response => this.cronjob = response).catch(err => node.warn(err))
+            if (this.cronjob.name) {
+                client.updateJob(request).then(response => {
+                    [this.cronjob] = [response]; 
+                    node.log([response])
+                }).catch(err => node.warn(err))
             } else {
-                client.createJob(request).then(response => this.cronjob = response).catch(err => node.warn(err))
+                client.createJob(request).then(response => {
+                    [this.cronjob] = [response]; 
+                    node.log([response])
+                }).catch(err => node.warn(err))
             }
 
             this.errorHandler = function (err, req, res, next) {
