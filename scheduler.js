@@ -159,6 +159,7 @@ module.exports = function (RED) {
             this.jobId = null;
             let credentials = null;
             this.cronjob = [];
+            let buildUrl = getUrl(this.url);
 
             var node = this;
 
@@ -267,22 +268,23 @@ module.exports = function (RED) {
                 };
             }
 
+
             if (this.method == "get") {
-                RED.httpNode.get(this.url, cookieParser(), httpMiddleware, corsHandler, metricsHandler, this.callback, this.errorHandler);
+                RED.httpNode.get(buildUrl, cookieParser(), httpMiddleware, corsHandler, metricsHandler, this.callback, this.errorHandler);
             } else if (this.method == "post") {
-                RED.httpNode.post(this.url, cookieParser(), httpMiddleware, corsHandler, metricsHandler, jsonParser, urlencParser, multipartParser, rawBodyParser, this.callback, this.errorHandler);
+                RED.httpNode.post(buildUrl, cookieParser(), httpMiddleware, corsHandler, metricsHandler, jsonParser, urlencParser, multipartParser, rawBodyParser, this.callback, this.errorHandler);
             } else if (this.method == "put") {
-                RED.httpNode.put(this.url, cookieParser(), httpMiddleware, corsHandler, metricsHandler, jsonParser, urlencParser, rawBodyParser, this.callback, this.errorHandler);
+                RED.httpNode.put(buildUrl, cookieParser(), httpMiddleware, corsHandler, metricsHandler, jsonParser, urlencParser, rawBodyParser, this.callback, this.errorHandler);
             } else if (this.method == "patch") {
-                RED.httpNode.patch(this.url, cookieParser(), httpMiddleware, corsHandler, metricsHandler, jsonParser, urlencParser, rawBodyParser, this.callback, this.errorHandler);
+                RED.httpNode.patch(buildUrl, cookieParser(), httpMiddleware, corsHandler, metricsHandler, jsonParser, urlencParser, rawBodyParser, this.callback, this.errorHandler);
             } else if (this.method == "delete") {
-                RED.httpNode.delete(this.url, cookieParser(), httpMiddleware, corsHandler, metricsHandler, jsonParser, urlencParser, rawBodyParser, this.callback, this.errorHandler);
+                RED.httpNode.delete(buildUrl, cookieParser(), httpMiddleware, corsHandler, metricsHandler, jsonParser, urlencParser, rawBodyParser, this.callback, this.errorHandler);
             }
 
             this.on("close", function () {
                 var node = this;
                 RED.httpNode._router.stack.forEach(function (route, i, routes) {
-                    if (route.route && route.route.path === node.url && route.route.methods[node.method]) {
+                    if (route.route && route.route.path === buildUrl && route.route.methods[node.method]) {
                         routes.splice(i, 1);
                     }
                 });
