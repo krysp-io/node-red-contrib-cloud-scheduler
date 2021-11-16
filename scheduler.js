@@ -345,10 +345,6 @@ module.exports = function (RED) {
 
         this.on("close", async function(removed, done) {
             if (removed) {
-                console.log("===================");
-                console.log("removed", removed);
-                console.log("===================");
-
                 // Construct the fully qualified location path.
 
                 const job = client.jobPath(credentials.project_id, "us-east1", this.jobId);
