@@ -140,7 +140,7 @@ module.exports = function (RED) {
         }
     }
 
-    function SchedulerHTTPIn(n) {
+    async function SchedulerHTTPIn(n) {
         RED.nodes.createNode(this, n);
         if (RED.settings.httpNodeRoot !== false) {
 
@@ -159,7 +159,6 @@ module.exports = function (RED) {
             this.crontab = n.crontab;
             this.jobId = null;
             let credentials = null;
-            this.cronjob = {};
             let buildUrl = getUrl(this.url);
 
             var node = this;
@@ -202,24 +201,11 @@ module.exports = function (RED) {
                 job: job,
             };
 
-            console.log(this.cronjob);
 
-            if (this.cronjob.name) {
-                client.updateJob(request).then(updated => {
-                    console.log('respomse');
-                    const [response] = updated; 
-                    node.cronjob = {...response};
-                    console.log('update Job', this.cronjob);
-                    node.warn(this.cronjob)
-                }).catch(err => node.warn(err))
-            } else {
-                client.createJob(request).then(created => {
-                    const [response] = created; 
-                    node.cronjob = {...response};
-                    console.log('create Job', this.cronjob);
-                    node.warn(this.cronjob)
-                }).catch(err => node.warn(err))
-            }
+                
+            client.createJob(request).then(created => {
+                node.warn(created)
+            }).catch(err => node.warn(err))
 
             this.errorHandler = function (err, req, res, next) {
                 node.warn(err);
@@ -293,8 +279,10 @@ module.exports = function (RED) {
                 RED.httpNode.delete(buildUrl, cookieParser(), httpMiddleware, corsHandler, metricsHandler, jsonParser, urlencParser, rawBodyParser, this.callback, this.errorHandler);
             }
 
-            this.on("close", function () {
+            this.on("close", async function () {
                 var node = this;
+                const job = client.jobPath(credentials.project_id, "us-east1", this.id);
+                await client.deleteJob({ name: job });
                 RED.httpNode._router.stack.forEach(function (route, i, routes) {
                     if (route.route && route.route.path === buildUrl && route.route.methods[node.method]) {
                         routes.splice(i, 1);
