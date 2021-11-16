@@ -362,7 +362,7 @@ module.exports = function (RED) {
         }
 
         delete this.cronjob;
-    })
+    }
 
     RED.httpAdmin.post("/inject/:id", RED.auth.needsPermission("inject.write"), function (req, res) {
         var node = RED.nodes.getNode(req.params.id);
