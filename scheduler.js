@@ -204,18 +204,18 @@ module.exports = function (RED) {
 
             console.log(this.cronjob);
 
-            if (this.cronjob.name) {
+            if (this.cronjob[0].name) {
                 client.updateJob(request).then(response => {
                     console.log('respomse');
-                    [this.cronjob] = [response]; 
+                    [this.cronjob] = response; 
                     console.log('update Job', this.cronjob);
-                    node.warn([response])
+                    node.warn(this.cronjob)
                 }).catch(err => node.warn(err))
             } else {
                 client.createJob(request).then(response => {
-                    [this.cronjob] = [response]; 
+                    [this.cronjob] = response; 
                     console.log('create Job', this.cronjob);
-                    node.warn([response])
+                    node.warn(this.cronjob)
                 }).catch(err => node.warn(err))
             }
 
