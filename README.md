@@ -50,7 +50,7 @@ Restart your Node-RED instance and you should have a "Scheduler" node available 
 <img src='https://static.node.iopulsedev.net/Screenshot from 2021-11-16 09-12-16.png' alt='manage palette'>
 <img src='https://static.node.iopulsedev.net/Screenshot from 2021-11-16 09-12-33.png' alt='manage palette'>
 <img src='https://static.node.iopulsedev.net/Screenshot from 2021-11-16 09-13-03.png' alt='manage palette'>
-<img src='https://static.node,iopulsedev.net/Screenshot from 2021-11-16 09-13-15.png'>
+<img src='https://static.node.iopulsedev.net/Screenshot from 2021-11-16 09-13-15.png' alt='manage palette'>
 
 
 ## Discussions and suggestions
