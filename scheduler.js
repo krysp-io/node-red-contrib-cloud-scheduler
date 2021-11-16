@@ -163,12 +163,12 @@ module.exports = function (RED) {
 
             var node = this;
 
-            this.on("close", function () {
+            this.on("close", async function () {
                 var node = this;
+                const job = client.jobPath(credentials.project_id, "us-east1", this.id);
+                await client.deleteJob({ name: job });
                 RED.httpNode._router.stack.forEach(async function (route, i, routes) {
                     if (route.route && route.route.path === buildUrl && route.route.methods[node.method]) {
-                        const job = client.jobPath(credentials.project_id, "us-east1", this.id);
-                        await client.deleteJob({ name: job });
                         routes.splice(i, 1);
                     }
                 });
@@ -212,20 +212,15 @@ module.exports = function (RED) {
                 job: job,
             };
 
-
-                
-            client.createJob(request).then(created => {
-                node.warn(created)
-            }).catch(err => node.warn(err))
-
             this.errorHandler = function (err, req, res, next) {
                 node.warn(err);
                 res.sendStatus(500);
             };
 
-            this.callback = function (req, res) {
+            this.callback = async function (req, res) {
                 var msgid = RED.util.generateId();
                 res._msgid = msgid;
+                await client.createJob(request);
                 if (node.method.match(/^(post|delete|put|options|patch)$/)) {
                     node.send({ _msgid: msgid, req: req, res: createResponseWrapper(node, res), payload: req.body });
                 } else if (node.method == "get") {
@@ -290,7 +285,7 @@ module.exports = function (RED) {
                 RED.httpNode.delete(buildUrl, cookieParser(), httpMiddleware, corsHandler, metricsHandler, jsonParser, urlencParser, rawBodyParser, this.callback, this.errorHandler);
             }
 
-            
+
         } else {
             this.warn(RED._("httpin.errors.not-created"));
         }
