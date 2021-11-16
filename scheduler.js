@@ -343,26 +343,28 @@ module.exports = function (RED) {
             }
         });
 
+        this.on("close", async function(removed, done) {
+            if (removed) {
+                console.log("===================");
+                console.log("removed", removed);
+                console.log("===================");
+
+                // Construct the fully qualified location path.
+
+                const job = client.jobPath(credentials.project_id, "us-east1", this.jobId);
+                try {
+                    await client.deleteJob({ name: job });
+                } catch(err) {
+                    console.log("Delete Job", err)
+                }
+
+                delete this.cronjob;
+            } 
+            done();
+        })
     }
-    
+
     RED.nodes.registerType("Scheduler", SchedulerNode);
-
-    SchedulerNode.prototype.close = async function() {
-        console.log("===================");
-        console.log("removed", removed);
-        console.log("===================");
-
-        // Construct the fully qualified location path.
-
-        const job = client.jobPath(credentials.project_id, "us-east1", this.jobId);
-        try {
-            await client.deleteJob({ name: job });
-        } catch(err) {
-            console.log("Delete Job", err)
-        }
-
-        delete this.cronjob;
-    }
 
     RED.httpAdmin.post("/inject/:id", RED.auth.needsPermission("inject.write"), function (req, res) {
         var node = RED.nodes.getNode(req.params.id);
