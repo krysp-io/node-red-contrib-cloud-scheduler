@@ -140,70 +140,42 @@ module.exports = function (RED) {
         }
     }
 
-    function SchedulerNode(n) {
-        RED.nodes.createNode(this, n);
-
-        // this.repeat = n.repeat;
-        // this.crontab = n.crontab;
-        // this.once = n.once;
-        // this.onceDelay = (n.onceDelay || 0.1) * 1000;
-        // this.interval_id = null;
-        // this.cronjob = [];
-        // this.method = n.method;
-        // this.jobId = null;
-        // var node = this;
-        this.url = n.url;
-        // this.not_publicly_accessible = n.not_publicly_accessible;
-        // var pattern = /localhost|127.0.0.1/gi;
-        // let credentials = null;
-
-        // if (n.account) {
-        //     credentials = GetCredentials(n.account);
-        // }
-
-        // function GetCredentials(node) {
-        //     return JSON.parse(RED.nodes.getCredentials(node).account);
-        // }
-
-
-        // if (!n.url) {
-        //     this.warn(RED._("Missing Path."));
-        //     return;
-        // } else if (pattern.test(this.url)) {
-        //     this.warn(RED._("Localhost is not supported."));
-        //     return;
-        // } else if (!this.not_publicly_accessible) {
-        //     this.warn(RED._("Mandatory:Please click on the checkbox if this URL is publicly accessible."));
-        //     return;
-        // } else if (!credentials) {
-        //     this.warn(RED._("Google Cloud Credentials are required."));
-        //     return;
-        // }
-
-
+    function SchedulerHTTPIn(n) {
+        RED.nodes.createNode(this,n);
         if (RED.settings.httpNodeRoot !== false) {
 
+            if (!n.url) {
+                this.warn(RED._("httpin.errors.missing-path"));
+                return;
+            }
+            this.url = n.url;
+            if (this.url[0] !== '/') {
+                this.url = '/'+this.url;
+            }
+            this.method = n.method;
+            this.upload = n.upload;
+            this.swaggerDoc = n.swaggerDoc;
 
             var node = this;
 
-            this.errorHandler = (err, req, res, next) => {
+            this.errorHandler = function(err,req,res,next) {
                 node.warn(err);
                 res.sendStatus(500);
             };
 
-            this.callback = (req, res) => {
+            this.callback = function(req,res) {
                 var msgid = RED.util.generateId();
                 res._msgid = msgid;
                 if (node.method.match(/^(post|delete|put|options|patch)$/)) {
-                    node.send({ _msgid: msgid, req: req, res: createResponseWrapper(node, res), payload: req.body });
-                } else if (this.method == "get") {
-                    node.send({ _msgid: msgid, req: req, res: createResponseWrapper(node, res), payload: req.query });
+                    node.send({_msgid:msgid,req:req,res:createResponseWrapper(node,res),payload:req.body});
+                } else if (node.method == "get") {
+                    node.send({_msgid:msgid,req:req,res:createResponseWrapper(node,res),payload:req.query});
                 } else {
-                    node.send({ _msgid: msgid, req: req, res: createResponseWrapper(node, res) });
+                    node.send({_msgid:msgid,req:req,res:createResponseWrapper(node,res)});
                 }
             };
 
-            var httpMiddleware = (req, res, next) => { next(); }
+            var httpMiddleware = function(req,res,next) { next(); }
 
             if (RED.settings.httpNodeMiddleware) {
                 if (typeof RED.settings.httpNodeMiddleware === "function" || Array.isArray(RED.settings.httpNodeMiddleware)) {
@@ -212,134 +184,64 @@ module.exports = function (RED) {
             }
 
             var maxApiRequestSize = RED.settings.apiMaxLength || '5mb';
-            var jsonParser = bodyParser.json({ limit: maxApiRequestSize });
-            var urlencParser = bodyParser.urlencoded({ limit: maxApiRequestSize, extended: true });
+            var jsonParser = bodyParser.json({limit:maxApiRequestSize});
+            var urlencParser = bodyParser.urlencoded({limit:maxApiRequestSize,extended:true});
 
-            var metricsHandler = (req, res, next) => { next(); }
+            var metricsHandler = function(req,res,next) { next(); }
             if (this.metric()) {
-                metricsHandler = (req, res, next) => {
+                metricsHandler = function(req, res, next) {
                     var startAt = process.hrtime();
-                    onHeaders(res, () => {
+                    onHeaders(res, function() {
                         if (res._msgid) {
                             var diff = process.hrtime(startAt);
                             var ms = diff[0] * 1e3 + diff[1] * 1e-6;
                             var metricResponseTime = ms.toFixed(3);
                             var metricContentLength = res.getHeader("content-length");
                             //assuming that _id has been set for res._metrics in HttpOut node!
-                            node.metric("response.time.millis", { _msgid: res._msgid }, metricResponseTime);
-                            node.metric("response.content-length.bytes", { _msgid: res._msgid }, metricContentLength);
+                            node.metric("response.time.millis", {_msgid:res._msgid} , metricResponseTime);
+                            node.metric("response.content-length.bytes", {_msgid:res._msgid} , metricContentLength);
                         }
                     });
                     next();
                 };
             }
 
-            var multipartParser = (req, res, next) => { next(); }
-
-
-
-
-            if (this.method == "get") {
-                RED.httpNode.get(this.url, cookieParser(), httpMiddleware, corsHandler, metricsHandler, this.callback, this.errorHandler);
-            } else if (this.method == "post") {
-                RED.httpNode.post(this.url, cookieParser(), httpMiddleware, corsHandler, metricsHandler, jsonParser, urlencParser, multipartParser, rawBodyParser, this.callback, this.errorHandler);
-            } else if (this.method == "put") {
-                RED.httpNode.put(this.url, cookieParser(), httpMiddleware, corsHandler, metricsHandler, jsonParser, urlencParser, rawBodyParser, this.callback, this.errorHandler);
-            } else if (this.method == "patch") {
-                RED.httpNode.patch(this.url, cookieParser(), httpMiddleware, corsHandler, metricsHandler, jsonParser, urlencParser, rawBodyParser, this.callback, this.errorHandler);
-            } else if (this.method == "delete") {
-                RED.httpNode.delete(this.url, cookieParser(), httpMiddleware, corsHandler, metricsHandler, jsonParser, urlencParser, rawBodyParser, this.callback, this.errorHandler);
+            var multipartParser = function(req,res,next) { next(); }
+            if (this.upload) {
+                var mp = multer({ storage: multer.memoryStorage() }).any();
+                multipartParser = function(req,res,next) {
+                    mp(req,res,function(err) {
+                        req._body = true;
+                        next(err);
+                    })
+                };
             }
 
+            if (this.method == "get") {
+                RED.httpNode.get(this.url,cookieParser(),httpMiddleware,corsHandler,metricsHandler,this.callback,this.errorHandler);
+            } else if (this.method == "post") {
+                RED.httpNode.post(this.url,cookieParser(),httpMiddleware,corsHandler,metricsHandler,jsonParser,urlencParser,multipartParser,rawBodyParser,this.callback,this.errorHandler);
+            } else if (this.method == "put") {
+                RED.httpNode.put(this.url,cookieParser(),httpMiddleware,corsHandler,metricsHandler,jsonParser,urlencParser,rawBodyParser,this.callback,this.errorHandler);
+            } else if (this.method == "patch") {
+                RED.httpNode.patch(this.url,cookieParser(),httpMiddleware,corsHandler,metricsHandler,jsonParser,urlencParser,rawBodyParser,this.callback,this.errorHandler);
+            } else if (this.method == "delete") {
+                RED.httpNode.delete(this.url,cookieParser(),httpMiddleware,corsHandler,metricsHandler,jsonParser,urlencParser,rawBodyParser,this.callback,this.errorHandler);
+            }
+
+            this.on("close",function() {
+                var node = this;
+                RED.httpNode._router.stack.forEach(function(route,i,routes) {
+                    if (route.route && route.route.path === node.url && route.route.methods[node.method]) {
+                        routes.splice(i,1);
+                    }
+                });
+            });
         } else {
             this.warn(RED._("httpin.errors.not-created"));
         }
     }
-
-    //     SchedulerHttpIn();
-
-
-    //     // Create a client.
-    //     const client = new scheduler.CloudSchedulerClient({
-    //         credentials: credentials
-    //     });
-
-    //     // Construct the fully qualified location path.
-    //     const parent = client.locationPath(credentials.project_id, "us-east1");
-
-    //     if (node.repeat > 2147483) {
-    //         node.error(RED._("inject.errors.toolong", this));
-    //         delete node.repeat;
-    //     }
-
-    //     node.repeaterSetup = async function () {
-    //         if (this.crontab) {
-    //             if (RED.settings.verbose) {
-    //                 this.log(RED._("inject.crontab", this));
-    //             }
-
-
-    //             this.jobId = n.id;
-    //             const job = {
-    //                 name: `projects/${credentials.project_id}/locations/us-east1/jobs/${this.jobId}`,
-    //                 httpTarget: {
-    //                     uri: this.url,
-    //                     httpMethod: this.method,
-    //                     body: { "message": "Scheduled job executed via Google Cloud Scheduler" }
-    //                 },
-    //                 schedule: this.crontab,
-    //                 timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone
-    //             };
-
-    //             const request = {
-    //                 parent: parent,
-    //                 job: job,
-    //             };
-
-
-
-    //             if (this.cronjob.length) {
-    //                 client.updateJob(request).then(response => this.cronjob = response).catch(err => node.warn(err))
-    //             } else {
-    //                 client.createJob(request).then(response => this.cronjob = response).catch(err => node.warn(err))
-    //             }
-    //         }
-    //     }
-
-    //     // Construct the request body.
-    //     if (this.once) {
-    //         this.onceTimeout = setTimeout(function () {
-    //             node.repeaterSetup();
-    //         }, this.onceDelay);
-    //     } else {
-    //         node.repeaterSetup();
-    //     }
-
-    //     this.on("close", async function(removed, done) {
-    //         if (removed) {
-    //             // Construct the fully qualified location path.
-
-    //             const job = client.jobPath(credentials.project_id, "us-east1", this.jobId);
-    //             try {
-    //                 await client.deleteJob({ name: job });
-    //             } catch(err) {
-    //                 console.log("Delete Job", err)
-    //             }
-
-    //             this.cronjob = [];
-    //         } else {
-    //             var node = this;
-    //             RED.httpNode._router.stack.forEach(function(route,i,routes) {
-    //                 if (route.route && route.route.path === node.url && route.route.methods[node.method]) {
-    //                     routes.splice(i,1);
-    //                 }
-    //             });
-    //         }
-    //         done();
-    //     })
-    // }
-
-    RED.nodes.registerType("Scheduler", SchedulerNode);
+    RED.nodes.registerType("Scheduler",SchedulerHTTPIn);
 }
 
 
