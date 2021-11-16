@@ -15,8 +15,10 @@ A node that allows to execute any flow at a given time interval.
 1.  [Enable the Google Cloud Scheduler API][enable_api].
 1.  [Set up authentication with a service account][auth] so you can access the
     API from your local workstation.
-    <img src='https://static.node.iopulsedev.net/nodes/Scheduler_Config.png' alt='manage palette' width="50%">
-    <img src='https://static.node.iopulsedev.net/nodes/Scheduler_Config_help.png' alt='manage palette' width="50%">
+    
+    
+    <img src='https://static.node.iopulsedev.net/nodes/Scheduler_Config.png' alt='manage palette' width="30% height="15%">
+    <img src='https://static.node.iopulsedev.net/nodes/Scheduler_Config_help.png' alt='manage palette' width="30% height="15%">
 
 ### Installing the client library
 
