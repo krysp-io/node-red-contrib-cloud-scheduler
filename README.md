@@ -38,6 +38,7 @@ Restart your Node-RED instance and you should have a "Scheduler" node available 
 <p>2. Double click on the node to add timer.</p>
 
 <img src='https://static.node.iopulsedev.net/nodes/Scheduler_Timer.png' alt='config_help' width="200" height="450">
+<img src='https://static.node.iopulsedev.net/nodes/Scheduler_Timer_help.png' alt='config_help' width="200" height="450">
 
 ## Usage
 
