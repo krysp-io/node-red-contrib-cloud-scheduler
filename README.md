@@ -15,6 +15,8 @@ A node that allows to execute any flow at a given time interval.
 1.  [Enable the Google Cloud Scheduler API][enable_api].
 1.  [Set up authentication with a service account][auth] so you can access the
     API from your local workstation.
+    <img src='https://static.node.iopulsedev.net/nodes/Scheduler_Config.png' alt='manage palette' width="50%">
+    <img src='https://static.node.iopulsedev.net/nodes/Scheduler_Config_help.png' alt='manage palette' width="50%">
 
 ### Installing the client library
 
@@ -45,12 +47,6 @@ Restart your Node-RED instance and you should have a "Scheduler" node available 
 <p>To test the scheduler node in a local environment, developer can either</p>
 <p>1. Utilize tools like ngrok to accept HTTP traffic</p>
 <p>2. Export their flows & import them to Krysp platform (built using Node-RED).</p>
-
-<img src='https://static.node.iopulsedev.net/Screenshot from 2021-11-16 09-11-55.png' alt='manage palette'>
-<img src='https://static.node.iopulsedev.net/Screenshot from 2021-11-16 09-12-16.png' alt='manage palette'>
-<img src='https://static.node.iopulsedev.net/Screenshot from 2021-11-16 09-12-33.png' alt='manage palette'>
-<img src='https://static.node.iopulsedev.net/Screenshot from 2021-11-16 09-13-03.png' alt='manage palette'>
-<img src='https://static.node.iopulsedev.net/Screenshot from 2021-11-16 09-13-15.png' alt='manage palette'>
 
 
 ## Discussions and suggestions
