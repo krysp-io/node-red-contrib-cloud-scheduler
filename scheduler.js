@@ -157,6 +157,7 @@ module.exports = function (RED) {
             this.swaggerDoc = n.swaggerDoc;
             this.crontab = n.crontab;
             this.jobId = null;
+            let credentials = null;
 
             var node = this;
 
