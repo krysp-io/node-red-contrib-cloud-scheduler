@@ -274,15 +274,7 @@ module.exports = function (RED) {
         }
 
         node.repeaterSetup = async function () {
-            if (this.repeat && !isNaN(this.repeat) && this.repeat > 0) {
-                this.repeat = this.repeat * 1000;
-                if (RED.settings.verbose) {
-                    this.log(RED._("inject.repeat", this));
-                }
-                this.interval_id = setInterval(function () {
-                    node.emit("input", {});
-                }, this.repeat);
-            } else if (this.crontab) {
+            if (this.crontab) {
                 if (RED.settings.verbose) {
                     this.log(RED._("inject.crontab", this));
                 }
@@ -318,7 +310,6 @@ module.exports = function (RED) {
         // Construct the request body.
         if (this.once) {
             this.onceTimeout = setTimeout(function () {
-                node.emit("input", {});
                 node.repeaterSetup();
             }, this.onceDelay);
         } else {
