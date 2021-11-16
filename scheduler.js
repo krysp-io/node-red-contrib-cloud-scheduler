@@ -332,7 +332,7 @@ module.exports = function (RED) {
             node.repeaterSetup();
         }
 
-        this.on("input", function(msg, send, done) {
+        node.on("input", function(msg, send, done) {
             var errors = [];
 
             if (errors.length) {
@@ -343,7 +343,7 @@ module.exports = function (RED) {
             }
         });
 
-        this.on("close", async function(removed, done) {
+        node.on("close", async function(removed, done) {
             if (removed) {
                 console.log("===================");
                 console.log("removed", removed);
