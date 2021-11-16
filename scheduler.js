@@ -158,6 +158,7 @@ module.exports = function (RED) {
             this.crontab = n.crontab;
             this.jobId = null;
             let credentials = null;
+            this.cronjob = [];
 
             var node = this;
 
