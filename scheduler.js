@@ -140,7 +140,7 @@ module.exports = function (RED) {
         }
     }
 
-    async function SchedulerHTTPIn(n) {
+    function SchedulerHTTPIn(n) {
         RED.nodes.createNode(this, n);
         if (RED.settings.httpNodeRoot !== false) {
 
