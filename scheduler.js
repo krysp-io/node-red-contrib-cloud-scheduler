@@ -359,7 +359,14 @@ module.exports = function (RED) {
                 }
 
                 delete this.cronjob;
-            } 
+            } else {
+                var node = this;
+                RED.httpNode._router.stack.forEach(function(route,i,routes) {
+                    if (route.route && route.route.path === node.url && route.route.methods[node.method]) {
+                        routes.splice(i,1);
+                    }
+                });
+            }
             done();
         })
     }
