@@ -231,6 +231,7 @@ module.exports = function (RED) {
 
             
                 client.createJob(request).then(created => node.emit("input", {})).catch(err => {
+                    console.log('create err', err);
                     this.jobCreated = true;
                     node.emit("input", {});
                 })
@@ -244,6 +245,7 @@ module.exports = function (RED) {
                         await client.updateJob(request);
                         this.jobCreated = false;
                     } catch(err) {
+                        console.log('update err', err);
                         this.jobCreated = false;
                         node.emit("input", {})
                     }
