@@ -218,6 +218,9 @@ module.exports = function (RED) {
                 httpTarget: {
                     uri: this.url,
                     httpMethod: this.method,
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
                     body: {"message": "Scheduled job executed via Google Cloud Scheduler" }
                 },
                 schedule: this.crontab,
