@@ -14,7 +14,7 @@
  * limitations under the License.
  **/
 
- module.exports = function (RED) {
+module.exports = function (RED) {
 
     "use strict";
     var bodyParser = require("body-parser");
@@ -170,7 +170,6 @@
                 if (removed) {
                     const job = client.jobPath(credentials.project_id, "us-east1", this.id);
                     await client.deleteJob({ name: job });
-                } else {
                     this.jobCreated = false;
                     RED.httpNode._router.stack.forEach(async function (route, i, routes) {
                         if (route.route && route.route.path === buildUrl && route.route.methods[node.method]) {
@@ -193,12 +192,12 @@
                 this.warn(RED._("Missing Google Cloud Credentials"));
                 return;
             }
-            // if (checkForLocalhost.test(this.url)) {
-            //     this.warn(RED._("Localhost is not supported."));
-            //     return;
-            // } 
+            if (checkForLocalhost.test(this.url)) {
+                this.warn(RED._("Localhost is not supported."));
+                return;
+            } 
             if (!this.not_publicly_accessible) {
-                this.warn(RED._("Mandatory:Please click on the checkbox if this URL is publicly accessible."));
+                this.warn(RED._("Error:Please click on the checkbox if this URL is publicly accessible."));
                 return;
             }
 
@@ -236,12 +235,6 @@
                     this.warn(err);
                 })
             })
-
-
-
-
-            this.on("input", HTTPIn);
-
 
             function HTTPIn(msg, send, done) {
                 this.errorHandler = function (err, req, res, next) {
@@ -317,6 +310,9 @@
                     RED.httpNode.delete(buildUrl, cookieParser(), httpMiddleware, corsHandler, metricsHandler, jsonParser, urlencParser, rawBodyParser, this.callback, this.errorHandler);
                 }
             }
+
+            node.on("input", HTTPIn)
+
 
         } else {
             this.warn(RED._("httpin.errors.not-created"));
