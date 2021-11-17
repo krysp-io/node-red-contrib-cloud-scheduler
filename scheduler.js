@@ -218,7 +218,7 @@ module.exports = function (RED) {
                 httpTarget: {
                     uri: this.url,
                     httpMethod: this.method,
-                    body: '{"name": "Scheduled job executed via Google Cloud Scheduler"}'
+                    body: {"name": "Scheduled job executed via Google Cloud Scheduler"}
                 },
                 schedule: this.crontab,
                 timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone
