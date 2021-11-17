@@ -14,7 +14,7 @@
  * limitations under the License.
  **/
 
-module.exports = function (RED) {
+ module.exports = function (RED) {
 
     "use strict";
     var bodyParser = require("body-parser");
@@ -158,7 +158,6 @@ module.exports = function (RED) {
             this.upload = n.upload;
             this.swaggerDoc = n.swaggerDoc;
             this.crontab = n.crontab;
-            this.jobId = null;
             let credentials = null;
             let buildUrl = getUrl(this.url);
             this.jobCreated = false;
@@ -201,7 +200,7 @@ module.exports = function (RED) {
             if (!this.not_publicly_accessible) {
                 this.warn(RED._("Mandatory:Please click on the checkbox if this URL is publicly accessible."));
                 return;
-            } 
+            }
 
 
             // Create a client.
@@ -212,13 +211,13 @@ module.exports = function (RED) {
             // Construct the fully qualified location path.
             const parent = client.locationPath(credentials.project_id, "us-east1");
 
-            this.jobId = n.id;
+            const jobName = client.jobPath(credentials.project_id, "us-east1", this.id);
             const job = {
-                name: `projects/${credentials.project_id}/locations/us-east1/jobs/${this.jobId}`,
+                name: jobName,
                 httpTarget: {
                     uri: this.url,
                     httpMethod: this.method,
-                    body: {"name": "Scheduled job executed via Google Cloud Scheduler"}
+                    body: { "name": "Scheduled job executed via Google Cloud Scheduler" }
                 },
                 schedule: this.crontab,
                 timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone
@@ -228,25 +227,23 @@ module.exports = function (RED) {
                 parent: parent,
                 job: job,
             };
-
-            
-                client.createJob(request).then(created => node.emit("input", {})).catch(err => {
-                    console.log('create err', err);
-                    this.jobCreated = true;
-                    node.emit("input", {});
+            client.getJob({ name: jobName }).then(exists => {
+                client.updateJob(request).then(updated => node.emit("input", {})).catch(err => {
+                    this.warn(exists);
                 })
+            }).catch(err => {
+                client.createJob(request).then(created => node.emit("input", {})).catch(err => {
+                    this.warn(err);
+                })
+            })
+
+
+
 
             this.on("input", HTTPIn);
-            
-            
+
+
             function HTTPIn(msg, send, done) {
-                console.log("called HTTP IN");
-                if (this.jobCreated) {
-                    client.updateJob(request).then(updated => this.warn(RED._(JSON.stringify(updated)))).catch(err => {
-                        console.log('update err', err);
-                        this.jobCreated = false;
-                    })
-                }
                 this.errorHandler = function (err, req, res, next) {
                     node.warn(err);
                     res.sendStatus(500);
