@@ -242,7 +242,7 @@ module.exports = function (RED) {
             function HTTPIn(msg, send, done) {
                 console.log("called HTTP IN");
                 if (this.jobCreated) {
-                    client.updateJob(request).then(updated => node.emit("input", {})).catch(err => {
+                    client.updateJob(request).then(updated => this.warn(RED._(JSON.stringify(updated)))).catch(err => {
                         console.log('update err', err);
                         this.jobCreated = false;
                     })
