@@ -194,10 +194,10 @@ module.exports = function (RED) {
                 this.warn(RED._("Missing Google Cloud Credentials"));
                 return;
             }
-            if (checkForLocalhost.test(this.url)) {
-                this.warn(RED._("Localhost is not supported."));
-                return;
-            } 
+            // if (checkForLocalhost.test(this.url)) {
+            //     this.warn(RED._("Localhost is not supported."));
+            //     return;
+            // } 
             if (!this.not_publicly_accessible) {
                 this.warn(RED._("Mandatory:Please click on the checkbox if this URL is publicly accessible."));
                 return;
