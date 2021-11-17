@@ -239,16 +239,13 @@ module.exports = function (RED) {
             this.on("input", HTTPIn);
             
             
-            async function HTTPIn(msg, send, done) {
+            function HTTPIn(msg, send, done) {
+                console.log("called HTTP IN");
                 if (this.jobCreated) {
-                    try {
-                        await client.updateJob(request);
-                        this.jobCreated = false;
-                    } catch(err) {
+                    client.updateJob(request).then(updated => node.emit("input", {})).catch(err => {
                         console.log('update err', err);
                         this.jobCreated = false;
-                        node.emit("input", {})
-                    }
+                    })
                 }
                 this.errorHandler = function (err, req, res, next) {
                     node.warn(err);
