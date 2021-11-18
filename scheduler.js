@@ -155,10 +155,11 @@ module.exports = function (RED) {
             this.method = n.method;
             this.upload = n.upload;
             this.crontab = n.crontab;
-            let credentials = null;
-            let buildUrl = getUrl(this.url);
+            var credentials = null;
+            var buildUrl = getUrl(this.url);
             this.not_publicly_accessible = n.not_publicly_accessible;
             this.name = n.name;
+            var node = this;
 
             this.removeHttpIN = () => {
                 console.log("called remove http in");
@@ -171,7 +172,7 @@ module.exports = function (RED) {
                 });
             }
 
-            this.on("close", async function (removed, done) {
+            this.on("close", async (removed, done) => {
                 if (removed) {
                     const job = client.jobPath(credentials.project_id, "us-east1", this.id);
                     await client.deleteJob({ name: job });
