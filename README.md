@@ -37,7 +37,7 @@ Restart your Node-RED instance and you should have a "Scheduler" node available 
 <p>1. After installation, drag the <b>scheduler</b> node from the palette to the workspace.</p>
 <p>2. Double click on the node to add timer.</p>
 <p><img src='https://static.node.iopulsedev.net/nodes/Scheduler_Timer.png' alt='config_help' width="300" height="450" /></p>
-<p>3. Enter all the form fields in scheduler node and then click <button disabled>DONE</button>.
+<p>3. Enter all the form fields in scheduler node and then click <input type="button" disabled>DONE</button></p>
 <p>4. Attach a Http Response node to scheduler node.</p>
 
 ## Usage
