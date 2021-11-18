@@ -55,7 +55,12 @@ Restart your Node-RED instance and you should have a "Scheduler" node available 
 <p>To test the scheduler node in a local environment, developer can either</p>
 <p>1. Utilize tools like ngrok to accept HTTP traffic</p>
 <p>2. Export their flows & import them to Krysp platform (built using Node-RED).</p>
+    
+## Help
+    <p> For help click on the scheduler node from the palette list.</p>
 
+## Issues
+    Feel Free to raise a issue on <a href="https://github.com/krysp-io/node-red-contrib-scheduler/issues"></a>
 
 ## Discussions and suggestions
 
