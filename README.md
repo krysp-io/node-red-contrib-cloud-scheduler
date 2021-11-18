@@ -16,9 +16,6 @@ A node that allows to execute any flow at a given time interval.
 1.  [Set up authentication with a service account][auth] so you can access the
     API from your local workstation.
     
-    
-    <img src='https://static.node.iopulsedev.net/nodes/Scheduler_Config.png' alt='Config Node' width="300" height="450">
-    <img src='https://static.node.iopulsedev.net/nodes/Scheduler_Config_help.png' alt='config_help' width="200" height="450">
 
 ### Installing the client library
 
