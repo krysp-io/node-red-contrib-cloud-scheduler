@@ -160,26 +160,8 @@ module.exports = function (RED) {
             this.not_publicly_accessible = n.not_publicly_accessible;
             this.name = n.name;
             var node = this;
-
-            this.removeHttpIN = () => {
-                console.log("called remove http in");
-                this.warn('Removed Http IN');
-                var node = this;
-                RED.httpNode._router.stack.forEach(async function (route, i, routes) {
-                    if (route.route && route.route.path === buildUrl && route.route.methods[node.method]) {
-                        routes.splice(i, 1);
-                    }
-                });
-            }
-
-            this.on("close", async (removed, done) => {
-                if (removed) {
-                    const job = client.jobPath(credentials.project_id, "us-east1", this.id);
-                    await client.deleteJob({ name: job });
-                    this.removeHttpIN()
-                }
-                done()
-            });
+            var jobName = null;
+            var parent = null;
 
             if (n.account) {
                 credentials = GetCredentials(n.account);
@@ -189,41 +171,18 @@ module.exports = function (RED) {
                 return JSON.parse(RED.nodes.getCredentials(node).account);
             }
 
-            if (!n.url) {
-                this.removeHttpIN();
-                this.warn(RED._("httpin.errors.missing-path"));
-                return;
-            }
-            if(!n.name) {
-                this.removeHttpIN();
-                this.warn(RED._("Name is required"));
-                return
-            }
-            if (!credentials) {
-                this.removeHttpIN();
-                this.warn(RED._("Missing Google Cloud Credentials"));
-                return;
-            }
-            if (checkForLocalhost.test(this.url)) {
-                this.warn(RED._("Localhost is not supported."));
-                return;
-            } 
-            if (!this.not_publicly_accessible) {
-                this.removeHttpIN();
-                this.warn(RED._("Error:Please click on the checkbox if this URL is publicly accessible."));
-                return;
-            }
-
 
             // Create a client.
             const client = new scheduler.CloudSchedulerClient({
                 credentials: credentials
             });
 
-            // Construct the fully qualified location path.
-            const parent = client.locationPath(credentials.project_id, "us-east1");
+            
+            if (credentials) {
+                jobName = client.jobPath(credentials.project_id, "us-east1", this.id);
+                parent = client.locationPath(credentials.project_id, "us-east1");
+            }
 
-            const jobName = client.jobPath(credentials.project_id, "us-east1", this.id);
             const job = {
                 name: jobName,
                 httpTarget: {
@@ -239,15 +198,81 @@ module.exports = function (RED) {
                 parent: parent,
                 job: job,
             };
+
+
+            this.createJob = async () => {
+                try {
+                    await client.createJob(request);
+                    this.warn(`Google Cloud Scheduler successfully created on ${this.url} for cron : ${this.crontab}`);
+                    node.emit("input", {});
+                } catch(err) {
+                    this.trace(err)
+                }
+            }
+
+            this.updateJob = async () => {
+                try {
+                    await client.updateJob(request);
+                    this.warn(`Google Cloud Scheduler successfully updated on ${this.url} for cron : ${this.crontab}`);
+                    node.emit("input", {});
+                } catch(err) {
+                    this.trace(err)
+                }
+            }
+
+            this.removeJob = async () => {
+                client.getJob({ name: jobName }).then(async exists => {
+                    await client.deleteJob({ name: jobName });
+                }).catch(err => this.trace(err))
+            }
+
+            this.removeHttpIN = () => {
+                var node = this;
+                RED.httpNode._router.stack.forEach(async function (route, i, routes) {
+                    if (route.route && route.route.path === buildUrl && route.route.methods[node.method]) {
+                        routes.splice(i, 1);
+                    }
+                });
+            }
+
+            this.completeRemove = () => {
+                this.removeHttpIN();
+                this.removeJob();
+            }
+
+            this.on("close", (removed, done) => {
+                if (removed) {
+                    this.completeRemove()
+                }
+                done()
+            });
+
+            
+            if (!n.url) {
+                this.removeJob();
+                this.warn("Mandatory : Missing URL Path. Please provide publicly accessible URL in the scheduler node.");
+                return;
+            }
+            if (!credentials) {
+                this.removeHttpIN();
+                this.warn("Mandatory : Missing Google Cloud Credentials. Add Credentials by clicking on the edit icon in the scheduler node.");
+                return;
+            }
+            if (checkForLocalhost.test(this.url)) {
+                this.completeRemove();
+                this.warn("Localhost is not supported. Please provide publicly accessible for google cloud scheduler to create the job.");
+                return;
+            } 
+            if (!this.not_publicly_accessible) {
+                this.completeRemove();
+                this.warn(`Mandatory : Please click on the checkbox in the scheduler node to verify that the URL is publicly accessible for google cloud scheduler to create the job.`);
+                return;
+            }
+
             client.getJob({ name: jobName }).then(exists => {
-                client.updateJob(request).then(updated => node.emit("input", {})).catch(err => {
-                    this.warn(exists);
-                })
-            }).catch(err => {
-                client.createJob(request).then(created => node.emit("input", {})).catch(err => {
-                    this.warn(err);
-                })
-            })
+                this.removeHttpIN();
+                this.updateJob();
+            }).catch(err => this.createJob())
 
             function HTTPIn(msg, send, done) {
                 this.errorHandler = function (err, req, res, next) {
