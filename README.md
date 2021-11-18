@@ -41,7 +41,8 @@ Restart your Node-RED instance and you should have a "Scheduler" node available 
 <p> <img src='https://static.node.iopulsedev.net/nodes/Scheduler_HTTP_IN.png' alt='config_help' width="300" height="100" /></p>
 <p centered>5.Click on <img src="https://static.node.iopulsedev.net/nodes/done_button.png" width="80" height="40" /></p>
 <p>6.Click on <img src="https://static.node.iopulsedev.net/nodes/deploy_to_cloud.png" width="300" height="50" /></p>
-<p>7.
+<p>7. At the scheduled time the flow will get executed.</p>
+<img src="https://static.node.iopulsedev.net/nodes/Scheduler_Ouput.png" width="300" height="50" /></p>
 
 ## Usage
 
