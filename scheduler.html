@@ -40,8 +40,10 @@
     </div>
 
     <div class="form-row">
-        <input type="checkbox" id="node-input-not_publicly_accessible" class="node-red-accessible" style="display:inline-block; width:15px; vertical-align:baseline; margin-left: 100px;">
-        <label for="node-input-not_publicly_accessible" style="display: inline;width: 100%;"> This URL is accessible from the internet. <a href="#" id="node-red-help">Help</a></label>
+        <label class="main" for="node-input-not_publicly_accessible">This URL is accessible from the internet. <a href="#" id="node-red-help">Help</a>
+            <input type="checkbox" id="node-input-not_publicly_accessible">
+            <span class="geekmark"></span>
+        </label>
     </div>
     
     <!-- <div class="d-flex justify-content-center" id="node-once">
@@ -163,10 +165,73 @@
 </script>
 
 <style>
+    .main {
+        display: block;
+        position: relative;
+        padding-left: 130px;
+        margin-bottom: 15px;
+        cursor: pointer;
+        font-size: 20px;
+        width: 100% !important;
+    }
+
+    /* Hide the default checkbox */
+    input[type=checkbox] {
+        visibility: hidden;
+    }
+
+    /* Creating a custom checkbox
+        based on demand */
+    .geekmark {
+        position: absolute;
+        top: 0;
+        left: 104px;
+        height: 20px;
+        width: 20px;
+        border: 1px solid red;
+    }
+
+    
+    /* Specify the background color to be
+        shown when checkbox is checked */
+    .main input:checked~.geekmark {
+        border: none;
+        background-color: green;
+    }
+
+    /* Checkmark to be shown in checkbox */
+    /* It is not be shown when not checked */
+    .geekmark:after {
+        content: "";
+        position: absolute;
+        display: none;
+    }
+
+    /* Display checkmark when checked */
+    .main input:checked~.geekmark:after {
+        display: block;
+    }
+
+    /* Styling the checkmark using webkit */
+    /* Rotated the rectangle by 45 degree and 
+        showing only two border to make it look
+        like a tickmark */
+    .main .geekmark:after {
+        left: 8px;
+        bottom: 5px;
+        width: 6px;
+        height: 12px;
+        border: solid white;
+        border-width: 0 4px 4px 0;
+        -webkit-transform: rotate(45deg);
+        -ms-transform: rotate(45deg);
+        transform: rotate(45deg);
+    }
+
     input[type="checkbox"]:focus {
         border-color: #ffffcc;
         background: #ffffcc;
-        outline:5px solid #ffffcc;
+        outline: 5px solid #ffffcc;
     }
 
     .form-row {
@@ -267,12 +332,11 @@
                 crontab: { value: "" },
                 once: { value: true },
                 onceDelay: { value: 0.1 },
-                url: { value: `${window.location.origin}/Scheduler`, required: true, validate: function (v) { var pattern = /localhost|127.0.0.1/gi; return !pattern.test(v) }},
+                url: { value: `${window.location.origin}/Scheduler`, required: true, validate: function (v) { var pattern = /localhost|127.0.0.1/gi; return !pattern.test(v) } },
                 method: { value: "post", required: true },
-                not_publicly_accessible: { value: false },
-                upload: {value:false},
-                swaggerDoc: {type:"swagger-doc", required:false},
-                cronjob: {value: {}}
+                not_publicly_accessible: { value: false, validate: function (prop) { return this.not_publicly_accessible } },
+                upload: { value: false },
+                cronjob: { value: {} }
             },
             icon: "inject.svg",
             inputs: 0,
@@ -298,6 +362,20 @@
             oneditprepare: function () {
                 var node = this;
 
+                if(!$("#node-input-not_publicly_accessible").prop("checked")) {
+                    $(".main").addClass('text-danger')
+                } else {
+                    $(".main").removeClass('text-danger')
+                }
+
+                $("#node-input-not_publicly_accessible").on("click", function() {
+                    if(!$("#node-input-not_publicly_accessible").prop("checked")) {
+                    $(".main").addClass('text-danger')
+                    } else {
+                        $(".main").removeClass('text-danger')
+                    }
+                })
+
                 $("#node-red-help").on("click", function (e) {
                     e.preventDefault();
                     RED.sidebar.help.show("Scheduler");
@@ -305,7 +383,6 @@
 
                 $("#node-input-name").keyup(function () {
                     this.url = `${window.location.origin}/${$("#node-input-name").val()}`;
-                    console.log("test", this.url);
                     $("#node-input-url").val(this.url)
                 })
 
@@ -372,14 +449,14 @@
                     var checkForintervalTimeDifference = cronparts[1].split("-")
                     if (
                         (
-                            (!isNaN(minutesPart[1]) && minutesPart.length>1 && cronparts[1] == '*') 
-                            || 
-                            (!isNaN(hoursPart[1]) && hoursPart.length>1 && cronparts[0] == '0')
-                        ) 
+                            (!isNaN(minutesPart[1]) && minutesPart.length > 1 && cronparts[1] == '*')
+                            ||
+                            (!isNaN(hoursPart[1]) && hoursPart.length > 1 && cronparts[0] == '0')
+                        )
                         &&
-                        checkForintervalTime.length <= 1 
-                        && 
-                        checkForintervalTimeDifference.length <=1
+                        checkForintervalTime.length <= 1
+                        &&
+                        checkForintervalTimeDifference.length <= 1
                     ) {
                         repeattype = "interval";
                         const count = cronparts[0] == '0' ? hoursPart[1] : minutesPart[1];

@@ -141,13 +141,11 @@ module.exports = function (RED) {
     }
 
     function SchedulerHTTPIn(n) {
+        console.log("called");
         RED.nodes.createNode(this, n);
         if (RED.settings.httpNodeRoot !== false) {
 
-            if (!n.url) {
-                this.warn(RED._("httpin.errors.missing-path"));
-                return;
-            }
+            
             this.url = n.url;
             var pattern = /^http:|https:/;
             var checkForLocalhost = /localhost|127.0.0.1/gi;
@@ -156,26 +154,28 @@ module.exports = function (RED) {
             }
             this.method = n.method;
             this.upload = n.upload;
-            this.swaggerDoc = n.swaggerDoc;
             this.crontab = n.crontab;
             let credentials = null;
             let buildUrl = getUrl(this.url);
-            this.jobCreated = false;
             this.not_publicly_accessible = n.not_publicly_accessible;
+            this.name = n.name;
 
-            var node = this;
+            this.removeHttpIN = () => {
+                console.log("called remove http in");
+                this.warn('Removed Http IN');
+                var node = this;
+                RED.httpNode._router.stack.forEach(async function (route, i, routes) {
+                    if (route.route && route.route.path === buildUrl && route.route.methods[node.method]) {
+                        routes.splice(i, 1);
+                    }
+                });
+            }
 
             this.on("close", async function (removed, done) {
-                var node = this;
                 if (removed) {
                     const job = client.jobPath(credentials.project_id, "us-east1", this.id);
                     await client.deleteJob({ name: job });
-                    this.jobCreated = false;
-                    RED.httpNode._router.stack.forEach(async function (route, i, routes) {
-                        if (route.route && route.route.path === buildUrl && route.route.methods[node.method]) {
-                            routes.splice(i, 1);
-                        }
-                    });
+                    this.removeHttpIN()
                 }
                 done()
             });
@@ -188,7 +188,18 @@ module.exports = function (RED) {
                 return JSON.parse(RED.nodes.getCredentials(node).account);
             }
 
+            if (!n.url) {
+                this.removeHttpIN();
+                this.warn(RED._("httpin.errors.missing-path"));
+                return;
+            }
+            if(!n.name) {
+                this.removeHttpIN();
+                this.warn(RED._("Name is required"));
+                return
+            }
             if (!credentials) {
+                this.removeHttpIN();
                 this.warn(RED._("Missing Google Cloud Credentials"));
                 return;
             }
@@ -197,6 +208,7 @@ module.exports = function (RED) {
                 return;
             } 
             if (!this.not_publicly_accessible) {
+                this.removeHttpIN();
                 this.warn(RED._("Error:Please click on the checkbox if this URL is publicly accessible."));
                 return;
             }
@@ -216,7 +228,7 @@ module.exports = function (RED) {
                 httpTarget: {
                     uri: this.url,
                     httpMethod: this.method,
-                    body: { "name": "Scheduled job executed via Google Cloud Scheduler" }
+                    body: Buffer.from("Scheduled job executed via Google Cloud Scheduler")
                 },
                 schedule: this.crontab,
                 timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone
