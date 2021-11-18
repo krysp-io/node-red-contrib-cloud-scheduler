@@ -1,5 +1,5 @@
 {
-  "name": "node-red-contrib-scheduler",
+  "name": "node-red-contrib-cloud-scheduler",
   "version": "1.0.0",
   "description": "Scheduler for node red flows",
   "scripts": {
@@ -9,7 +9,8 @@
     "node-red",
     "scheduler",
     "@google-cloud/scheduler",
-    "cloud-scheduler"
+    "cloud-scheduler",
+    "timer"
   ],
   "author": "",
   "license": "ISC",
