@@ -39,7 +39,7 @@ Restart your Node-RED instance and you should have a "Scheduler" node available 
 <p><img src='https://static.node.iopulsedev.net/nodes/Scheduler_Timer.png' alt='config_help' width="300" height="450" /></p>
 <p>3. Enter all the form fields in scheduler node and then click <input type="button" disabled>DONE</button></p>
 <p>4. Attach a Http Response node to scheduler node.</p>
-<p>5. Click on <img src="https://static.node.iopulsedev.net/nodes/deploy_to_cloud.png" width="20" height="20" />
+<p>5. Click on <img src="https://static.node.iopulsedev.net/nodes/deploy_to_cloud.png" width="50" height="50" />
 
 ## Usage
 
