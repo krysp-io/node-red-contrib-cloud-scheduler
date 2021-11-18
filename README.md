@@ -39,8 +39,9 @@ Restart your Node-RED instance and you should have a "Scheduler" node available 
 <p> <img src='https://static.node.iopulsedev.net/nodes/Scheduler_completed_form.png' alt='config_help' width="350" height="450></p>
 <p>4. Attach a Http Response node to scheduler node.</p>
 <p> <img src='https://static.node.iopulsedev.net/nodes/Scheduler_HTTP_IN.png' alt='config_help' width="300" height="100" /></p>
-<p>5.Click on <img src="https://static.node.iopulsedev.net/nodes/done_button.png" width="80" height="40" /></p>
+<p centered>5.Click on <img src="https://static.node.iopulsedev.net/nodes/done_button.png" width="80" height="40" /></p>
 <p>6.Click on <img src="https://static.node.iopulsedev.net/nodes/deploy_to_cloud.png" width="300" height="50" /></p>
+<p>7.
 
 ## Usage
 
@@ -62,3 +63,5 @@ Use the Krysp Forum: https://www.krysp.io/forum to ask questions or to discuss n
 [projects]: https://console.cloud.google.com/project
 [enable_api]: https://console.cloud.google.com/flows/enableapi?apiid=cloudscheduler.googleapis.com
 [auth]: https://cloud.google.com/docs/authentication/getting-started30
+    
+
