@@ -144,7 +144,7 @@ module.exports = function (RED) {
         RED.nodes.createNode(this, n);
         if (RED.settings.httpNodeRoot !== false) {
 
-            
+
             this.url = n.url;
             var pattern = /^http:|https:/;
             var checkForLocalhost = /localhost|127.0.0.1/gi;
@@ -185,7 +185,7 @@ module.exports = function (RED) {
             const job = {
                 name: jobName,
                 httpTarget: {
-                    uri: this.url,
+                    uri: `${this.url}/${n.id}`,
                     httpMethod: this.method,
                     body: Buffer.from("Scheduled job executed via Google Cloud Scheduler")
                 },
@@ -228,9 +228,16 @@ module.exports = function (RED) {
             this.removeHttpIN = () => {
                 var node = this;
                 RED.httpNode._router.stack.forEach(async function (route, i, routes) {
-                    if (route.route && route.route.path === buildUrl && route.route.methods[node.method]) {
-                        routes.splice(i, 1);
+                    const matchedRouteIndex = routes.findIndex(val => {
+                        const { params } = val;
+                        if (params) {
+                            return params.id === n.id;
+                        }
+                    });
+                    if (matchedRouteIndex >= 0) {
+                        routes.splice(matchedRouteIndex, 1)
                     }
+
                 });
             }
 
@@ -248,7 +255,7 @@ module.exports = function (RED) {
 
             
             if (!n.url) {
-                this.removeJob();
+                this.completeRemove();
                 this.warn("Mandatory : Missing URL Path. Please provide publicly accessible URL in the scheduler node.");
                 return;
             }
@@ -335,15 +342,15 @@ module.exports = function (RED) {
 
 
                 if (this.method == "get") {
-                    RED.httpNode.get(buildUrl, cookieParser(), httpMiddleware, corsHandler, metricsHandler, this.callback, this.errorHandler);
+                    RED.httpNode.get(`${buildUrl}/:id`, cookieParser(), httpMiddleware, corsHandler, metricsHandler, this.callback, this.errorHandler);
                 } else if (this.method == "post") {
-                    RED.httpNode.post(buildUrl, cookieParser(), httpMiddleware, corsHandler, metricsHandler, jsonParser, urlencParser, multipartParser, rawBodyParser, this.callback, this.errorHandler);
+                    RED.httpNode.post(`${buildUrl}/:id`, cookieParser(), httpMiddleware, corsHandler, metricsHandler, jsonParser, urlencParser, multipartParser, rawBodyParser, this.callback, this.errorHandler);
                 } else if (this.method == "put") {
-                    RED.httpNode.put(buildUrl, cookieParser(), httpMiddleware, corsHandler, metricsHandler, jsonParser, urlencParser, rawBodyParser, this.callback, this.errorHandler);
+                    RED.httpNode.put(`${buildUrl}/:id`, cookieParser(), httpMiddleware, corsHandler, metricsHandler, jsonParser, urlencParser, rawBodyParser, this.callback, this.errorHandler);
                 } else if (this.method == "patch") {
-                    RED.httpNode.patch(buildUrl, cookieParser(), httpMiddleware, corsHandler, metricsHandler, jsonParser, urlencParser, rawBodyParser, this.callback, this.errorHandler);
+                    RED.httpNode.patch(`${buildUrl}/:id`, cookieParser(), httpMiddleware, corsHandler, metricsHandler, jsonParser, urlencParser, rawBodyParser, this.callback, this.errorHandler);
                 } else if (this.method == "delete") {
-                    RED.httpNode.delete(buildUrl, cookieParser(), httpMiddleware, corsHandler, metricsHandler, jsonParser, urlencParser, rawBodyParser, this.callback, this.errorHandler);
+                    RED.httpNode.delete(`${buildUrl}/:id`, cookieParser(), httpMiddleware, corsHandler, metricsHandler, jsonParser, urlencParser, rawBodyParser, this.callback, this.errorHandler);
                 }
             }
 
