@@ -57,10 +57,10 @@ Restart your Node-RED instance and you should have a "Scheduler" node available 
 <p>2. Export their flows & import them to Krysp platform (built using Node-RED).</p>
     
 ## Help
-    For help click on the scheduler node from the palette list.
+<p>For help click on the scheduler node from the palette list.</p>
 
 ## Issues
-    Feel Free to raise a issue on <a href="https://github.com/krysp-io/node-red-contrib-scheduler/issues"></a>
+<p>Feel Free to raise a issue on <a href="https://github.com/krysp-io/node-red-contrib-scheduler/issues"></a></p>
 
 ## Discussions and suggestions
 
