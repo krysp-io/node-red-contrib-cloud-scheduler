@@ -141,7 +141,6 @@ module.exports = function (RED) {
     }
 
     function SchedulerHTTPIn(n) {
-        console.log("called");
         RED.nodes.createNode(this, n);
         if (RED.settings.httpNodeRoot !== false) {
 
@@ -284,7 +283,7 @@ module.exports = function (RED) {
                     var msgid = RED.util.generateId();
                     res._msgid = msgid;
                     if (node.method.match(/^(post|delete|put|options|patch)$/)) {
-                        node.send({ _msgid: msgid, req: req, res: createResponseWrapper(node, res), payload: req.body });
+                        node.send({ _msgid: msgid, req: req, res: createResponseWrapper(node, res), payload: req.body.toString() });
                     } else if (node.method == "get") {
                         node.send({ _msgid: msgid, req: req, res: createResponseWrapper(node, res), payload: req.query });
                     } else {

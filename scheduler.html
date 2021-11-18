@@ -66,7 +66,8 @@
 
     <div class="form-row inject-time-row hidden" id="inject-time-row-interval">
         <span data-i18n="inject.every">every </span>
-        <input id="inject-time-interval-count" class="inject-time-count" value="1"></input>
+        <select id="inject-time-interval-units-minutes" class="inject-time-interval-minutes"></select>
+        <select id="inject-time-interval-units-hours" class="inject-time-interval-hours"></select>
         <select style="width:100px" id="inject-time-interval-units">
             <option value="m">minutes</option>
             <option value="h">hours</option>
@@ -111,7 +112,7 @@
     </div>
 
     <div class="form-row inject-time-row hidden" id="inject-time-row-time">
-        <span>at</span> <input type="text" id="inject-time-time" value="12:00"></input><br/>
+        <span>at</span> <input type="time" id="inject-time-time" value="12:00"></input><br/>
         <div id="inject-time-time-days" class="inject-time-days">
             <div style="display:inline-block; vertical-align:top; margin-right:5px;">on</div>
             <div style="display:inline-block;">
@@ -176,7 +177,7 @@
     }
 
     /* Hide the default checkbox */
-    input[type=checkbox] {
+    .main input[type=checkbox] {
         visibility: hidden;
     }
 
@@ -191,7 +192,7 @@
         border: 1px solid red;
     }
 
-    
+
     /* Specify the background color to be
         shown when checkbox is checked */
     .main input:checked~.geekmark {
@@ -267,8 +268,17 @@
         width: 90px !important;
     }
 
+    .inject-time-interval-minutes {
+        width: 90px !important;
+    }
+
+    .inject-time-interval-hours {
+        width: 90px !important;
+    }
+
+
     #inject-time-time {
-        width: 75px;
+        width: 90px !important;
         margin-left: 8px;
         margin-bottom: 8px;
     }
@@ -362,15 +372,15 @@
             oneditprepare: function () {
                 var node = this;
 
-                if(!$("#node-input-not_publicly_accessible").prop("checked")) {
+                if (!$("#node-input-not_publicly_accessible").prop("checked")) {
                     $(".main").addClass('text-danger')
                 } else {
                     $(".main").removeClass('text-danger')
                 }
 
-                $("#node-input-not_publicly_accessible").on("click", function() {
-                    if(!$("#node-input-not_publicly_accessible").prop("checked")) {
-                    $(".main").addClass('text-danger')
+                $("#node-input-not_publicly_accessible").on("click", function () {
+                    if (!$("#node-input-not_publicly_accessible").prop("checked")) {
+                        $(".main").addClass('text-danger')
                     } else {
                         $(".main").removeClass('text-danger')
                     }
@@ -386,20 +396,58 @@
                     $("#node-input-url").val(this.url)
                 })
 
+                $("#inject-time-interval-units").on("change", function () {
+                    var intervalUnit = $("#inject-time-interval-units").val();
+                        if (intervalUnit == 'm') {
+                            $("#inject-time-interval-units-minutes").show();
+                            $("#inject-time-interval-units-hours").hide();
+                            for (var i = 1; i < 60; i++) {
+                                $("<option></option>").val(i).text(i).appendTo("#inject-time-interval-units-minutes");
+                            }
+                        } else {
+                            $("#inject-time-interval-units-minutes").hide();
+                            $("#inject-time-interval-units-hours").show();
+                            for (var i = 1; i < 24; i++) {
+                                $("<option></option>").val(i).text(i).appendTo("#inject-time-interval-units-hours");
+                            }
+                        }
+                })
+
+
 
                 $("#inject-time-type-select").on("change", function () {
                     $("#node-input-crontab").val('');
                     var id = $("#inject-time-type-select").val();
                     $(".inject-time-row").hide();
                     $("#inject-time-row-" + id).show();
-                    if ((id == "none") || (id == "interval") || (id == "interval-time")) {
-                        // $("#node-once").show();
-                        // $("#node-input-once").prop('checked', true);
+                    if (id == "interval") {
+
+                        
+                        
+                        var intervalUnit = $("#inject-time-interval-units").val();
+                        if (intervalUnit == 'm') {
+                            $("#inject-time-interval-units-minutes").show();
+                            $("#inject-time-interval-units-hours").hide();
+                            for (var i = 1; i < 60; i++) {
+                                $("<option></option>").val(i).text(i).appendTo("#inject-time-interval-units-minutes");
+                            }
+                        } else {
+                            $("#inject-time-interval-units-minutes").hide();
+                            $("#inject-time-interval-units-hours").show();
+                            for (var i = 1; i < 24; i++) {
+                                $("<option></option>").val(i).text(i).appendTo("#inject-time-interval-units-hours");
+                            }
+                        }
+
                     }
-                    else {
-                        // $("#node-once").hide();
-                        // $("#node-input-once").prop('checked', false);
-                    }
+                    // if ((id == "none") || (id == "interval") || (id == "interval-time")) {
+                    //     // $("#node-once").show();
+                    //     // $("#node-input-once").prop('checked', true);
+                    // }
+                    // else {
+                    //     // $("#node-once").hide();
+                    //     // $("#node-input-once").prop('checked', false);
+                    // }
 
                     // Scroll down
                     var scrollDiv = $("#dialog-form").parent();
@@ -459,8 +507,19 @@
                         checkForintervalTimeDifference.length <= 1
                     ) {
                         repeattype = "interval";
-                        const count = cronparts[0] == '0' ? hoursPart[1] : minutesPart[1];
-                        $("#inject-time-interval-count").val(count)
+                        var count;
+                        if (cronparts[0] == '0') {
+                            $("#inject-time-interval-units").val('h').trigger('change');
+                            var hour = Number(hoursPart[1]).toString();
+                            $("#inject-time-interval-units-hours").val(hour);;
+                            $("#inject-time-interval-units-minutes").hide();
+                        } else {
+                            $("#inject-time-interval-units").val('m').trigger('change');
+                            var minutes = Number(minutesPart[1]).toString();
+                            $("#inject-time-interval-units-hours").hide()
+                            $("#inject-time-interval-units-minutes").val(minutes).change();
+
+                        }
                     } else if (!isNaN(cronparts[0]) && !isNaN(cronparts[1])) {
                         repeattype = "time";
                         // Fixed time
@@ -569,12 +628,13 @@
                 if (type == "none") {
                     // nothing
                 } else if (type == "interval") {
-                    var count = $("#inject-time-interval-count").val();
                     var units = $("#inject-time-interval-units").val();
                     if (units == "m") {
+                        var count = $("#inject-time-interval-units-minutes").val();
                         crontab = "*/" + count + " * * * *";
                         // repeat = count * 60;
                     } else if (units == "h") {
+                        var count = $("#inject-time-interval-units-hours").val();
                         crontab = "0 */" + count + " * * *";
                         // repeat = count * 60 * 60;
                     }
