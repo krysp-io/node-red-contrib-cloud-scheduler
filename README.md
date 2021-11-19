@@ -32,7 +32,7 @@ Restart your Node-RED instance and you should have a "Scheduler" node available 
 
 
 <p>1. After installation, drag the <b>scheduler</b> node from the palette to the workspace.</p>
-<p align="center"> <img src='https://static.node.iopulsedev.net/nodes/Scheduler_Node.png' alt='config_help' width="240" height="80" /></p>
+<p align="center"> <img src='https://static.node.iopulsedev.net/nodes/Scheduler_Node.png' alt='config_help' width="200" height="80" /></p>
 <p>2. Double click on the node.</p>
 <p>3. Enter all the form fields in scheduler node and then click on Done</p>
 <p> <img src='https://static.node.iopulsedev.net/nodes/Scheduler_completed_form.png' alt='config_help' width="350" height="450" /></p>
