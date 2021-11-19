@@ -35,7 +35,7 @@ Restart your Node-RED instance and you should have a "Scheduler" node available 
 <p> <img src='https://static.node.iopulsedev.net/nodes/Scheduler_node.png' alt='config_help' width="240" height="80" /></p>
 <p>2. Double click on the node.</p>
 <p> <img src='https://static.node.iopulsedev.net/nodes/Scheduler_incomplete_form.png' alt='config_help' width="350" height="450" /></p>
-<p>3. Enter all the form fields in scheduler node and then click <img src="https://static.node.iopulsedev.net/nodes/done_button.png" width="80" height="40" /></p>
+<p>3. Enter all the form fields in scheduler node and then click on Done</p>
 <p> <img src='https://static.node.iopulsedev.net/nodes/Scheduler_completed_form.png' alt='config_help' width="350" height="450></p>
 <p>4. Attach a Http Response node to scheduler node.</p>
 <p> <img src='https://static.node.iopulsedev.net/nodes/Scheduler_HTTP_IN.png' alt='config_help' width="300" height="100" /></p>
