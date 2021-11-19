@@ -60,7 +60,7 @@ Restart your Node-RED instance and you should have a "Scheduler" node available 
 <p>For help click on the scheduler node from the palette list.</p>
 
 ## Issues
-<p>Feel Free to raise a issue on <a href="https://github.com/krysp-io/node-red-contrib-scheduler/issues"></a></p>
+<p>Feel Free to raise a issue on <a href="https://github.com/krysp-io/node-red-contrib-scheduler/issues">Github</a></p>
 
 ## Discussions and suggestions
 
