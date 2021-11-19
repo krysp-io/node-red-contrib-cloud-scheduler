@@ -1,4 +1,4 @@
-## node-red-contrib-scheduler
+## node-red-contrib-cloud-scheduler
 A node that allows to execute any flow at a given time interval.
 
 
@@ -20,9 +20,9 @@ A node that allows to execute any flow at a given time interval.
 ### Installing the client library
 
 
-To install the stable version use the Menu - Manage palette option and search for node-red-contrib-scheduler, or run the following command in your Node-RED user directory - typically ~/.node-red: 
+To install the stable version use the Menu - Manage palette option and search for node-red-contrib-cloud-scheduler, or run the following command in your Node-RED user directory - typically ~/.node-red: 
 
-        npm install node-red-contrib-scheduler
+        npm install node-red-contrib-cloud-scheduler
 
 Or else install the package directly from Manage Palette
 
