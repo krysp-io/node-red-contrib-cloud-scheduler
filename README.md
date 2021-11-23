@@ -74,7 +74,7 @@ Copy and paste the contents of the file directly into the **Key** field in the n
 <p>Add Google Cloud Credentials JSON created earlier in the scheduler config node.</p>
 <p align="center"> <img src='https://static.node.iopulsedev.net/nodes/scheduler_google_credentials.png' alt='config_help' width="350" height="450" /></p>
 <p>4. Attach a Http Response and a debug node to scheduler node.</p>
-<p align="center"> <img src='https://static.node.iopulsedev.net/nodes/Scheduler_HTTP_Debug.png' alt='config_help' width="300" height="100" /></p>
+<p align="center"> <img src='https://static.node.iopulsedev.net/nodes/Scheduler_HTTP.png' alt='config_help' width="300" height="100" /></p>
 <p>5.Click on Deploy to Cloud</p>
 <p>6. At the scheduled time the flow will get executed.</p>
 <p align="center"><img src="https://static.node.iopulsedev.net/nodes/Scheduler_Output.png" width="900" height="600" /></p>
