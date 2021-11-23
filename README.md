@@ -61,9 +61,9 @@ The credentials for a service account can be acquired from the [APIs & Services]
 Copy and paste the contents of the file directly into the **Key** field in the node editor.
 
 <p>
-    <img src="https://static.node.iopulsedev.net/nodes/credentials1.png" width="350" height="450" />
-    <img src="https://static.node.iopulsedev.net/nodes/credentials2.png" width="350" height="450" />
-    <img src="https://static.node.iopulsedev.net/nodes/credentials3.png" width="350" height="450" />
+    <img src="https://static.node.iopulsedev.net/nodes/credentials1.png" width="350" height="400" />
+    <img src="https://static.node.iopulsedev.net/nodes/credentials2.png" width="350" height="400" />
+    <img src="https://static.node.iopulsedev.net/nodes/credentials3.png" width="350" height="400" />
 </p>
 
 
