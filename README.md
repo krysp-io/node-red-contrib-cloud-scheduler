@@ -71,6 +71,7 @@ Copy and paste the contents of the file directly into the **Key** field in the n
 <p>2. Double click on the node.</p>
 <p>3. Enter all the form fields in scheduler node and then click on Done</p>
 <p align="center"> <img src='https://static.node.iopulsedev.net/nodes/Scheduler_completed_form.png' alt='config_help' width="350" height="450" /></p>
+<p>Add Google Cloud Credentials JSON created earlier in the scheduler config node.</p>
 <p align="center"> <img src='https://static.node.iopulsedev.net/nodes/scheduler_google_credentials.png' alt='config_help' width="350" height="450" /></p>
 <p>4. Attach a Http Response and a debug node to scheduler node.</p>
 <p align="center"> <img src='https://static.node.iopulsedev.net/nodes/Scheduler_HTTP_Debug.png' alt='config_help' width="300" height="100" /></p>
