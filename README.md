@@ -60,11 +60,11 @@ On each node, we have the opportunity to supply credentials.  These can be suppl
 The credentials for a service account can be acquired from the [APIs & Services](https://console.cloud.google.com/apis/credentials) menu. After you finish creating a service account key, it will be downloaded in JSON format and saved to a local file.
 Copy and paste the contents of the file directly into the **Key** field in the node editor.
 
-![Step 1](docs/images/credentials1.png)
+<p><img src="https://static.node.iopulsedev.net/nodes/credentials1.png.png" width="350" height="450" /></p>
 
-![Step 2](docs/images/credentials2.png)
+<p><img src="https://static.node.iopulsedev.net/nodes/credentials2.png.png" width="350" height="450" /></p>
 
-![Step 3](docs/images/credentials3.png)
+<p><img src="https://static.node.iopulsedev.net/nodes/credentials3.png.png" width="350" height="450" /></p>
 
 
 ## Usage
