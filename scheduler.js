@@ -29,6 +29,8 @@ module.exports = function (RED) {
     var hashSum = require("hash-sum");
 
     const scheduler = require('@google-cloud/scheduler');
+    const { google } = require('googleapis');
+    const cloudscheduler = google.cloudscheduler('v1');
 
 
     const rawBodyParser = (req, res, next) => {
@@ -159,8 +161,11 @@ module.exports = function (RED) {
             this.not_publicly_accessible = n.not_publicly_accessible;
             this.name = n.name;
             var node = this;
-            var jobName = null;
-            var parent = null;
+            this.jobName = null;
+            this.parent = null;
+            this.location = null;
+            this.job = {};
+            this.request = {};
 
             if (n.account) {
                 credentials = GetCredentials(n.account);
@@ -176,52 +181,85 @@ module.exports = function (RED) {
                 credentials: credentials
             });
 
-            
+
             if (credentials) {
-                jobName = client.jobPath(credentials.project_id, "us-east1", this.id);
-                parent = client.locationPath(credentials.project_id, "us-east1");
+                const locations = ["us-west1", "us-west2", "us-west3", "us-west4", "us-central1", "us-east1", "us-east4", "northamerica-northeast1", "southamerica-east1"];
+                for (var i=0;i<locations.length; i++) {
+                    (async (region) => {
+                        const authClient = await authorize();
+                        const request = {
+                            // Resource name for the location.
+                            name: `projects/${credentials.project_id}/locations/${region}`,
+                            auth: authClient,
+                        };
+    
+                        try {
+                            const response = (await cloudscheduler.projects.locations.get(request)).data;
+                            this.location = response.locationId;
+                            this.jobName = client.jobPath(credentials.project_id, this.location, this.id);
+                            this.parent = client.locationPath(credentials.project_id, this.location);
+                            if (!n.url) {
+                                this.completeRemove();
+                                this.warn("Mandatory : Missing URL Path. Please provide publicly accessible URL in the scheduler node.");
+                                return;
+                            }
+                            if (!credentials) {
+                                this.removeHttpIN();
+                                this.warn("Mandatory : Missing Google Cloud Credentials. Add Credentials by clicking on the edit icon in the scheduler node.");
+                                return;
+                            }
+                            if (checkForLocalhost.test(this.url)) {
+                                this.completeRemove();
+                                this.warn("Localhost is not supported. Please provide publicly accessible for google cloud scheduler to create the job.");
+                                return;
+                            }
+                            if (!this.not_publicly_accessible) {
+                                this.completeRemove();
+                                this.warn(`Mandatory : Please click on the checkbox in the scheduler node to verify that the URL is publicly accessible for google cloud scheduler to create the job.`);
+                                return;
+                            }
+
+                            this.init();
+                        } catch (err) {
+                        }
+                    })(locations[i]);
+                }
+
+                async function authorize() {
+                    const auth = new google.auth.GoogleAuth({
+                        scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+                        credentials
+                    });
+                    return await auth.getClient();
+                }
             }
 
-            const job = {
-                name: jobName,
-                httpTarget: {
-                    uri: `${this.url}/${n.id}`,
-                    httpMethod: this.method,
-                    body: Buffer.from("Scheduled job executed via Google Cloud Scheduler")
-                },
-                schedule: this.crontab,
-                timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone
-            };
-
-            const request = {
-                parent: parent,
-                job: job,
-            };
+            
 
 
             this.createJob = async () => {
                 try {
-                    await client.createJob(request);
+                    await client.createJob(this.request);
                     this.warn(`Google Cloud Scheduler successfully created on ${this.url} for cron : ${this.crontab}`);
                     node.emit("input", {});
-                } catch(err) {
-                    this.trace(err)
+                } catch (err) {
+                    this.warn(err)
                 }
             }
 
             this.updateJob = async () => {
                 try {
-                    await client.updateJob(request);
+                    await client.updateJob(this.request);
                     this.warn(`Google Cloud Scheduler successfully updated on ${this.url} for cron : ${this.crontab}`);
                     node.emit("input", {});
-                } catch(err) {
-                    this.trace(err)
+                } catch (err) {
+                    this.warn(err)
                 }
             }
 
             this.removeJob = async () => {
-                client.getJob({ name: jobName }).then(async exists => {
-                    await client.deleteJob({ name: jobName });
+                client.getJob({ name: this.jobName }).then(async exists => {
+                    await client.deleteJob({ name: this.jobName });
                 }).catch(err => this.trace(err))
             }
 
@@ -246,6 +284,29 @@ module.exports = function (RED) {
                 this.removeJob();
             }
 
+            this.init = () => {
+                this.job = {
+                    name: this.jobName,
+                    httpTarget: {
+                        uri: `${this.url}/${n.id}`,
+                        httpMethod: this.method,
+                        body: Buffer.from("Scheduled job executed via Google Cloud Scheduler")
+                    },
+                    schedule: this.crontab,
+                    timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone
+                };
+    
+                this.request = {
+                    parent: this.parent,
+                    job: this.job,
+                };
+                client.getJob({ name: this.jobName }).then(exists => {
+                    this.debug(JSON.stringify(exists))
+                    this.removeHttpIN();
+                    this.updateJob();
+                }).catch(err => this.createJob())
+            }
+
             this.on("close", (removed, done) => {
                 if (removed) {
                     this.completeRemove()
@@ -253,32 +314,8 @@ module.exports = function (RED) {
                 done()
             });
 
-            
-            if (!n.url) {
-                this.completeRemove();
-                this.warn("Mandatory : Missing URL Path. Please provide publicly accessible URL in the scheduler node.");
-                return;
-            }
-            if (!credentials) {
-                this.removeHttpIN();
-                this.warn("Mandatory : Missing Google Cloud Credentials. Add Credentials by clicking on the edit icon in the scheduler node.");
-                return;
-            }
-            if (checkForLocalhost.test(this.url)) {
-                this.completeRemove();
-                this.warn("Localhost is not supported. Please provide publicly accessible for google cloud scheduler to create the job.");
-                return;
-            } 
-            if (!this.not_publicly_accessible) {
-                this.completeRemove();
-                this.warn(`Mandatory : Please click on the checkbox in the scheduler node to verify that the URL is publicly accessible for google cloud scheduler to create the job.`);
-                return;
-            }
 
-            client.getJob({ name: jobName }).then(exists => {
-                this.removeHttpIN();
-                this.updateJob();
-            }).catch(err => this.createJob())
+            
 
             function HTTPIn(msg, send, done) {
                 this.errorHandler = function (err, req, res, next) {
@@ -286,7 +323,7 @@ module.exports = function (RED) {
                     res.sendStatus(500);
                 };
 
-                this.callback = async function (req, res) {
+                this.callback = function (req, res) {
                     var msgid = RED.util.generateId();
                     res._msgid = msgid;
                     if (node.method.match(/^(post|delete|put|options|patch)$/)) {
