@@ -43,7 +43,7 @@ Restart your Node-RED instance and you should have a "Scheduler" node available 
 
 ## Google Cloud Credentials
 
-Cloud Scheduler node use Google Cloud Scheduler to execute the flow. GCP credentials are required to securely create a scheduler task in Google Cloud Scheduler. Use the scheduler node's configuration to provide GCP credentials.  
+Cloud Scheduler node uses Google Cloud Scheduler to execute the flow. GCP credentials are required to securely create a scheduler task in Google Cloud Scheduler. Use the scheduler node's configuration to provide GCP credentials.  
 
 If Node-RED is running under a GCP environment such as a Compute Engine, Google Kubernetes Engine or Cloud Run then there is an implicit identity presented
 to GCP and the flow developer need not provide any authentication configuration.  However, if your Node-RED runtime is not running
@@ -71,7 +71,7 @@ Copy and paste the contents of the file directly into the **Key** field in the n
 <p>2. Double click on the node.</p>
 <p>3. Enter all the form fields in scheduler node and then click on Done</p>
 <p align="center"> <img src='https://static.node.iopulsedev.net/nodes/Scheduler_completed_form.png' alt='config_help' width="350" height="450" /></p>
-<p>Add Google Cloud Credentials JSON created earlier in the scheduler config node.</p>
+<p>Click on Credentials to add new Google Cloud credentials and use Credentials JSON created earlier in the scheduler config node.</p>
 <p align="center"> <img src='https://static.node.iopulsedev.net/nodes/scheduler_google_credentials.png' alt='config_help' width="350" height="450" /></p>
 <p>4. Attach an HTTP Response and a Debug node along with scheduler node to your existing flow to make it accessible for Google Cloud Scheduler to work.</p>
 <p align="center"> <img src='https://static.node.iopulsedev.net/nodes/Scheduler_HTTP.png' alt='config_help' width="800" height="100" /></p>
