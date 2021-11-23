@@ -32,7 +32,7 @@ Restart your Node-RED instance and you should have a "Scheduler" node available 
 
 <p>With Scheduler node you can set up your flows to be executed at defined times or regular intervals. The scheduler node work as a cron job for your flows.</p>
 
-<p>Each scheduler node requires a publicly accessible URL where the flow will be deployed and will be used by the Google Cloud scheduler to send to a target according to a specified schedule.</p> 
+<p><b>Mandatory</b>: Each scheduler node requires a publicly accessible URL where the flow will be deployed and will be used by the Google Cloud scheduler to send to a target according to a specified schedule.</p> 
 
 <p>It is important to note that the target must be HTTP/S endpoints.</p>
 
