@@ -30,6 +30,18 @@ Restart your Node-RED instance and you should have a "Scheduler" node available 
 
 ### Get Started
 
+<p>With Scheduler node you can set up your flows to be executed at defined times or regular intervals. The scheduler node work as a cron job for your flows.</p>
+
+<p>Each scheduler node requires a publicly accessible URL where the flow will be deployed and will be used by the Google Cloud scheduler to send to a target according to a specified schedule.</p> 
+
+<p>It is important to note that the target must be HTTP/S endpoints.</p>
+
+<p>To test the scheduler node in a local environment, developer can either</p>
+<p>1. Utilize tools like ngrok to accept HTTP traffic</p>
+<p>2. Export their flows & import them to Krysp platform (built using Node-RED).</p>
+
+
+## Usage
 
 <p>1. After installation, drag the <b>scheduler</b> node from the palette to the workspace.</p>
 <p align="center"> <img src='https://static.node.iopulsedev.net/nodes/Scheduler_Node.png' alt='config_help' width="200" height="80" /></p>
@@ -42,17 +54,6 @@ Restart your Node-RED instance and you should have a "Scheduler" node available 
 <p>6. At the scheduled time the flow will get executed.</p>
 <p align="center"><img src="https://static.node.iopulsedev.net/nodes/Scheduler_Output.png" width="900" height="600" /></p>
 
-## Usage
-
-<p>With Scheduler node you can set up your flows to be executed at defined times or regular intervals. The scheduler node work as a cron job for your flows.</p>
-
-<p>Each scheduler node requires a publicly accessible URL where the flow will be deployed and will be used by the Google Cloud scheduler to send to a target according to a specified schedule.</p> 
-
-<p>It is important to note that the target must be HTTP/S endpoints.</p>
-
-<p>To test the scheduler node in a local environment, developer can either</p>
-<p>1. Utilize tools like ngrok to accept HTTP traffic</p>
-<p>2. Export their flows & import them to Krysp platform (built using Node-RED).</p>
 
 ## Discussions and suggestions
 
