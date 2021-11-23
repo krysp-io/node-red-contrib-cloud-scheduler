@@ -41,6 +41,32 @@ Restart your Node-RED instance and you should have a "Scheduler" node available 
 <p>2. Export their flows & import them to Krysp platform (built using Node-RED).</p>
 
 
+## Google Cloud Credentials
+
+Each of the new nodes made available through this package will communicate with the Google Cloud Platform (GCP).  These interactions must be performed securely and require authentication information to be passed.
+
+If Node-RED is running under a GCP environment such as a Compute Engine, Google Kubernetes Engine or Cloud Run then there is an implicit identity presented
+to GCP and the flow developer need do nothing special for authentication configuration.  However, if your Node-RED runtime is not running
+under GCP or you wish to call a service with adistinct identity, then you will need to use explicit credentials.
+
+On each node, we have the opportunity to supply credentials.  These can be supplied either as a path to a named key file or by creating a Node-RED managed name credentials secret.  Each credential defined as a Node-RED secret has the following properties:
+
+
+| Property    | Type     | Description                                          |
+| ----------- | -------- | ---------------------------------------------------- |
+| **name**    | `string` | Label for easy identification, essentially a comment. |
+| **account** | `string` | Credentials in the form of a JSON key.               |
+
+The credentials for a service account can be acquired from the [APIs & Services](https://console.cloud.google.com/apis/credentials) menu. After you finish creating a service account key, it will be downloaded in JSON format and saved to a local file.
+Copy and paste the contents of the file directly into the **Key** field in the node editor.
+
+![Step 1](docs/images/credentials1.png)
+
+![Step 2](docs/images/credentials2.png)
+
+![Step 3](docs/images/credentials3.png)
+
+
 ## Usage
 
 <p>1. After installation, drag the <b>scheduler</b> node from the palette to the workspace.</p>
