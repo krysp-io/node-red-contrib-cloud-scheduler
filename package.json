@@ -16,7 +16,8 @@
   "license": "ISC",
   "node-red": {
     "nodes": {
-      "timer": "scheduler.js"
+      "Scheduler Task Start": "schedulerTaskStart.js",
+      "Scheduler Task Stop": "schedulerTaskStop.js"
     }
   },
   "dependencies": {

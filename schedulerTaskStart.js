@@ -10,7 +10,6 @@
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
  * limitations under the License.
  **/
 
@@ -183,47 +182,45 @@ module.exports = function (RED) {
 
 
             if (credentials) {
-                const locations = ["us-west1", "us-west2", "us-west3", "us-west4", "us-central1", "us-east1", "us-east4", "northamerica-northeast1", "southamerica-east1"];
-                for (var i=0;i<locations.length; i++) {
-                    (async (region) => {
-                        const authClient = await authorize();
-                        const request = {
-                            // Resource name for the location.
-                            name: `projects/${credentials.project_id}/locations/${region}`,
-                            auth: authClient,
-                        };
-    
-                        try {
-                            const response = (await cloudscheduler.projects.locations.get(request)).data;
-                            this.location = response.locationId;
-                            this.jobName = client.jobPath(credentials.project_id, this.location, this.id);
-                            this.parent = client.locationPath(credentials.project_id, this.location);
-                            if (!n.url) {
-                                this.completeRemove();
-                                this.warn("Mandatory : Missing URL Path. Please provide publicly accessible URL in the scheduler node.");
-                                return;
-                            }
-                            if (!credentials) {
-                                this.removeHttpIN();
-                                this.warn("Mandatory : Missing Google Cloud Credentials. Add Credentials by clicking on the edit icon in the scheduler node.");
-                                return;
-                            }
-                            if (checkForLocalhost.test(this.url)) {
-                                this.completeRemove();
-                                this.warn("Localhost is not supported. Please provide publicly accessible for google cloud scheduler to create the job.");
-                                return;
-                            }
-                            if (!this.not_publicly_accessible) {
-                                this.completeRemove();
-                                this.warn(`Mandatory : Please click on the checkbox in the scheduler node to verify that the URL is publicly accessible for google cloud scheduler to create the job.`);
-                                return;
-                            }
+                (async () => {
 
-                            this.init();
-                        } catch (err) {
+
+                    const authClient = await authorize();
+                    const request = {
+                        name: `projects/${credentials.project_id}`,
+                        auth: authClient,
+                    };
+
+                    try {
+                        const response = (await cloudscheduler.projects.locations.list(request)).data;
+                        this.location = response.locations[0].locationId;
+                        this.jobName = client.jobPath(credentials.project_id, this.location, this.id);
+                        this.parent = client.locationPath(credentials.project_id, this.location);
+                        if (!n.url) {
+                            this.completeRemove();
+                            this.warn("Mandatory : Missing URL Path. Please provide publicly accessible URL in the scheduler node.");
+                            return;
                         }
-                    })(locations[i]);
-                }
+                        if (!credentials) {
+                            this.removeHttpIN();
+                            this.warn("Mandatory : Missing Google Cloud Credentials. Add Credentials by clicking on the edit icon in the scheduler node.");
+                            return;
+                        }
+                        if (checkForLocalhost.test(this.url)) {
+                            this.completeRemove();
+                            return;
+                        }
+                        if (!this.not_publicly_accessible) {
+                            this.completeRemove();
+                            return;
+                        }
+
+                        this.init();
+                    } catch (err) {
+                        this.warn(err)
+                    }
+                })()
+
 
                 async function authorize() {
                     const auth = new google.auth.GoogleAuth({
@@ -234,10 +231,12 @@ module.exports = function (RED) {
                 }
             }
 
-            
+
 
 
             this.createJob = async () => {
+                this.warn("Create job");
+                this.warn(this.crontab);
                 try {
                     await client.createJob(this.request);
                     this.warn(`Google Cloud Scheduler successfully created on ${this.url} for cron : ${this.crontab}`);
@@ -295,7 +294,7 @@ module.exports = function (RED) {
                     schedule: this.crontab,
                     timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone
                 };
-    
+
                 this.request = {
                     parent: this.parent,
                     job: this.job,
@@ -315,7 +314,7 @@ module.exports = function (RED) {
             });
 
 
-            
+
 
             function HTTPIn(msg, send, done) {
                 this.errorHandler = function (err, req, res, next) {
@@ -357,7 +356,6 @@ module.exports = function (RED) {
                                 var ms = diff[0] * 1e3 + diff[1] * 1e-6;
                                 var metricResponseTime = ms.toFixed(3);
                                 var metricContentLength = res.getHeader("content-length");
-                                //assuming that _id has been set for res._metrics in HttpOut node!
                                 node.metric("response.time.millis", { _msgid: res._msgid }, metricResponseTime);
                                 node.metric("response.content-length.bytes", { _msgid: res._msgid }, metricContentLength);
                             }
@@ -398,8 +396,7 @@ module.exports = function (RED) {
             this.warn(RED._("httpin.errors.not-created"));
         }
     }
-    RED.nodes.registerType("Scheduler", SchedulerHTTPIn);
+    RED.nodes.registerType("Scheduler Task Start", SchedulerHTTPIn);
 }
-
 
 
