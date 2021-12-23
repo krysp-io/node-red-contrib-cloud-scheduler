@@ -235,8 +235,6 @@ module.exports = function (RED) {
 
 
             this.createJob = async () => {
-                this.warn("Create job");
-                this.warn(this.crontab);
                 try {
                     await client.createJob(this.request);
                     this.warn(`Google Cloud Scheduler successfully created on ${this.url} for cron : ${this.crontab}`);
