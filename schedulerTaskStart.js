@@ -207,11 +207,13 @@ module.exports = function (RED) {
                             return;
                         }
                         if (checkForLocalhost.test(this.url)) {
-                            this.completeRemove();
-                            return;
+                                this.completeRemove();
+                                this.warn("Localhost is not supported. Please provide publicly accessible for google cloud scheduler to create the job.");
+                                return;
                         }
                         if (!this.not_publicly_accessible) {
                             this.completeRemove();
+                            this.warn(`Mandatory : Please click on the checkbox in the scheduler node to verify that the URL is publicly accessible for google cloud scheduler to create the job.`);
                             return;
                         }
 
