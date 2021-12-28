@@ -91,6 +91,22 @@ After installing the mapper node, follow the below steps:
 <p>6. At the scheduled time the flow will get executed.</p>
 <p align="center"><img src="https://static.node.iopulsedev.net/nodes/Scheduler_Output.png" width="900" height="600" /></p>
 
+# FAQs
+
+---
+<p>1. How does Cloud-Scheduler work?</p>
+<p>Cloud Scheduler is a fully manged cron job scheduler. It allows you to scheduler any job for executing the flow.</p>
+
+<p>2. How do I use Cloud Scheduler? </p>
+<p> Cloud Scheduler will run at the configured time frame and execute the flow.</p>
+
+<p>3. How do I create Cloud Scheduler? </p>
+
+<p> Drag the <b>“Scheduler Task Start”</b> node from the palette to the workspace.</p>
+<p> Double click to open the Config node.</p>
+<p>. Click on the edit icon to <b>Add Google Cloud credentials</b> in the config node.</p>
+<p> Enter the Credentials JSON created for the service account (See example below) and Click <b>Add</b>.</p>
+
 # Krysp Platform Features
 
 <p>Flow execution metrics</p>
