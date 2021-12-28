@@ -9,7 +9,7 @@
 
 <p>1. The Node-RED Scheduler node requires Node-RED to be installed.</p>
 <p>2. The Node-RED should be accessible from internet.</p>
-<p>3. [Select or create a Cloud Platform project][projects].</p>
+3. [Select or create a Cloud Platform project][projects].
 <p>4. [Enable the Google Cloud Scheduler API][enable_api].</p>
 <p>5. [Set up authentication with a service account][auth] so you can access the
     API from your local workstation.</p>
