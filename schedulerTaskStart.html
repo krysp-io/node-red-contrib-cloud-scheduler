@@ -74,25 +74,25 @@
         <input type="hidden" id="node-input-crontab">
     </div>
 
-    <div class="d-none" id="show-options-for-time" style="margin-bottom: 8px;">
-        <label>Time</label>
-        <div style="display: flex; margin-left: 68px;">
+    <div class="d-none" id="show-options-for-time" style="margin-bottom: 8px; margin-left: 100px;">
+        <label style="margin-right:24px;">Time</label>
+        <div style="display: flex;">
             <span class="d-flex" style="padding-right: 5px;"><input type='radio' name="time_group" value='interval' checked/><label style="margin-left: 5px"> interval </label></span>
             <span class="d-flex" style="padding-right: 8px;"><input type='radio' name="time_group" value='interval-time'/><label style="margin-left: 5px"> interval between time </label></span>
             <span class="d-flex"><input type='radio' name="time_group" value='time'/><label style="margin-left: 5px"> At a specific time </label></span>
         </div>
     </div>
 
-    <div class="d-none" id="show-options-for-days" style="margin-bottom: 8px;">
-        <label>Day</label>
-        <div style="display: flex; margin-left: 74px;">
+    <div class="d-none" id="show-options-for-days" style="margin-bottom: 8px; margin-left: 100px;">
+        <label style="margin-right:30px;">Day</label>
+        <div style="display: flex;">
             <span class="d-flex" style="padding-right: 5px;"><input type='radio' name="days_group" value='interval-day' checked/><label style="margin-left: 5px"> interval </label></span>
             <span class="d-flex" style="padding-right: 5px;"><input type='radio' name="days_group" value='interval-between-day'/><label style="margin-left: 5px"> interval between days </label></span>
             <span class="d-flex"><input type='radio' name="days_group" value='day'/><label style="margin-left: 5px"> At a specific day </label></span>
         </div>
     </div>
 
-    <div class="form-row inject-time-row hidden" style="margin-bottom: 8px; padding-left:46px !important" id="inject-row-interval">
+    <div class="form-row inject-time-row hidden" style="margin-bottom: 8px; padding-left:104px !important" id="inject-row-interval">
         <span data-i18n="inject.every">every </span>
         <select id="inject-time-interval-units-minutes" class="inject-time-interval-minutes"  style="width:90px; margin-left:20px;"></select>
         <select id="inject-time-interval-units-hours" class="inject-time-interval-hours"  style="width:90px; margin-left:20px;"></select>
@@ -103,7 +103,7 @@
     </div>
 
     <div class="form-row inject-time-row hidden p-0" id="inject-row-interval-time">
-        <div style="padding-left: 46px; margin-bottom: 8px">
+        <div style="padding-left: 104px; margin-bottom: 8px">
             <span>every </span> <select style="width:90px;margin-left:20px" id="inject-time-interval-time-units" class="inject-time-int-count" value="1">
                 <option value="1">1</option>
                 <option value="2">2</option>
@@ -119,48 +119,48 @@
                 <option value="0">60</option>
             </select> <span> minutes </span><br/>
         </div>
-        <div style="padding-left: 27px; margin-bottom: 8px;">
-            <span> between </span> <select id="inject-time-interval-time-start" style="width:90px;margin-left: 20px;margin-right: 10px;" class="inject-time-times"  style="width:90px"></select>
+        <div style="padding-left: 104px; margin-bottom: 8px;">
+            <span> between </span> <select id="inject-time-interval-time-start" style="width:90px;margin-left: 2px;margin-right: 10px;" class="inject-time-times"  style="width:90px"></select>
             <span> and </span> <select id="inject-time-interval-time-end" class="inject-time-times"  style="width:90px; margin-left: 10px;"></select><br/>
         </div>
     </div>
 
-    <div class="form-row inject-time-row hidden" style="margin-bottom: 8px; padding-left: 67px !important;" id="inject-row-time">
+    <div class="form-row inject-time-row hidden" style="margin-bottom: 8px; padding-left: 125px !important;" id="inject-row-time">
         <span>at</span> <input type="time" id="inject-time-time" value="12:00" style="width:90px;margin-left:20px"></input><br/>
     </div>
 
-    <div class="form-row inject-time-row hidden" style="margin-bottom: 8px; padding-left: 46px;" id="inject-row-interval-day">
+    <div class="form-row inject-time-row hidden" style="margin-bottom: 8px; padding-left: 104px;" id="inject-row-interval-day">
         <span data-i18n="inject.every">every </span>
         <select id="inject-day-interval-unit" class="inject-time-interval-minutes"  style="width:90px; margin-left:20px;"></select>
         <span data-i18n="inject.every">days</span>
     </div>
 
-    <div class="form-row inject-time-row hidden" style="margin-bottom: 8px; padding-left: 27px;" id="inject-row-interval-between-day">
-        <span> between </span> <select id="inject-day-interval-between-day-start" class="inject-day-month"  style="width:90px;margin-left:20px; margin-right:10px"></select>
+    <div class="form-row inject-time-row hidden" style="margin-bottom: 8px; padding-left: 104px;" id="inject-row-interval-between-day">
+        <span> between </span> <select id="inject-day-interval-between-day-start" class="inject-day-month"  style="width:90px;margin-left:2px; margin-right:10px"></select>
         <span> and </span> <select id="inject-day-interval-between-day-end" class="inject-day-month"  style="width:90px;margin-left:10px"></select><br/>
     </div>
 
-    <div class="form-row inject-time-row hidden" style=" margin-bottom: 8px; padding-left: 68px;" id="inject-row-day">
+    <div class="form-row inject-time-row hidden" style=" margin-bottom: 8px; padding-left: 125px;" id="inject-row-day">
         <span>at</span> <select id="inject-day-interval" class="inject-day-month"  style="width:90px; margin-left:20px;"></select><br/>
     </div>
 
-    <div class="form-row inject-time-row hidden" style="margin-bottom: 8px; padding-left: 46px;" id="inject-row-interval-month">
+    <div class="form-row inject-time-row hidden" style="margin-bottom: 8px; padding-left: 104px;" id="inject-row-interval-month">
         <span data-i18n="inject.every">every </span>
         <select id="inject-month-interval-unit" class="inject-time-interval-minutes"  style="width:90px; margin-left:20px;"></select>
         <span data-i18n="inject.every">months</span>
     </div>
 
-    <div class="form-row inject-time-row hidden" style="margin-bottom: 8px; padding-left: 27px;" id="inject-row-interval-between-month">
-        <span> between </span> <select id="inject-month-interval-time-start" class="inject-day-month"  style="width:90px;  margin-left:20px; ; margin-right:10px"></select>
+    <div class="form-row inject-time-row hidden" style="margin-bottom: 8px; padding-left: 104px;" id="inject-row-interval-between-month">
+        <span> between </span> <select id="inject-month-interval-time-start" class="inject-day-month"  style="width:90px;  margin-left:2px; ; margin-right:10px"></select>
         <span> and </span> <select id="inject-month-interval-time-end" class="inject-day-month"  style="width:90px;margin-left:10px""></select><br/>
     </div>
 
-    <div class="form-row inject-time-row hidden" style="margin-bottom: 8px; padding-left: 68px;" id="inject-row-month">
+    <div class="form-row inject-time-row hidden" style="margin-bottom: 8px; padding-left: 125px;" id="inject-row-month">
         <span>at</span> <select id="inject-month-interval" class="inject-day-month"  style="width:90px; margin-left:20px;"></select><br/>
     </div>
     
-    <div id="inject-days" class="inject-time-days">
-        <div style="display:inline-block; vertical-align:top; margin-right:5px; padding-left: 58px; padding-right: 17px;">on</div>
+    <div id="inject-days" class="inject-time-days" style="margin-bottom: 10px;">
+        <div style="display:inline-block; vertical-align:top; margin-right:5px; padding-left: 116px; padding-right: 17px;">on</div>
         <div style="display:inline-block;">
             <div>
                 <label><input type='checkbox' checked value='1'/> <span>Monday</span></label>
@@ -181,7 +181,7 @@
             </div>
         </div>
     </div>
-    <div class="form-tips"><span></span></div>
+    <div class="form-tips" style="max-width: 100% !important; width: 100% !important"><span></span></div>
 </script>
 
 <script type="text/html" data-help-name="Scheduler Task Start">
@@ -350,14 +350,11 @@
     (function () {
 
         function resizeDialog(size) {
-            console.log("===============");
-            console.log(size);
-            console.log("===============");
-
+            console.log("size", size);
             size = size || { width: $(".red-ui-tray-content form").width(), height: $(".red-ui-tray-content form").height() }
             var rows = $("#dialog-form>div:not(.node-input-property-container-row):visible");
             var height = size.height;
-            var width = size.weight + 600;
+            var width = size.weight + 83;
             var node = this;
             for (var i = 0; i < rows.length; i++) {
                 height -= $(rows[i]).outerHeight(true);
@@ -366,7 +363,8 @@
             height -= (parseInt(editorRow.css("marginTop")) + parseInt(editorRow.css("marginBottom")));
             height += 16;
             $("#node-input-property-container").editableList('height', height);
-            $(".red-ui-tray-content form").width(width)
+            $("#dialog-form").parent().parent().parent().parent().parent().width(width);
+            $("#dialog-form").parent().parent().parent().parent().width(width);
         }
         /** Perform inject, optionally sending a custom msg (refactored for re-use in the form inject button)*/
         function doInject(node, customMsg) {
@@ -411,7 +409,7 @@
                 method: { value: "post", required: true },
                 not_publicly_accessible: { value: false, validate: function (prop) { return this.not_publicly_accessible } },
                 upload: { value: false },
-                cronjob: { value: {} }
+                cronjob: { value: {} },
             },
             icon: "timer.svg",
             inputs: 0,
@@ -1615,6 +1613,7 @@
                             $("<option></option>").val(l).text(l).appendTo("#inject-day-interval-between-day-end");
                         }
                         if (id == "interval-between-day") {
+                            const selectedOption = $("#show-options-for-time input[name=time_group]:checked").val();
                             if (selectedOption == "interval") {
                                 const intervalUnit = getIntervalUnit();
                                 $(".form-tips").empty();
