@@ -93,11 +93,10 @@ The node also provides a way to know the selected schedule in a readable format 
  - [Do I have to create a Google Cloud account?](#do-i-have-to-create-a-google-cloud-account) 
  - [How to get google-cloud-credentials?](#how-to-get-google-cloud-credentials) 
  - [How to add google-cloud-credentials?](#how-to-add-google-cloud-credentials) 
- - [What should be the method (POST/PUT /PATCH)?](#what-should-be-the-method-postputpatch)
+ - [What should be the method (POST/PUT)?](#what-should-be-the-method-postput)
  - [What is the URL?](#what-is-the-url)
- - [Can I use any other URL?](#can-i-use-any-other-url)
  - [Is it mandatory to have a publicly accessible URL?](#is-it-mandatory-to-have-a-publicly-accessible-url)
- - [I am facing issues with the scheduler. What should I do?](#i-am-facing-issues-with-the-scheduler.-what-should-i-do)
+ - [If I am having problems and unable to troubleshoot what should I do?](#if-i-am-having-problems-and-unable-to-troubleshoot-what-should-i-do)
 
 ## How does cloud-scheduler work?
 Cloud Scheduler is a fully manged cron job scheduler. It allows you to scheduler any job for executing the flow.
@@ -111,20 +110,17 @@ Please follow the guide here to create Google Cloud credentials.
 ## How to add google-cloud-credentials?
 Drag and Open the scheduler node. Click on the edit icon to **Add Google Cloud Credentials** in the config node. (*Copy and paste the contents of the Google service account credential JSON file [created above](#setup-google-cloud-scheduler-and-google-credentials), directly into the **Key** field.*)
 
-## What should be the method (Post/Put/Patch)?
+## What should be the method (Post/Put)?
 Cloud Scheduler will use POST method by default. PUT method can be used for updating any job. 
 
 ## What is the URL?
 Cloud Scheduler will create the URL from the URL entered in the field in combination with node id.
 
-## Can I use any other URL?
-No you can't use any other URL.
-
 ## Is it mandatory to have a publicly accessible URL?
 Yes. It is important that the URL is publicly accessible for Google Cloud Scheduler to execute the flow.
 
-## I am facing issues with the scheduler. What should I do?
-If you're still not able to execute your flow using the scheduler, please send an email with a subject line **Cloud Scheduler Issue** at support@krysp.io. Please describe your issue and attach your flow, logs (optional), and screenshots if possible.
+## If I am having problems and unable to troubleshoot what should I do?
+If you're still not able to execute your flow using the scheduler, please send an email with a subject line **Cloud Scheduler Issue** at developer@krysp.io. Please describe your issue and attach your flow, logs (optional), and screenshots if possible.
 
 # Node-RED On Cloud
 
