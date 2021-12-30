@@ -150,12 +150,12 @@
     </div>
 
     <div class="form-row inject-time-row hidden" style="margin-bottom: 8px; padding-left: 104px;" id="inject-row-interval-between-month">
-        <span> between </span> <select id="inject-month-interval-time-start" class="inject-day-month"  style="width:120px;  margin-left:2px; ; margin-right:10px"></select>
-        <span> and </span> <select id="inject-month-interval-time-end" class="inject-day-month"  style="width:120px;margin-left:10px""></select><br/>
+        <span> between </span> <select id="inject-month-interval-time-start" class="inject-day-month"  style="width:120px !important;  margin-left:2px; ; margin-right:10px"></select>
+        <span> and </span> <select id="inject-month-interval-time-end" class="inject-day-month"  style="width:120px !important;margin-left:10px""></select><br/>
     </div>
 
     <div class="form-row inject-time-row hidden" style="margin-bottom: 8px; padding-left: 125px;" id="inject-row-month">
-        <span>at</span> <select id="inject-month-interval" class="inject-day-month"  style="width:120px; margin-left:20px;"></select><br/>
+        <span>at</span> <select id="inject-month-interval" class="inject-day-month"  style="width:120px !important; margin-left:20px;"></select><br/>
     </div>
     
     <div id="inject-days" class="inject-time-days" style="margin-bottom: 10px;">
@@ -362,8 +362,13 @@
             height -= (parseInt(editorRow.css("marginTop")) + parseInt(editorRow.css("marginBottom")));
             height += 16;
             $("#node-input-property-container").editableList('height', height);
-            $("#dialog-form").parent().parent().parent().parent().parent().width(width);
-            $("#dialog-form").parent().parent().parent().parent().width(width);
+            if (!size) {
+                $("#dialog-form").parent().parent().parent().parent().parent().width(600);
+                $("#dialog-form").parent().parent().parent().parent().width(600);
+            } else {
+                $("#dialog-form").parent().parent().parent().parent().parent().width(600);
+                $("#dialog-form").parent().parent().parent().parent().width(width);
+            }
         }
         /** Perform inject, optionally sending a custom msg (refactored for re-use in the form inject button)*/
         function doInject(node, customMsg) {
@@ -2447,8 +2452,169 @@
                     for (var i = start + 1; i < 13; i++) {
                         var opt = $("<option></option>").val(i).text(i).appendTo("#inject-month-interval-between-day-end");
                     }
+                    const selectedOptionOfTime = $("#show-options-for-time input[name=time_group]:checked").val();
+                    const selectedOptionOfDay = $("#show-options-for-days input[name=days_group]:checked").val();
+                    var cronExpression;
+                    $(".form-tips").empty();
+                    if (selectedOptionOfTime == "interval") {
+                        const intervalUnit = getIntervalUnit();
+                        if (intervalUnit == 'm') {
+                            if (selectedOptionOfDay == "interval-day") {
+                                cronExpression = `*/${getIntervalMinutes()} * */${getFrequencyDay()} ${getIntervalInbetweenMonth()} ${getDays()}`;
+                                $(".form-tips").append(`${cronstrue.toString(cronExpression, { verbose: true })}`)
+                            } else if (selectedOptionOfDay == "interval-between-day") {
+                                cronExpression = `*/${getIntervalMinutes()} * ${getDayInterval()} ${getIntervalInbetweenMonth()} ${getDays()}`;
+                                $(".form-tips").append(`${cronstrue.toString(cronExpression, { verbose: true })}`)
+                            } else {
+                                cronExpression = `*/${getIntervalMinutes()} * ${getSpecificDay()} ${getIntervalInbetweenMonth()} ${getDays()}`;
+                                $(".form-tips").append(`${cronstrue.toString(cronExpression, { verbose: true })}`)
+                            }
+                        } else {
+                            if (selectedOptionOfDay == "interval-day") {
+                                cronExpression = `0 */${getIntervalHours()} */${getFrequencyDay()} ${getIntervalInbetweenMonth()} ${getDays()}`;
+                                $(".form-tips").append(`${cronstrue.toString(cronExpression, { verbose: true })}`)
+                            } else if (selectedOptionOfDay == "interval-between-day") {
+                                cronExpression = `0 */${getIntervalHours()} ${getDayInterval()} ${getIntervalInbetweenMonth()} ${getDays()}`;
+                                $(".form-tips").append(`${cronstrue.toString(cronExpression, { verbose: true })}`)
+                            } else {
+                                cronExpression = `0 */${getIntervalHours()} ${getSpecificDay()} ${getIntervalInbetweenMonth()} ${getDays()}`;
+                                $(".form-tips").append(`${cronstrue.toString(cronExpression, { verbose: true })}`)
+                            }
+                        }
+                    } else if (selectedOptionOfTime == "interval-time") {
+                        if (selectedOptionOfDay == "interval-day") {
+                            cronExpression = `*/${getTimeIntervalMinutes()} ${getDayInterval()} */${getFrequencyDay()} ${getIntervalInbetweenMonth()} ${getDays()}`;
+                            $(".form-tips").append(`${cronstrue.toString(cronExpression, { verbose: true })}`)
+                        } else if (selectedOptionOfDay == "interval-between-day") {
+                            cronExpression = `*/${getTimeIntervalMinutes()} ${getDayInterval()} ${getIntervalInbetweenMonth()} ${getDays()}`;
+                            $(".form-tips").append(`${cronstrue.toString(cronExpression, { verbose: true })}`)
+                        } else {
+                            cronExpression = `*/${getTimeIntervalMinutes()} ${getDayInterval()} ${getSpecificDay()} ${getIntervalInbetweenMonth()} ${getDays()}`;
+                            $(".form-tips").append(`${cronstrue.toString(cronExpression, { verbose: true })}`)
+                        }
+                    } else {
+                        if (selectedOptionOfDay == "interval-day") {
+                            cronExpression = `${getSpecificTimeMinutes()} ${getSpecificTimeHours()} */${getFrequencyDay()} ${getIntervalInbetweenMonth()} ${getDays()}`;
+                            $(".form-tips").append(`${cronstrue.toString(cronExpression, { verbose: true })}`)
+                        } else if (selectedOptionOfDay == "interval-between-day") {
+                            cronExpression = `${getSpecificTimeMinutes()} ${getSpecificTimeHours()} ${getDayInterval()} ${getIntervalInbetweenMonth()} ${getDays()}`;
+                            $(".form-tips").append(`${cronstrue.toString(cronExpression, { verbose: true })}`)
+                        } else {
+                            cronExpression = `${getSpecificTimeMinutes()} ${getSpecificTimeHours()} ${getSpecificDay()} ${getIntervalInbetweenMonth()} ${getDays()}`;
+                            $(".form-tips").append(`${cronstrue.toString(cronExpression, { verbose: true })}`)
+                        }
+                    }
                 })
 
+                $("#inject-month-interval-time-end").on("change", function () {
+                    const selectedOptionOfTime = $("#show-options-for-time input[name=time_group]:checked").val();
+                    const selectedOptionOfDay = $("#show-options-for-days input[name=days_group]:checked").val();
+                    var cronExpression;
+                    $(".form-tips").empty();
+                    if (selectedOptionOfTime == "interval") {
+                        const intervalUnit = getIntervalUnit();
+                        if (intervalUnit == 'm') {
+                            if (selectedOptionOfDay == "interval-day") {
+                                cronExpression = `*/${getIntervalMinutes()} * */${getFrequencyDay()} ${getIntervalInbetweenMonth()} ${getDays()}`;
+                                $(".form-tips").append(`${cronstrue.toString(cronExpression, { verbose: true })}`)
+                            } else if (selectedOptionOfDay == "interval-between-day") {
+                                cronExpression = `*/${getIntervalMinutes()} * ${getDayInterval()} ${getIntervalInbetweenMonth()} ${getDays()}`;
+                                $(".form-tips").append(`${cronstrue.toString(cronExpression, { verbose: true })}`)
+                            } else {
+                                cronExpression = `*/${getIntervalMinutes()} * ${getSpecificDay()} ${getIntervalInbetweenMonth()} ${getDays()}`;
+                                $(".form-tips").append(`${cronstrue.toString(cronExpression, { verbose: true })}`)
+                            }
+                        } else {
+                            if (selectedOptionOfDay == "interval-day") {
+                                cronExpression = `0 */${getIntervalHours()} */${getFrequencyDay()} ${getIntervalInbetweenMonth()} ${getDays()}`;
+                                $(".form-tips").append(`${cronstrue.toString(cronExpression, { verbose: true })}`)
+                            } else if (selectedOptionOfDay == "interval-between-day") {
+                                cronExpression = `0 */${getIntervalHours()} ${getDayInterval()} ${getIntervalInbetweenMonth()} ${getDays()}`;
+                                $(".form-tips").append(`${cronstrue.toString(cronExpression, { verbose: true })}`)
+                            } else {
+                                cronExpression = `0 */${getIntervalHours()} ${getSpecificDay()} ${getIntervalInbetweenMonth()} ${getDays()}`;
+                                $(".form-tips").append(`${cronstrue.toString(cronExpression, { verbose: true })}`)
+                            }
+                        }
+                    } else if (selectedOptionOfTime == "interval-time") {
+                        if (selectedOptionOfDay == "interval-day") {
+                            cronExpression = `*/${getTimeIntervalMinutes()} ${getDayInterval()} */${getFrequencyDay()} ${getIntervalInbetweenMonth()} ${getDays()}`;
+                            $(".form-tips").append(`${cronstrue.toString(cronExpression, { verbose: true })}`)
+                        } else if (selectedOptionOfDay == "interval-between-day") {
+                            cronExpression = `*/${getTimeIntervalMinutes()} ${getDayInterval()} ${getIntervalInbetweenMonth()} ${getDays()}`;
+                            $(".form-tips").append(`${cronstrue.toString(cronExpression, { verbose: true })}`)
+                        } else {
+                            cronExpression = `*/${getTimeIntervalMinutes()} ${getDayInterval()} ${getSpecificDay()} ${getIntervalInbetweenMonth()} ${getDays()}`;
+                            $(".form-tips").append(`${cronstrue.toString(cronExpression, { verbose: true })}`)
+                        }
+                    } else {
+                        if (selectedOptionOfDay == "interval-day") {
+                            cronExpression = `${getSpecificTimeMinutes()} ${getSpecificTimeHours()} */${getFrequencyDay()} ${getIntervalInbetweenMonth()} ${getDays()}`;
+                            $(".form-tips").append(`${cronstrue.toString(cronExpression, { verbose: true })}`)
+                        } else if (selectedOptionOfDay == "interval-between-day") {
+                            cronExpression = `${getSpecificTimeMinutes()} ${getSpecificTimeHours()} ${getDayInterval()} ${getIntervalInbetweenMonth()} ${getDays()}`;
+                            $(".form-tips").append(`${cronstrue.toString(cronExpression, { verbose: true })}`)
+                        } else {
+                            cronExpression = `${getSpecificTimeMinutes()} ${getSpecificTimeHours()} ${getSpecificDay()} ${getIntervalInbetweenMonth()} ${getDays()}`;
+                            $(".form-tips").append(`${cronstrue.toString(cronExpression, { verbose: true })}`)
+                        }
+                    }
+                })
+
+                $("#inject-month-interval").on("change", function () {
+                    const selectedOptionOfTime = $("#show-options-for-time input[name=time_group]:checked").val();
+                    const selectedOptionOfDay = $("#show-options-for-days input[name=days_group]:checked").val();
+                    var cronExpression;
+                    $(".form-tips").empty();
+                    if (selectedOptionOfTime == "interval") {
+                        const intervalUnit = getIntervalUnit();
+                        if (intervalUnit == 'm') {
+                            if (selectedOptionOfDay == "interval-day") {
+                                cronExpression = `*/${getIntervalMinutes()} * */${getFrequencyDay()} ${getSpecificMonth()} ${getDays()}`;
+                                $(".form-tips").append(`${cronstrue.toString(cronExpression, { verbose: true })}`)
+                            } else if (selectedOptionOfDay == "interval-between-day") {
+                                cronExpression = `*/${getIntervalMinutes()} * ${getDayInterval()} ${getSpecificMonth()} ${getDays()}`;
+                                $(".form-tips").append(`${cronstrue.toString(cronExpression, { verbose: true })}`)
+                            } else {
+                                cronExpression = `*/${getIntervalMinutes()} * ${getSpecificDay()} ${getSpecificMonth()} ${getDays()}`;
+                                $(".form-tips").append(`${cronstrue.toString(cronExpression, { verbose: true })}`)
+                            }
+                        } else {
+                            if (selectedOptionOfDay == "interval-day") {
+                                cronExpression = `0 */${getIntervalHours()} */${getFrequencyDay()} ${getSpecificMonth()} ${getDays()}`;
+                                $(".form-tips").append(`${cronstrue.toString(cronExpression, { verbose: true })}`)
+                            } else if (selectedOptionOfDay == "interval-between-day") {
+                                cronExpression = `0 */${getIntervalHours()} ${getDayInterval()} ${getSpecificMonth()} ${getDays()}`;
+                                $(".form-tips").append(`${cronstrue.toString(cronExpression, { verbose: true })}`)
+                            } else {
+                                cronExpression = `0 */${getIntervalHours()} ${getSpecificDay()} ${getSpecificMonth()} ${getDays()}`;
+                                $(".form-tips").append(`${cronstrue.toString(cronExpression, { verbose: true })}`)
+                            }
+                        }
+                    } else if (selectedOptionOfTime == "interval-time") {
+                        if (selectedOptionOfDay == "interval-day") {
+                            cronExpression = `*/${getTimeIntervalMinutes()} ${getDayInterval()} */${getFrequencyDay()} ${getSpecificMonth()} ${getDays()}`;
+                            $(".form-tips").append(`${cronstrue.toString(cronExpression, { verbose: true })}`)
+                        } else if (selectedOptionOfDay == "interval-between-day") {
+                            cronExpression = `*/${getTimeIntervalMinutes()} ${getDayInterval()} ${getSpecificMonth()} ${getDays()}`;
+                            $(".form-tips").append(`${cronstrue.toString(cronExpression, { verbose: true })}`)
+                        } else {
+                            cronExpression = `*/${getTimeIntervalMinutes()} ${getDayInterval()} ${getSpecificDay()} ${getSpecificMonth()} ${getDays()}`;
+                            $(".form-tips").append(`${cronstrue.toString(cronExpression, { verbose: true })}`)
+                        }
+                    } else {
+                        if (selectedOptionOfDay == "interval-day") {
+                            cronExpression = `${getSpecificTimeMinutes()} ${getSpecificTimeHours()} */${getFrequencyDay()} ${getSpecificMonth()} ${getDays()}`;
+                            $(".form-tips").append(`${cronstrue.toString(cronExpression, { verbose: true })}`)
+                        } else if (selectedOptionOfDay == "interval-between-day") {
+                            cronExpression = `${getSpecificTimeMinutes()} ${getSpecificTimeHours()} ${getDayInterval()} ${getSpecificMonth()} ${getDays()}`;
+                            $(".form-tips").append(`${cronstrue.toString(cronExpression, { verbose: true })}`)
+                        } else {
+                            cronExpression = `${getSpecificTimeMinutes()} ${getSpecificTimeHours()} ${getSpecificDay()} ${getSpecificMonth()} ${getDays()}`;
+                            $(".form-tips").append(`${cronstrue.toString(cronExpression, { verbose: true })}`)
+                        }
+                    }
+                })
 
 
                 $(".inject-time-count").spinner({
