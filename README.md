@@ -112,13 +112,13 @@ Please follow the guide here to create Google Cloud credentials.
 Drag and Open the scheduler node. Click on the edit icon to **Add Google Cloud Credentials** in the config node. (*Copy and paste the contents of the Google service account credential JSON file [created above](#setup-google-cloud-scheduler-and-google-credentials), directly into the **Key** field.*)
 
 ## What should be the method (Post/Put/Patch)?
-**Need to fill this**
+Cloud Scheduler will use POST method by default. PUT method can be used for updating any job. 
 
 ## What is the URL?
-**Need to fill this**
+Cloud Scheduler will create the URL from the URL entered in the field in combination with node id.
 
 ## Can I use any other URL?
-**Need to fill this**
+No you can't use any other URL.
 
 ## Is it mandatory to have a publicly accessible URL?
 Yes. It is important that the URL is publicly accessible for Google Cloud Scheduler to execute the flow.
