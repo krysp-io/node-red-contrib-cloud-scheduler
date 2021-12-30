@@ -299,8 +299,8 @@ module.exports = function (RED) {
                     parent: this.parent,
                     job: this.job,
                 };
-                this.removeHttpIN();
                 client.getJob({ name: this.jobName }).then(exists => {
+                    this.removeHttpIN();
                     this.debug(JSON.stringify(exists))
                     this.updateJob();
                 }).catch(err => this.createJob())
