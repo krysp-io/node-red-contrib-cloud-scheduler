@@ -117,13 +117,10 @@ Cloud Scheduler will use POST method by default. PUT method can be used for upda
 ## What is the URL?
 Cloud Scheduler will create the URL from the URL entered in the field in combination with node id.
 
-## Can I use any other URL?
-No you can't use any other URL.
-
 ## Is it mandatory to have a publicly accessible URL?
 Yes. It is important that the URL is publicly accessible for Google Cloud Scheduler to execute the flow.
 
-## I am facing issues with the scheduler. What should I do?
+## If I am having problems and unable to troubleshoot what should I do?
 If you're still not able to execute your flow using the scheduler, please send an email with a subject line **Cloud Scheduler Issue** at support@krysp.io. Please describe your issue and attach your flow, logs (optional), and screenshots if possible.
 
 # Node-RED On Cloud
