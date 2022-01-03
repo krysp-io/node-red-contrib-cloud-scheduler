@@ -77,5 +77,5 @@ module.exports = function(RED) {
             done();
         });
     }
-    RED.nodes.registerType("Scheduler Task Stop",HTTPOut)
+    RED.nodes.registerType("Scheduler Response",HTTPOut)
 }

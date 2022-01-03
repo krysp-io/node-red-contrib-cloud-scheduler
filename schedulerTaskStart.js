@@ -165,7 +165,12 @@ module.exports = function (RED) {
             this.location = null;
             this.job = {};
             this.request = {};
+            this.checkForSpaceInName = this.name.split(" ");
 
+            if (checkForSpaceInName.length > 1) {
+                this.name = this.checkForSpaceInName.join('_')
+            }
+ 
             if (n.account) {
                 credentials = GetCredentials(n.account);
             }
@@ -396,7 +401,7 @@ module.exports = function (RED) {
             this.warn(RED._("httpin.errors.not-created"));
         }
     }
-    RED.nodes.registerType("Scheduler Task Start", SchedulerHTTPIn);
+    RED.nodes.registerType("Scheduler Request", SchedulerHTTPIn);
 }
 
 

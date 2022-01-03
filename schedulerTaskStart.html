@@ -15,7 +15,7 @@
 -->
 <script src="https://unpkg.com/cronstrue@latest/dist/cronstrue.min.js" async></script>
 
-<script type="text/html" data-template-name="Scheduler Task Start">
+<script type="text/html" data-template-name="Scheduler Request">
     <div class="form-row">
         <label for="node-input-name"><i class="fa fa-tag"></i> <span> Name</span></label>
         <input type="text" id="node-input-name" placeholder="Name">
@@ -183,7 +183,7 @@
     <div class="form-tips" style="max-width: 100% !important; width: 100% !important"><span></span></div>
 </script>
 
-<script type="text/html" data-help-name="Scheduler Task Start">
+<script type="text/html" data-help-name="Scheduler Request">
     <p>Connects to <a href="https://cloud.google.com/scheduler/docs/" target="_blank">Google Cloud Scheduler</a> and schedules a job.</p>
     <h3>Pre-requisites</h3>
     <p>Google Cloud Scheduler requires the URL to be accessible for triggering the scheduled task.</p>
@@ -397,11 +397,11 @@
                 }
             });
         }
-        RED.nodes.registerType('Scheduler Task Start', {
+        RED.nodes.registerType('Scheduler Request', {
             category: 'krysp',
             color: "#a6bbcf",
             defaults: {
-                name: { value: "Scheduler" },
+                name: { value: "Scheduler Request" },
                 account: { type: "google-cloud-credentials", required: true },
                 props: {},
                 repeat: { value: "", validate: function (v) { return ((v === "") || (RED.validators.number(v) && (v >= 0) && (v <= 2147483))) } },
@@ -892,7 +892,7 @@
 
                 $("#node-red-help").on("click", function (e) {
                     e.preventDefault();
-                    RED.sidebar.help.show("Scheduler Task Start");
+                    RED.sidebar.help.show("Scheduler Request");
                 })
 
                 $("#node-input-name").keyup(function () {

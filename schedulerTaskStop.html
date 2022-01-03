@@ -1,29 +1,23 @@
-<script type="text/html" data-template-name="Scheduler Task Stop">
+<script type="text/html" data-template-name="Scheduler Response">
     <div class="form-row">
         <label for="node-input-name"><i class="fa fa-tag"></i> <span data-i18n="common.label.name">Name</span></label>
         <input type="text" id="node-input-name" data-i18n="[placeholder]common.label.name" placeholder="name">
     </div>
     <div class="form-row">
         <label for="node-input-statusCode"><i class="fa fa-long-arrow-left"></i> Status code</span></label>
-        <input type="text" id="node-input-statusCode" placeholder="msg.statusCode">
+        <input type="text" id="node-input-statusCode" placeholder="Status Code">
     </div>
-    <div class="form-row" style="margin-bottom:0;">
-        <label><i class="fa fa-list"></i> <span data-i18n="httpin.label.headers">Headers</span></label>
-    </div>
-    <div class="form-row node-input-headers-container-row">
-        <ol id="node-input-headers-container"></ol>
-    </div>
-    <div class="form-tips"><span data-i18n="[html]httpin.tip.res">The messages sent to this node must originate from an http input node</span></div>
+    <div class="form-tips"><span data-i18n="[html]httpin.tip.res">The messages sent to this node must originate from an Scheduler Request node</span></div>
 </script>
 
 <script type="text/javascript">
 (function() {
 
-    RED.nodes.registerType('Scheduler Task Stop',{
+    RED.nodes.registerType('Scheduler Response',{
         category: 'krysp',
         color:"#d8bfd8",
         defaults: {
-            name: {value:""},
+            name: {value:"Scheduler Response"},
             statusCode: {value:"",validate: RED.validators.number(true)},
             headers: {value:{}}
         },
