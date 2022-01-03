@@ -167,7 +167,7 @@ module.exports = function (RED) {
             this.request = {};
             this.checkForSpaceInName = this.name.split(" ");
 
-            if (checkForSpaceInName.length > 1) {
+            if (this.checkForSpaceInName.length > 1) {
                 this.name = this.checkForSpaceInName.join('_')
             }
  
