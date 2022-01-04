@@ -60,7 +60,7 @@ After installing the mapper node, follow the below steps:
 4. Click **Add** to save the credentials.
 5. The **URL** field will be auto-populated based on the browser URL. **It is important to note that this URL should be accessible via internet for scheduler to execute the flow**.
 6. Attach Scheduler Task Start node infront of any new or already existing flow.
-<img src='https://static.node.iopulsedev.net/nodes/Scheduler_HTTP.png' alt='config_help' width="800" />
+<img src='https://static.node.iopulsedev.net/nodes/Scheduler_Flow.png' alt='config_help' width="800" />
 
 
 # Usage
