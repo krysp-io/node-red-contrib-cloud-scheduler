@@ -134,7 +134,7 @@ If you're looking for a Node-RED solution on cloud, try https://www.krysp.io/.
 
 # Contributions
 
-Development of Cloud Scheduler Node happens in the open on GitHub, and we are grateful to the community for contributing bugfixes and improvements. Read below to learn how you can take part in improving mapper node.
+Development of Cloud Scheduler Node happens in the open on GitHub, and we are grateful to the community for contributing bugfixes and improvements. Read below to learn how you can take part in improving cloud scheduler node.
 
 ## Contributing Guide
 
