@@ -52,7 +52,7 @@ After installing the mapper node, follow the below steps:
 <img src='https://static.node.iopulsedev.net/nodes/Scheduler.png' alt='config_help' width="300" />
 
 2. Double click to open the Config node.
-<img src='https://static.node.iopulsedev.net/nodes/Scheduler_completed_form.png' alt='config_help' width="350" />
+<img src='https://static.node.iopulsedev.net/nodes/Scheduler_Form.png' alt='config_help' width="350" />
 
 3. To add Click on the edit icon to **Add Google Cloud Credentials** in the config node. (*Copy and paste the contents of the Google service account credential JSON file [created above](#setup-google-cloud-scheduler-and-google-credentials), directly into the **Key** field.*)
 <img src='https://static.node.iopulsedev.net/nodes/scheduler_google_credentials.png' alt='config_help' width="300" />
