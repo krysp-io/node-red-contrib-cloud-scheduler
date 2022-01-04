@@ -408,7 +408,7 @@
                 crontab: { value: "" },
                 once: { value: true },
                 onceDelay: { value: 0.1 },
-                url: { value: `${window.location.origin}/Scheduler`, required: true, validate: function (v) { var pattern = /localhost|127.0.0.1/gi; return !pattern.test(v) } },
+                url: { value: `${window.location.origin}/Scheduler_Request`, required: true, validate: function (v) { var pattern = /localhost|127.0.0.1/gi; return !pattern.test(v) } },
                 method: { value: "post", required: true },
                 not_publicly_accessible: { value: false, validate: function (prop) { return this.not_publicly_accessible } },
                 upload: { value: false },
@@ -896,7 +896,12 @@
                 })
 
                 $("#node-input-name").keyup(function () {
-                    this.url = `${window.location.origin}/${$("#node-input-name").val()}`;
+                    var name = $("#node-input-name").val();
+                    var checkForSpaceInName = name.split(" ");
+                    if (checkForSpaceInName.length > 1) {
+                        name = checkForSpaceInName.join('_')
+                    }
+                    this.url = `${window.location.origin}/${name}`;
                     $("#node-input-url").val(this.url)
                 })
 
