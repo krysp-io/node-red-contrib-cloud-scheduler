@@ -48,8 +48,8 @@ Restart your Node-RED instance and you should have a **Schedule Task node** node
 
 After installing the mapper node, follow the below steps:
 
-1. Drag the **Scheduler Task Start** node from the palette to the workspace. 
-<img src='https://static.node.iopulsedev.net/nodes/Scheduler.png' alt='config_help' width="200" />
+1. Drag the **Scheduler Request** node from the palette to the workspace. 
+<img src='https://static.node.iopulsedev.net/nodes/Scheduler.png' alt='config_help' width="300" />
 
 2. Double click to open the Config node.
 <img src='https://static.node.iopulsedev.net/nodes/Scheduler_completed_form.png' alt='config_help' width="350" />
