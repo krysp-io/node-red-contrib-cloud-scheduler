@@ -42,7 +42,7 @@ To install the stable version use the **Menu - Manage palette** option and searc
 
 Or else install the package directly from **Manage Palette**
 
-Restart your Node-RED instance and you should have a **Schedule Task node** node available in the palette.
+Restart your Node-RED instance and you should have a **Schedule Request node** node available in the palette.
 
 # Get Started
 
