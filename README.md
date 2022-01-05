@@ -1,6 +1,6 @@
 # node-red-contrib-cloud-scheduler
 
-This module provides a **Scheduler Task Start** node in Node-RED for executing any flow at a given time interval using Google Cloud Scheduler. It allows you to run the flows at the same time each week, day, or hour with guaranteed execution and retries in case of failures.
+This module provides a **Scheduler Request** node in Node-RED for executing any flow at a given time interval using Google Cloud Scheduler. It allows you to run the flows at the same time each week, day, or hour with guaranteed execution and retries in case of failures.
 
 Scheduler Task Start node will retry to execute the flow in the case of error or failure, with a minimum backoff value of 5s to maximum backoff value of 1h.
 
