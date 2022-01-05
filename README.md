@@ -63,6 +63,7 @@ After installing the mapper node, follow the below steps:
 <img src='https://static.node.iopulsedev.net/nodes/Scheduler_Flow.png' alt='config_help' width="800" />
 
 Inject node will work on cronosjs which do not have support for month and day.
+
 <img src='https://static.node.iopulsedev.net/nodes/Inject.png' alt='config_help' width="800" />
 
 
